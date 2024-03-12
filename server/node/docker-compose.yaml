@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  service:
+    image: node
+    restart: always
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "4002:4002"
+    networks:
+      - databases_environment
+
+networks:
+  databases_environment:
+    external: true
