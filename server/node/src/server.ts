@@ -1,4 +1,5 @@
 import express from "express";
+import http from 'http'
 import cors from "cors";
 import { config } from "dotenv";
 import { corsOptions } from "./config/corsOptions";
@@ -20,7 +21,7 @@ app.get("/ping", (_req, res) => {
 
 app.use("/api", userRouter)
 
-// const server = http.createServer(app)
+const server = http.createServer(app)
 
 app.listen(PORT, () => {
   console.log(`server running on port ${PORT}`);
