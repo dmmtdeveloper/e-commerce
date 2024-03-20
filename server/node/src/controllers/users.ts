@@ -24,7 +24,29 @@ export const loginUser = async (req: Request, res: Response) => {
 
     return res.status(200).json({ user, token });
   } catch (error) {
-    res.status(500).json({ message: "Hubo un error", error: serverError });
+    return res
+      .status(500)
+      .json({ message: "Hubo un error", error: serverError });
+  }
+};
+
+export const getMe = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+      },
+    });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    return res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: serverError });
   }
 };
 
@@ -48,5 +70,43 @@ export const createUser = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(`Error en createUser ${error}`);
     return res.status(500).json({ error: serverError });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { email, name } = req.body;
+    const { id } = req.params;
+    const user = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        name: name,
+        email: email,
+      },
+    });
+
+    if (!user) return res.status(404).json({ message: "user not found" });
+    return res.status(200).json({ message: "user successfully UPDATE" });
+  } catch (error) {
+    return res.status(404).json({ message: "user not found", error: error });
+  }
+};
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const user = await prisma.user.delete({
+      where: {
+        id: id,
+      },
+    });
+    if (!user) return res.status(404).json({ message: "id not found" });
+    return res.status(200).json({ message: "user successfully deleted" });
+  } catch (error) {
+    return res
+      .status(404)
+      .json({ message: "error when trying to delete user", error: error });
   }
 };
