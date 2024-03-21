@@ -52,7 +52,8 @@ const RegisterPage: React.FC = () => {
   return (
     <div className="flex flex-col justify-center items-center mt-24">
       <form className="flex flex-col" onSubmit={handleSubmit} action="">
-        <LabelComponent name="username" />
+        
+        <LabelComponent name="username" htmlFor="name"/>
         <InputComponent
           type="text"
           name="name"
@@ -61,7 +62,7 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
         />
 
-        <LabelComponent name="email" />
+        <LabelComponent name="email" htmlFor="email"/>
         <InputComponent
           type="email"
           name="email"
@@ -70,21 +71,22 @@ const RegisterPage: React.FC = () => {
           onChange={handleChange}
         />
 
-        <LabelComponent name="Password" />
+        <LabelComponent name="Password" htmlFor="password"/>
         <InputComponent
           type="password"
           name="password"
           id="password"
           value={user.password}
           onChange={handleChange}
+          
         />
 
-        <LabelComponent name="Confirm password" />
+        <LabelComponent name="Confirm password" htmlFor="confirmPassword"/>
         <InputComponent
           type="password"
           name="ConfirmPassword"
           id="ConfirmPassword"
-          value={user.password}
+          value={user.confirmPassword}
           onChange={handleChange}
         />
 

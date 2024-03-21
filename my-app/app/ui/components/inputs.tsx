@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, InputHTMLAttributes } from "react";
 import clsx from "clsx";
 
 type InputProps = {
@@ -7,6 +7,7 @@ type InputProps = {
   id: string;
   value: string;
   onChange: any;
+  
 };
 
 const InputComponent: FC<InputProps> = ({
@@ -15,6 +16,7 @@ const InputComponent: FC<InputProps> = ({
   id,
   value,
   onChange,
+  
 }) => {
   return (
     <>

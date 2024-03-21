@@ -3,6 +3,7 @@ import clsx from "clsx";
 
 type labelComponent = {
   name: string;
+  htmlFor: string
 };
 
 const LabelComponent: FC<labelComponent> = ({ name }) => {
@@ -15,7 +16,6 @@ const LabelComponent: FC<labelComponent> = ({ name }) => {
           "capitalize",
           "pt-2"
         )}
-        htmlFor=""
       >
         {name}
       </label>
