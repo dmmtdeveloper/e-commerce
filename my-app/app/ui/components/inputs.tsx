@@ -1,4 +1,4 @@
-import React, { FC, InputHTMLAttributes } from "react";
+import React, { ChangeEventHandler, FC } from "react";
 import clsx from "clsx";
 
 type InputProps = {
@@ -6,8 +6,7 @@ type InputProps = {
   name: string;
   id: string;
   value: string;
-  onChange: any;
-  
+  onChange: ChangeEventHandler<HTMLInputElement>;
 };
 
 const InputComponent: FC<InputProps> = ({
@@ -16,18 +15,21 @@ const InputComponent: FC<InputProps> = ({
   id,
   value,
   onChange,
-  
 }) => {
   return (
     <>
       <input
-        type="text"
         className={clsx(
           "p-3 rounded",
           "bg-slate-900",
           "text-slate-300",
           "w-full"
         )}
+        type={type}
+        name={name}
+        id={id}
+        value={value}
+        onChange={onChange} 
       />
     </>
   );

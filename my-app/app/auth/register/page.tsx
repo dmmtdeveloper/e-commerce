@@ -51,46 +51,45 @@ const RegisterPage: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center mt-24">
-      <form className="flex flex-col" onSubmit={handleSubmit} action="">
-        
-        <LabelComponent name="username" htmlFor="name"/>
+      <form className="flex flex-col w-1/4" onSubmit={handleSubmit} action="">
+        <h1 className="text-slate-900 font-bold text-4xl mb-4">Register</h1>
+
+        <LabelComponent name="username" htmlFor="name" />
+
         <InputComponent
           type="text"
           name="name"
-          id="name"
           value={user.name}
           onChange={handleChange}
+          id="name"
         />
 
-        <LabelComponent name="email" htmlFor="email"/>
+        <LabelComponent name="email" htmlFor="name" />
         <InputComponent
           type="email"
           name="email"
-          id="email"
           value={user.email}
           onChange={handleChange}
+          id="email"
         />
-
-        <LabelComponent name="Password" htmlFor="password"/>
+        <LabelComponent name="password" htmlFor="name" />
         <InputComponent
           type="password"
           name="password"
-          id="password"
           value={user.password}
           onChange={handleChange}
-          
+          id="password"
         />
-
-        <LabelComponent name="Confirm password" htmlFor="confirmPassword"/>
+        <LabelComponent name="confirm password" htmlFor="name" />
         <InputComponent
           type="password"
-          name="ConfirmPassword"
-          id="ConfirmPassword"
+          name="confirmPassword"
           value={user.confirmPassword}
           onChange={handleChange}
+          id="confirmPassword"
         />
 
-        <ButtonComponent text="Register" />
+        <button type="submit">register</button>
       </form>
     </div>
   );
