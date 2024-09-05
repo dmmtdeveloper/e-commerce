@@ -1,14 +1,43 @@
-import Link from 'next/link'
-import React from 'react'
+"use client";
+import { useState } from "react";
+import { login } from "../../utils/authHelpers";
+import MainLayout from "../layouts/MainLayout";
 
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-function page() {
+  const handleLogin = async () => {
+    await login(email, password); // Función de autenticación
+  };
+
   return (
-    <div>
-        <h1>login</h1>
-        <Link href="/registro">Registro</Link>
-    </div>
-  )
+    <MainLayout>
+      <section className="min-h-[87vh]">
+        <div className="p-4 flex flex-col gap-10">
+          <h1 className="text-3xl font-semibold text-center">Login</h1>
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="border p-2"
+          />
+          <input
+            type="password"
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="border p-2 mt-2"
+          />
+          <button
+            onClick={handleLogin}
+            className="bg-blue-500 text-white p-2 mt-4"
+          >
+            Iniciar sesión
+          </button>
+        </div>
+      </section>
+    </MainLayout>
+  );
 }
-
-export default page
