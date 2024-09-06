@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Sora } from "next/font/google";
 import "./globals.css";
+import SessionAuthprovider from "@/context/SessionAuthprovider";
 
 const sora = Sora({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body suppressContentEditableWarning className={sora.className}>
         {children}
+        {/* <SessionAuthprovider>{children}</SessionAuthprovider> */}
       </body>
     </html>
   );
