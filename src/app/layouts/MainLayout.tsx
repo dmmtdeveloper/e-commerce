@@ -3,7 +3,7 @@ import Footer from '@/components/shared/Footer';
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="flex flex-col relative">
+    <main className="flex flex-col relative min-h-screen">
       <Navbar />
       {children}
       <Footer />
