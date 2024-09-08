@@ -39,6 +39,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="border p-2"
+              autoComplete="true"
             />
             <input
               type="password"
@@ -46,6 +47,7 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="border p-2"
+              autoComplete="true"
             />
             <button
               type="submit"

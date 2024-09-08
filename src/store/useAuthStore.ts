@@ -1,18 +1,23 @@
 // store/useAuthStore.ts
-import create from 'zustand';
+import { create } from "zustand";
 
 interface AuthState {
   email: string;
+  token: string;
   isAuthenticated: boolean;
   setEmail: (email: string) => void;
-  login: (email: string) => void;
+  setToken: (token: string) => void;
+  login: (email: string, token: string) => void;
   logout: () => void;
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  email: '',
+  email: "",
+  token: "",
   isAuthenticated: false,
   setEmail: (email: string) => set({ email }),
-  login: (email: string) => set({ email, isAuthenticated: true }),
-  logout: () => set({ email: '', isAuthenticated: false }),
+  setToken: (token: string) => set({ token }),
+  login: (email: string, token: string) =>
+    set({ email, token, isAuthenticated: true }),
+  logout: () => set({ email: "", token: "", isAuthenticated: false }),
 }));
