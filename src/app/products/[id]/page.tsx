@@ -1,39 +1,47 @@
-"use client"
-import { notFound } from 'next/navigation';
-import { useEffect, useState } from 'react';
+// app/products/[id]/page.tsx
+import { Product } from "@/types/product";
+import axios from "axios";
+import { notFound } from "next/navigation";
 
-interface ProductDetailProps {
-  params: { id: string };
+interface ProductPageProps {
+  params: {
+    id: string;
+  };
 }
 
-export default function ProductDetail({ params }: ProductDetailProps) {
-  const [product, setProduct] = useState(null);
-
-  useEffect(() => {
-    // Lógica para cargar el producto usando el parámetro id
-    const fetchProduct = async () => {
-      const res = await fetch(`/api/products/${params.id}`);
-      if (res.status === 404) {
-        notFound();  // Manejo de error 404
-      } else {
-        const data = await res.json();
-        setProduct(data);
+const fetchProductDetails = async (id: string): Promise<Product | null> => {
+  try {
+    const response = await axios.get(
+      `https://proyectosocius-hnfjbhheebgefpc7.eastus2-01.azurewebsites.net/api/Productos/${id}`,
+      {
+        headers: {
+          accept: "text/plain",
+        },
       }
-    };
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product details:", error);
+    return null;
+  }
+};
 
-    fetchProduct();
-  }, [params.id]);
+export default async function ProductDetailPage({ params }: ProductPageProps) {
+  const product = await fetchProductDetails(params.id);
 
   if (!product) {
-    return <div>Loading...</div>;  // Estado de carga
+    notFound(); // Muestra una página 404 si no se encuentra el producto
   }
 
   return (
-    <section>
-      <h1>producto</h1>
-      {/* <h1>{product.name}</h1> */}
-      {/* <p>{product.description}</p> */}
-      {/* Otros detalles del producto */}
+    <section className="mt-10 p-4">
+      <h1 className="text-3xl font-bold">{product.nombre}</h1>
+      <p className="text-lg text-gray-600">{product.descripcion}</p>
+      <p className="text-xl font-semibold mt-4">Precio: ${product.precio}</p>
+      {/* Aquí podrías agregar más detalles del producto, como una imagen */}
+      <button className="bg-blue-500 text-white p-2 mt-4">
+        Agregar al carrito
+      </button>
     </section>
   );
 }
