@@ -66,10 +66,11 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
 
   return (
     <MainLayout>
-      <section className="mt-10 p-4">
+      <section className="mt-32 p-4">
         <h1 className="text-3xl font-bold">{product.nombre}</h1>
         <p className="text-lg text-gray-600">{product.descripcion}</p>
         <p className="text-xl font-semibold mt-4">Precio: ${product.precio}</p>
+        <p className="text-xl font-semibold mt-4">stock{product.precio}</p>
 
         {/* Controles de cantidad */}
         <div className="flex items-center mt-4">

@@ -36,7 +36,7 @@ const Navbar = () => {
         <div className="text-2xl font-bold">e-commerce</div>
       </Link>
       <div className="flex gap-4 items-center">
-        <Link href={"/products"} className="relative">
+        <Link href={"/cart"} className="relative">
           <FaShoppingCart />
           {totalItemsInCart > 0 && (
             <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-2 py-1">
