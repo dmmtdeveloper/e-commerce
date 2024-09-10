@@ -1,5 +1,5 @@
-// store/useAuthStore.ts
 import { create } from "zustand";
+import { clearToken } from "@/utils/tokenHelpers"; // Función para limpiar el token de sessionStorage
 
 interface AuthState {
   email: string;
@@ -17,7 +17,13 @@ export const useAuthStore = create<AuthState>((set) => ({
   isAuthenticated: false,
   setEmail: (email: string) => set({ email }),
   setToken: (token: string) => set({ token }),
-  login: (email: string, token: string) =>
-    set({ email, token, isAuthenticated: true }),
-  logout: () => set({ email: "", token: "", isAuthenticated: false }),
+  login: (email: string, token: string) => {
+    sessionStorage.setItem("email", email); // Guarda el email en sessionStorage
+    sessionStorage.setItem("token", token); // Guarda el token en sessionStorage
+    set({ email, token, isAuthenticated: true });
+  },
+  logout: () => {
+    clearToken(); // Limpia el token de sessionStorage
+    set({ email: "", token: "", isAuthenticated: false });
+  },
 }));

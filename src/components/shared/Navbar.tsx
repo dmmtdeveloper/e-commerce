@@ -1,18 +1,29 @@
-// components/shared/Navbar.tsx
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaShoppingCart, FaTimes, FaHome } from "react-icons/fa";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { email,isAuthenticated, logout } = useAuthStore(); // Obtenemos el estado de autenticación
+  const { email, isAuthenticated, login, logout } = useAuthStore(); // Obtenemos login y logout del store
   const router = useRouter();
+
+  // Al cargar la página, verifica si el usuario está autenticado en sessionStorage
+  useEffect(() => {
+    const storedEmail = sessionStorage.getItem("email");
+    const storedToken = sessionStorage.getItem("token");
+
+    if (storedEmail && storedToken) {
+      login(storedEmail, storedToken); // Autentica al usuario automáticamente
+    }
+  }, [login]); // Dependencia de login
 
   const handleLogout = () => {
     logout(); // Limpia el estado de autenticación
+    sessionStorage.removeItem("email"); // Limpia sessionStorage
+    sessionStorage.removeItem("token"); // Limpia sessionStorage
     router.push("/login"); // Redirige al login
   };
 
@@ -37,12 +48,18 @@ const Navbar = () => {
             </button>
           </>
         ) : (
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-2 py-2 rounded"
-          >
-            Cerrar sesión
-          </button>
+          <>
+            {/* Botón de cerrar sesión si está autenticado */}
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white px-2 py-2 rounded"
+            >
+              Cerrar sesión
+            </button>
+
+            {/* Muestra el email del usuario autenticado */}
+            {/* <span>{email}</span> */}
+          </>
         )}
 
         <div className="relative">

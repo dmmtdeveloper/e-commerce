@@ -1,11 +1,13 @@
+// utils/tokenHelpers.ts
 export const setToken = (token: string) => {
-  localStorage.setItem("token", token);
+  sessionStorage.setItem("authToken", token); // Guarda el token en sessionStorage
 };
 
 export const getToken = () => {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("authToken"); // Obtén el token de sessionStorage
 };
 
-export const removeToken = () => {
-  localStorage.removeItem("token");
+export const clearToken = () => {
+  sessionStorage.removeItem("authToken"); // Borra el token de sessionStorage
 };
+

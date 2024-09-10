@@ -1,24 +1,38 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login } from "../../utils/authHelpers";
 import MainLayout from "../layouts/MainLayout";
 import { useRouter } from "next/navigation";
-import { setToken } from "@/utils/tokenHelpers"; // Utiliza una función para guardar el token
+import { setToken, getToken } from "@/utils/tokenHelpers"; // Importa las funciones
+import { useAuthStore } from "@/store/useAuthStore"; // Importa tu store de Zustand
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
+  const loginStore = useAuthStore((state) => state.login); // Obtén la función login del store
+
+  useEffect(() => {
+    const storedToken = getToken(); // Revisa si ya hay un token guardado
+
+    if (storedToken) {
+      // Aquí puedes decodificar el token o hacer alguna validación adicional
+      loginStore(email, storedToken); // Autenticar al usuario si ya hay un token
+      router.push("/"); // Redirigir al home u otra página
+    }
+  }, [email,loginStore, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const data = await login({ email, password }); // Pasamos email y password a la función login
       
-      setToken(data.token); // Guarda el token (puedes usar localStorage o cookies)
+      setToken(data.token); // Guarda el token en sessionStorage
+      setEmail(email); // Guarda el email en sessionStorage
       alert("Login exitoso");
-      router.push("/"); // Redirige al usuario al home o donde quieras
+      loginStore(email, data.token); // Inicia sesión en el store
+      router.push("/"); // Redirige al usuario
 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);

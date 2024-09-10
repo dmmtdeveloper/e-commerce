@@ -33,6 +33,10 @@ interface LoginData {
   password: string;
 }
 
+
+
+
+
 export const login = async (data: LoginData) => {
   try {
     // Realiza la petición a la API con los datos de login
@@ -49,12 +53,22 @@ export const login = async (data: LoginData) => {
     // Decodificar el token
     const decodedToken = jwt.decode(token); // Aquí decodificas el token sin verificar
 
-    // Mostrar el token decodificado en consola
-    console.log("Decoded token:", decodedToken.Token);
+    // Verifica si el token decodificado no es null
+    if (
+      decodedToken &&
+      typeof decodedToken === "object" &&
+      "Token" in decodedToken
+    ) {
+      // Mostrar el token decodificado en consola
+      console.log("Decoded token:", decodedToken.Token);
 
-    // Guardar el token o realizar cualquier otra acción con el token decodificado
-    const login = useAuthStore.getState().login;
-    login(data.email, decodedToken.Token); // Marca el usuario como autenticado
+      // Guardar el token o realizar cualquier otra acción con el token decodificado
+      const login = useAuthStore.getState().login;
+      login(data.email, decodedToken.Token); // Marca el usuario como autenticado
+    } else {
+      console.error("El token no pudo ser decodificado o es inválido.");
+      throw new Error("Token inválido");
+    }
 
     return response.data;
   } catch (error) {
