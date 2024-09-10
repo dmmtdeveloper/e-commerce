@@ -1,43 +1,43 @@
-import {create} from 'zustand';
+import { create } from "zustand";
 
 interface CartItem {
-  id: number;
-  productName: string;
-  price: number;
+  id: string;
+  name: string;
   quantity: number;
-  image: string;
 }
 
-interface CartState {
-  cartItems: CartItem[];
-  totalPrice: number;
+interface CartStore {
+  items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (id: number) => void;
-  clearCart: () => void;
+  removeItem: (id: string) => void;
+  updateItemQuantity: (id: string, quantity: number) => void;
 }
 
-export const useCartStore = create<CartState>((set) => ({
-  cartItems: [],
-  totalPrice: 0,
-  addItem: (item: CartItem) => set((state) => {
-    const existingItem = state.cartItems.find(i => i.id === item.id);
-    if (existingItem) {
-      existingItem.quantity += 1;
-      return { ...state, totalPrice: state.totalPrice + item.price };
-    }
-    return {
-      cartItems: [...state.cartItems, { ...item, quantity: 1 }],
-      totalPrice: state.totalPrice + item.price,
-    };
-  }),
-  removeItem: (id: number) => set((state) => {
-    const itemToRemove = state.cartItems.find(i => i.id === id);
-    if (!itemToRemove) return state;
-    const updatedCartItems = state.cartItems.filter(i => i.id !== id);
-    return {
-      cartItems: updatedCartItems,
-      totalPrice: state.totalPrice - itemToRemove.price * itemToRemove.quantity,
-    };
-  }),
-  clearCart: () => set({ cartItems: [], totalPrice: 0 }),
+const useCartStore = create<CartStore>((set) => ({
+  items: [],
+  addItem: (item) =>
+    set((state) => {
+      const existingItem = state.items.find((i) => i.id === item.id);
+      if (existingItem) {
+        return {
+          items: state.items.map((i) =>
+            i.id === item.id ? { ...i, quantity: i.quantity + item.quantity } : i
+          ),
+        };
+      } else {
+        return { items: [...state.items, item] };
+      }
+    }),
+  removeItem: (id) =>
+    set((state) => ({
+      items: state.items.filter((item) => item.id !== id),
+    })),
+  updateItemQuantity: (id, quantity) =>
+    set((state) => ({
+      items: state.items.map((item) =>
+        item.id === id ? { ...item, quantity } : item
+      ),
+    })),
 }));
+
+export default useCartStore;
