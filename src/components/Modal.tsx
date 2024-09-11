@@ -4,6 +4,8 @@ import Link from "next/link";
 interface ModalProps {
   product: Product;
   onClose: () => void; // Función para cerrar el modal
+  onContinueShopping: () => void;
+  onGoToCart: () => void;
 }
 
 export default function Modal({ product, onClose }: ModalProps) {

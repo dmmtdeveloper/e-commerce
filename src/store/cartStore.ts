@@ -1,3 +1,4 @@
+// store/cartStore.ts
 import { create } from "zustand";
 
 interface CartItem {
@@ -11,6 +12,7 @@ interface CartStore {
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateItemQuantity: (id: string, quantity: number) => void;
+  clearCart: () => void; // Nueva función para vaciar el carrito
 }
 
 const useCartStore = create<CartStore>((set) => ({
@@ -38,6 +40,7 @@ const useCartStore = create<CartStore>((set) => ({
         item.id === id ? { ...item, quantity } : item
       ),
     })),
+  clearCart: () => set({ items: [] }), // Implementación de la función para vaciar el carrito
 }));
 
 export default useCartStore;

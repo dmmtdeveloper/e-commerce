@@ -1,15 +1,53 @@
 "use client";
 
+import { useState } from "react";
 import useCartStore from "@/store/cartStore"; // Importa el store del carrito
 import Link from "next/link";
 import MainLayout from "../layouts/MainLayout";
+import { FaPlus, FaMinus } from "react-icons/fa"; // Importar los íconos
+import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
 
 export default function CartPage() {
-  const { items, removeItem } = useCartStore(); // Obtenemos los productos del carrito
+  const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
+  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [itemToRemove, setItemToRemove] = useState<string | null>(null); // ID del producto a eliminar
 
   // Función para manejar la eliminación de un producto del carrito
   const handleRemove = (id: string) => {
-    removeItem(id);
+    setItemToRemove(id);
+    setShowModal(true);
+  };
+
+  // Función para confirmar la eliminación
+  const confirmRemove = () => {
+    if (itemToRemove) {
+      removeItem(itemToRemove);
+      setShowModal(false);
+      setItemToRemove(null);
+    }
+  };
+
+  // Función para cancelar la eliminación
+  const cancelRemove = () => {
+    setShowModal(false);
+    setItemToRemove(null);
+  };
+
+  // Función para manejar el incremento de la cantidad
+  const handleIncreaseQuantity = (id: string, currentQuantity: number) => {
+    updateItemQuantity(id, currentQuantity + 1);
+  };
+
+  // Función para manejar la disminución de la cantidad
+  const handleDecreaseQuantity = (id: string, currentQuantity: number) => {
+    if (currentQuantity > 1) {
+      updateItemQuantity(id, currentQuantity - 1);
+    }
+  };
+
+  // Función para vaciar el carrito
+  const handleClearCart = () => {
+    clearCart();
   };
 
   // Si no hay productos en el carrito
@@ -40,7 +78,23 @@ export default function CartPage() {
             >
               <div>
                 <h2 className="text-lg font-bold">{item.name}</h2>
-                <p>Cantidad: {item.quantity}</p>
+                <div className="flex items-center mt-2">
+                  <button
+                    onClick={() => handleDecreaseQuantity(item.id, item.quantity)}
+                    className="p-2 bg-gray-200 rounded"
+                    aria-label="Decrease quantity"
+                  >
+                    <FaMinus />
+                  </button>
+                  <span className="mx-4 text-lg">{item.quantity}</span>
+                  <button
+                    onClick={() => handleIncreaseQuantity(item.id, item.quantity)}
+                    className="p-2 bg-gray-200 rounded"
+                    aria-label="Increase quantity"
+                  >
+                    <FaPlus />
+                  </button>
+                </div>
               </div>
               <button
                 onClick={() => handleRemove(item.id)}
@@ -51,12 +105,27 @@ export default function CartPage() {
             </li>
           ))}
         </ul>
-        <Link href="/checkout">
-          <button className="bg-green-500 text-white py-2 px-4 mt-4 rounded">
-            Proceder al pago
+        <div className="flex justify-between mt-4">
+          <button
+            onClick={handleClearCart}
+            className="bg-red-500 text-white py-2 px-4 rounded"
+          >
+            Vaciar carrito
           </button>
-        </Link>
+          <Link href="/checkout">
+            <button className="bg-green-500 text-white py-2 px-4 rounded">
+              Proceder al pago
+            </button>
+          </Link>
+        </div>
       </section>
+
+      {/* Modal de confirmación */}
+      <ConfirmationModal
+        isOpen={showModal}
+        onConfirm={confirmRemove}
+        onCancel={cancelRemove}
+      />
     </MainLayout>
   );
 }
