@@ -72,6 +72,18 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
     });
   };
 
+  // Manejar el primer producto agregado al carrito
+  const handleAddToCart = () => {
+    if (product) {
+      addItem({
+        id: product.productoId.toString(),
+        name: product.nombre,
+        quantity: 1,
+      });
+      setQuantity(1);
+    }
+  };
+
   const handleContinueShopping = () => {
     setShowModal(false);
   };
@@ -92,24 +104,34 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         <p className="text-xl font-semibold mt-4">Precio: ${product.precio}</p>
         <p className="text-xl font-semibold mt-4">Stock: {product.stock}</p>
 
-        {/* Controles de cantidad */}
+        {/* Controles de cantidad o botón de agregar al carrito */}
         <div className="flex items-center mt-4">
-          <button
-            onClick={handleDecreaseQuantity}
-            className="p-2 bg-gray-200 rounded"
-            aria-label="Decrease quantity"
-            disabled={quantity <= 0}
-          >
-            <FaMinus />
-          </button>
-          <span className="mx-4 text-lg">{quantity}</span>
-          <button
-            onClick={handleIncreaseQuantity}
-            className="p-2 bg-gray-200 rounded"
-            aria-label="Increase quantity"
-          >
-            <FaPlus />
-          </button>
+          {quantity === 0 ? (
+            <button
+              onClick={handleAddToCart}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Agregar al carrito
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleDecreaseQuantity}
+                className="p-2 bg-gray-200 rounded"
+                aria-label="Decrease quantity"
+              >
+                <FaMinus />
+              </button>
+              <span className="mx-4 text-lg">{quantity}</span>
+              <button
+                onClick={handleIncreaseQuantity}
+                className="p-2 bg-gray-200 rounded"
+                aria-label="Increase quantity"
+              >
+                <FaPlus />
+              </button>
+            </>
+          )}
         </div>
 
         {/* Mostrar modal */}
