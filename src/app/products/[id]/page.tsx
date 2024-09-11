@@ -9,7 +9,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import fetchProductDetails from "@/services/fetchProductDetails";
 
 import useCartStore from "@/store/cartStore";
-import ModalProductId from "@/components/ModalProductId";
+import ModalProductId from "@/components/ModalProductId"; // Importar el modal
 
 interface ProductPageProps {
   params: {
@@ -20,8 +20,8 @@ interface ProductPageProps {
 export default function ProductDetailPage({ params }: ProductPageProps) {
   const [quantity, setQuantity] = useState(0);
   const [product, setProduct] = useState<Product | null>(null);
-  const [showModal, setShowModal] = useState(false);
-  const { items, updateItemQuantity, addItem, removeItem } = useCartStore(); // Añadir removeItem
+  const [showModal, setShowModal] = useState(false); // Controlar visibilidad del modal
+  const { items, updateItemQuantity, addItem, removeItem } = useCartStore();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -72,7 +72,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
     });
   };
 
-  // Manejar el primer producto agregado al carrito
+  // Manejar el primer producto agregado al carrito y mostrar modal
   const handleAddToCart = () => {
     if (product) {
       addItem({
@@ -81,14 +81,16 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         quantity: 1,
       });
       setQuantity(1);
+      setShowModal(true); // Mostrar modal cuando se agrega al carrito
     }
   };
 
   const handleContinueShopping = () => {
-    setShowModal(false);
+    setShowModal(false); // Cerrar modal y continuar comprando
   };
+
   const handleGoToCart = () => {
-    setShowModal(false);
+    setShowModal(false); // Cerrar modal y redirigir al carrito
     window.location.href = "/cart";
   };
 
@@ -134,7 +136,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           )}
         </div>
 
-        {/* Mostrar modal */}
+        {/* Mostrar modal cuando se agrega un producto */}
         {showModal && product && (
           <ModalProductId
             product={{
