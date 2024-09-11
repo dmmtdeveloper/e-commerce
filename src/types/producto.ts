@@ -1,4 +1,5 @@
 export interface Producto {
+    href: string | undefined;
     productoId: number;
     nombre: string;
     descripcion: string;
