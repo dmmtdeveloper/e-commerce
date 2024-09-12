@@ -33,38 +33,24 @@ interface LoginData {
   password: string;
 }
 
-
-
-
-
 export const login = async (data: LoginData) => {
   try {
-    // Realiza la petición a la API con los datos de login
-    const response = await axiosInstance.get(
-      `/api/Login/${data.email}/${data.password}`
-    );
-    console.log("response:", response);
-
-    // Obtener el token de la respuesta
+    const response = await axiosInstance.get(`/api/Login/${data.email}/${data.password}`);
     const token = response.data.token.token;
-    console.log("response-data:", response.data);
-    console.log("response-token:", token);
-
+  
     // Decodificar el token
-    const decodedToken = jwt.decode(token); // Aquí decodificas el token sin verificar
+    const decodedToken = jwt.decode(token);
 
-    // Verifica si el token decodificado no es null
     if (
       decodedToken &&
       typeof decodedToken === "object" &&
-      "Token" in decodedToken
+      "Token" in decodedToken &&
+      "NombreUsuario" in decodedToken
     ) {
-      // Mostrar el token decodificado en consola
-      console.log("Decoded token:", decodedToken.Token);
-
-      // Guardar el token o realizar cualquier otra acción con el token decodificado
-      const login = useAuthStore.getState().login;
-      login(data.email, decodedToken.Token); // Marca el usuario como autenticado
+      // Llamar al store para iniciar sesión
+      useAuthStore.getState().login(data.email, decodedToken.Token, decodedToken.NombreUsuario);
+      console.log(decodedToken.Token)
+      console.log(decodedToken.NombreUsuario)
     } else {
       console.error("El token no pudo ser decodificado o es inválido.");
       throw new Error("Token inválido");
@@ -72,7 +58,7 @@ export const login = async (data: LoginData) => {
 
     return response.data;
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error("Error durante el login:", error);
     throw error;
   }
 };

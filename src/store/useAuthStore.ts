@@ -1,29 +1,40 @@
 import { create } from "zustand";
-import { clearToken } from "@/utils/tokenHelpers"; // Función para limpiar el token de sessionStorage
+import { createJSONStorage, persist } from "zustand/middleware";
+import { clearToken } from "@/utils/tokenHelpers";
 
 interface AuthState {
   email: string;
   token: string;
+  name: string;
   isAuthenticated: boolean;
-  setEmail: (email: string) => void;
-  setToken: (token: string) => void;
-  login: (email: string, token: string) => void;
+  login: (email: string, token: string, name: string) => void;
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  email: "",
-  token: "",
-  isAuthenticated: false,
-  setEmail: (email: string) => set({ email }),
-  setToken: (token: string) => set({ token }),
-  login: (email: string, token: string) => {
-    sessionStorage.setItem("email", email); // Guarda el email en sessionStorage
-    sessionStorage.setItem("token", token); // Guarda el token en sessionStorage
-    set({ email, token, isAuthenticated: true });
-  },
-  logout: () => {
-    clearToken(); // Limpia el token de sessionStorage
-    set({ email: "", token: "", isAuthenticated: false });
-  },
-}));
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      email: "",
+      token: "",
+      name: "",
+      isAuthenticated: false,
+      login: (email: string, token: string, name: string) => {
+        sessionStorage.setItem("token", token);
+        sessionStorage.setItem("name", name);
+        console.log(sessionStorage.getItem("name"));
+        console.log(name);
+
+        set({ email, token, name, isAuthenticated: true });
+      },
+      logout: () => {
+        sessionStorage.removeItem("token");
+        set({ email: "", token: "", name: "", isAuthenticated: false });
+        clearToken();
+      },
+    }),
+    {
+      name: "auth-storage", // Nombre del ítem en sessionStorage
+      storage: createJSONStorage(() => sessionStorage), // Persistir en sessionStorage
+    }
+  )
+);
