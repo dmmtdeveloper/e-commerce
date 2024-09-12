@@ -28,6 +28,31 @@ export const register = async (
   }
 };
 
+// Define la interfaz de Usuario
+export interface Usuario {
+  usuarioId: number;
+  nombre: string;
+  correo: string;
+  clave: string;
+  esAdmin: boolean;
+  eliminado: boolean;
+  habilitado: boolean;
+}
+
+// Función para obtener el usuario basado en el token
+export const GetUsuarioByToken = async (token: string): Promise<Usuario> => {
+  try {
+    const response = await axiosInstance.get<Usuario>(
+      `/api/Usuario/bytoken/${token}`
+    );
+    return response.data; // El tipo será automáticamente Usuario
+  } catch (error) {
+    console.error("Error obteniendo el usuario:", error);
+    throw error;
+  }
+};
+
+
 interface LoginData {
   email: string;
   password: string;
@@ -35,9 +60,11 @@ interface LoginData {
 
 export const login = async (data: LoginData) => {
   try {
-    const response = await axiosInstance.get(`/api/Login/${data.email}/${data.password}`);
+    const response = await axiosInstance.get(
+      `/api/Login/${data.email}/${data.password}`
+    );
     const token = response.data.token.token;
-  
+
     // Decodificar el token
     const decodedToken = jwt.decode(token);
 
@@ -48,9 +75,11 @@ export const login = async (data: LoginData) => {
       "NombreUsuario" in decodedToken
     ) {
       // Llamar al store para iniciar sesión
-      useAuthStore.getState().login(data.email, decodedToken.Token, decodedToken.NombreUsuario);
-      console.log(decodedToken.Token)
-      console.log(decodedToken.NombreUsuario)
+      useAuthStore
+        .getState()
+        .login(data.email, decodedToken.Token, decodedToken.NombreUsuario);
+      console.log(decodedToken.Token);
+      console.log(decodedToken.NombreUsuario);
     } else {
       console.error("El token no pudo ser decodificado o es inválido.");
       throw new Error("Token inválido");
