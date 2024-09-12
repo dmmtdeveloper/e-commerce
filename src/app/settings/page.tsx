@@ -49,29 +49,7 @@ export default function SettingsPage() {
     } else {
       console.warn("Token no encontrado en sessionStorage");
     }
-  }, []); // Se ejecuta una sola vez al montar el componente
-
-  const handleUpdate = async (field: string) => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      try {
-        console.log(`Actualizando ${field}:`, {
-          nombre,
-          correo,
-          clave,
-          habilitado,
-          eliminado,
-          esAdmin,
-        });
-        setModalMessage(`El campo ${field} se actualizó correctamente.`);
-        openConfirmationModal(() => {}, `¿Estás seguro de que quieres actualizar el ${field}?`);
-      } catch (error) {
-        console.error("Error actualizando el usuario:", error);
-      }
-    } else {
-      console.warn("Token no encontrado en sessionStorage");
-    }
-  };
+  }, []); 
 
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");

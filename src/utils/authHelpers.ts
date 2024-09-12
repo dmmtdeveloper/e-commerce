@@ -40,6 +40,17 @@ export interface Usuario {
   habilitado: boolean;
 }
 
+
+export const GetUsuarios = async (): Promise<Usuario[]> => {
+  try {
+    const response = await axiosInstance.get<Usuario[]>("/api/usuario");
+    return response.data; // Retorna la lista de usuarios
+  } catch (error) {
+    console.error("Error obteniendo la lista de usuarios:", error);
+    throw error;
+  }
+};
+
 // Función para obtener el usuario basado en el token
 export const GetUsuarioByToken = async (token: string): Promise<Usuario> => {
   try {

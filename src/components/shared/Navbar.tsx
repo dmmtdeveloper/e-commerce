@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { email, name, isAuthenticated, logout } = useAuthStore();
+  const { email, name, isAuthenticated, logout, isAdmin } = useAuthStore();
   const { items } = useCartStore();
   const router = useRouter();
 
@@ -27,6 +27,7 @@ const Navbar = () => {
         <div className="text-2xl font-bold">e-commerce</div>
       </Link>
       <div className="flex gap-4 items-center">
+        {/* Menú principal */}
         <Link href="/cart" className="relative">
           <FaShoppingCart />
           {totalItemsInCart > 0 && (
@@ -39,6 +40,7 @@ const Navbar = () => {
           <FaHome />
         </Link>
 
+        {/* Links de autenticación */}
         {!isAuthenticated ? (
           <>
             <Link href="/register">Register</Link>
@@ -57,6 +59,7 @@ const Navbar = () => {
           </>
         )}
 
+        {/* Menú desplegable */}
         <div className="relative">
           <span
             onClick={() => setMenuOpen(!menuOpen)}
@@ -64,6 +67,7 @@ const Navbar = () => {
           >
             {name || email} {/* Mostrar nombre si está disponible, de lo contrario el email */}
           </span>
+
           {menuOpen && isAuthenticated && (
             <div className="absolute right-0 mt-2 bg-white text-black p-4 rounded shadow-lg">
               <div className="flex justify-between items-center">
@@ -74,14 +78,35 @@ const Navbar = () => {
                   <FaTimes />
                 </button>
               </div>
+              <br></br>
+              {/* Sección Menú */}
+              <h3 className="text-lg font-semibold">Menú</h3>
               <ul>
                 <li>
-                  <Link href="/settings">Settings</Link>
+                  <Link href="/settings">Configuración</Link>
                 </li>
                 <li>
                   <Link href="/orders">Mis Órdenes</Link>
                 </li>
               </ul>
+
+              {/* Sección Admin (solo si es administrador) */}
+              {isAdmin && (
+                <>
+                  <h3 className="text-lg font-semibold mt-4">Admin</h3>
+                  <ul>
+                    <li>
+                      <Link href="/admin/products">Productos</Link>
+                    </li>
+                    <li>
+                      <Link href="/admin/users">Usuarios</Link>
+                    </li>
+                    <li>
+                      <Link href="/admin/orders">Pedidos</Link>
+                    </li>
+                  </ul>
+                </>
+              )}
             </div>
           )}
         </div>
