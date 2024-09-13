@@ -10,6 +10,7 @@ import { Input } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { InputComponent } from "@/components/input/InputComponent";
 import Link from "next/link";
+import { Title } from "@/components/title/Title";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -57,9 +58,7 @@ export default function LoginPage() {
         </article>
         <article className="w-[44rem] mt-64 ">
           <div className="flex flex-col shadow-md gap-10 bg-slate-100 px-20 py-20 rounded-3xl">
-            <h1 className="text-3xl font-semibold text-center">
-              Iniciar Sesión
-            </h1>
+            <Title text="Iniciar Sesión" />
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <InputComponent
                 type="email"
@@ -82,7 +81,9 @@ export default function LoginPage() {
             </form>
             <div className="flex gap-4">
               <p>¿Eres nuevo?</p>
-              <Link className="text-blue-500 underline" href={"/register"}>Regístrate</Link>
+              <Link className="text-blue-500 underline" href={"/register"}>
+                Regístrate
+              </Link>
             </div>
           </div>
         </article>
