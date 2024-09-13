@@ -11,6 +11,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { InputComponent } from "@/components/input/InputComponent";
 import Link from "next/link";
 import { Title } from "@/components/title/Title";
+import clsx from "clsx";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -46,18 +47,26 @@ export default function LoginPage() {
 
   return (
     <MainLayout>
-      <section className=" min-h-screen grid grid-cols-2 justify-between">
-        <article>
-          <Image
-            className="h-[54rem] w-[44rem] "
-            width={900}
-            height={1500}
-            alt="login"
-            src={loginImage}
-          />
-        </article>
-        <article className="w-[44rem] mt-64 ">
-          <div className="flex flex-col shadow-md gap-10 bg-slate-100 px-20 py-20 rounded-3xl">
+      <section
+        className={clsx(
+          "min-h-screen mt-32 2xl:mt-0",
+          "2xl:grid 2xl:grid-cols-2",
+          "md:flex md:flex-col-reverse",
+          "flex flex-col-reverse",
+          "items-center justify-center"
+        )}
+      >
+        <Image
+          className="2xl:h-[54rem] 2xl:w-[44rem] w-full"
+          width={900}
+          height={1500}
+          alt="login"
+          src={loginImage}
+          priority
+        />
+
+        <article className="2xl:w-[44rem] mt-40 2xl:mt-0 w-[20rem]">
+          <div className="flex flex-col shadow-md gap-10 bg-slate-100 2xl:px-20 py-20 rounded-3xl px-4">
             <Title text="Iniciar Sesión" />
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <InputComponent
