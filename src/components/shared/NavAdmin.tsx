@@ -1,7 +1,5 @@
 import Link from "next/link";
 import React from "react";
-import { AiOutlineSetting } from "react-icons/ai";
-import { CiDeliveryTruck } from "react-icons/ci";
 
 interface NavAdminProps {
   className?: string; // Aceptar la prop className
