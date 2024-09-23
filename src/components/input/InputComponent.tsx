@@ -5,6 +5,7 @@ interface InputProps {
   placeholder?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name:string
 }
 
 export const InputComponent: React.FC<InputProps> = ({
@@ -12,6 +13,7 @@ export const InputComponent: React.FC<InputProps> = ({
   placeholder = "",
   value,
   onChange,
+  name
 }) => {
   return (
     <div className="relative w-full">
@@ -21,7 +23,8 @@ export const InputComponent: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         autoComplete="true"
-        className="border border-slate-300 py-2 px-4 w-full rounded-xl focus:outline-none"
+        className="border border-slate-300 py-2 px-4 w-full rounded-xl focus:outline-blue-400"
+        name={name}
       />
     </div>
   );

@@ -1,23 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import { register } from "../../utils/authHelpers";
-import MainLayout from "../layouts/MainLayout";
-import { useRouter } from "next/navigation"; // Importa el hook useRouter
-import { InputComponent } from "@/components/input/InputComponent";
 import { AuthButton } from "@/components/buttons/AuthButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Input } from "@/components/input/InputPassword";
+import { InputComponent } from "@/components/input/InputComponent";
+import { register } from "../../utils/authHelpers";
+import { Title } from "@/components/title/Title";
+import { useRouter } from "next/navigation"; // Importa el hook useRouter
+import { useState } from "react";
+
 import clsx from "clsx";
 import Image from "next/image";
-import registerImage from "@/public/assets/img/register.jpg";
-import { Title } from "@/components/title/Title";
 import Link from "next/link";
+import MainLayout from "../layouts/MainLayout";
+import registerImage from "@/public/assets/img/register.jpg";
 
 export default function RegisterPage() {
-  const [correo, setCorreo] = useState("");
-  const [clave, setClave] = useState("");
-  const [nombre, setNombre] = useState("");
+
+  const [formData, setFormData] = useState({
+    correo: "",
+    clave: "",
+    nombre: "",
+  });
+
+  const {correo, clave, nombre} = formData
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((data) => ({
+      ...data,
+      [name]: value,
+    }));
+  };
+
   const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter(); // Inicializa el router
@@ -35,7 +50,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(nombre, correo, clave);
+      await register(correo, clave, nombre);
       alert("Usuario registrado con éxito");
       router.push("/login"); // Redirige a la página de login
     } catch (error) {
@@ -73,23 +88,26 @@ export default function RegisterPage() {
                 type="text"
                 value={nombre}
                 placeholder="Ingresa tu Nombre"
-                onChange={(e) => setNombre(e.target.value)}
+                onChange= {handleChange}
+                name="nombre"
               />
               <InputComponent
                 type="email"
                 value={correo}
                 placeholder="Ingresa tu correo electrónico"
-                onChange={(e) => setCorreo(e.target.value)}
+                onChange={handleChange}
+                name="correo"
               />
 
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Ingrese contraseña"
                 value={clave}
-                onChange={(e) => setClave(e.target.value)}
+                onChange={handleChange}
                 icon={showPassword ? <FaEye /> : <FaEyeSlash />}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
+                name="clave"
               />
 
               <AuthButton text="Registrate" />

@@ -75,6 +75,7 @@ export default function LoginPage() {
                 value={email}
                 placeholder="Ingresa tu correo electrónico"
                 onChange={(e) => setEmail(e.target.value)}
+                name="email"
               />
 
               <Input
@@ -85,6 +86,7 @@ export default function LoginPage() {
                 icon={showPassword ? <FaEye /> : <FaEyeSlash />}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
+                name="password"
               />
 
               <AuthButton text="Iniciar Sesión" />
