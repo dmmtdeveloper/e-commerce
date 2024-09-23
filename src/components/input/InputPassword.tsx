@@ -1,19 +1,7 @@
+import { InputPasswordProps } from "@/types/types";
 import React from "react";
 
-interface InputProps {
-  type?: string;
-  name:string;
-  placeholder?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  autoComplete?: string;
-  icon?: React.ReactNode; // Añadimos un prop para el icono
-  onIconClick?: () => void; // Añadimos un prop para manejar el clic del icono
-  onMouseDown?: () => void; // Evento para detectar cuando se mantiene presionado el ícono
-  onMouseUp?: () => void; // Evento para detectar cuando se suelta el ícono
-}
-
-export const Input: React.FC<InputProps> = ({
+export const Input: React.FC<InputPasswordProps> = ({
   type = "text",
   name,
   placeholder = "",
@@ -28,19 +16,20 @@ export const Input: React.FC<InputProps> = ({
     <div className="relative w-full">
       <input
         type={type}
+        name={name}
         placeholder={placeholder}
         value={value}
         onChange={onChange}
         autoComplete="true"
-        className="border border-slate-300 py-2 px-4 w-full rounded-xl  focus:outline-blue-400" // Deja espacio a la derecha para el ícono
+        className="border border-slate-300 py-2 px-4 w-full rounded-xl focus:outline-blue-400" // Añade espacio a la derecha para el ícono
       />
       {icon && (
         <button
           type="button"
-          name={name}
-          onMouseDown={onMouseDown} // Al hacer clic y mantener
-          onMouseUp={onMouseUp} // Al soltar el clic
-          onMouseLeave={onMouseUp} // Para ocultar la contraseña si el mouse sale del botón sin soltar
+          onClick={onIconClick} // Si se desea agregar una función de clic en el ícono
+          onMouseDown={onMouseDown} // Al hacer clic y mantener presionado el ícono
+          onMouseUp={onMouseUp} // Al soltar el clic del ícono
+          onMouseLeave={onMouseUp} // Por si el mouse sale del botón sin soltarlo
           className="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-500"
         >
           {icon}

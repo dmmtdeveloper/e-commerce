@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import { AuthButton } from "@/components/buttons/AuthButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -6,9 +6,8 @@ import { Input } from "@/components/input/InputPassword";
 import { InputComponent } from "@/components/input/InputComponent";
 import { register } from "../../utils/authHelpers";
 import { Title } from "@/components/title/Title";
-import { useRouter } from "next/navigation"; // Importa el hook useRouter
+import { useRouter } from "next/navigation"; // Correcto para la carpeta 'app'
 import { useState } from "react";
-
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,14 +15,13 @@ import MainLayout from "../layouts/MainLayout";
 import registerImage from "@/public/assets/img/register.jpg";
 
 export default function RegisterPage() {
-
   const [formData, setFormData] = useState({
     correo: "",
     clave: "",
     nombre: "",
   });
 
-  const {correo, clave, nombre} = formData
+  const { correo, clave, nombre } = formData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -34,8 +32,7 @@ export default function RegisterPage() {
   };
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const router = useRouter(); // Inicializa el router
+  const router = useRouter();
 
   // Mostrar contraseña al mantener presionado
   const handleMouseDown = () => {
@@ -74,7 +71,7 @@ export default function RegisterPage() {
           className="2xl:h-[54rem] 2xl:w-[44rem] w-full"
           width={900}
           height={1500}
-          alt="login"
+          alt="register"
           src={registerImage}
           priority
         />
@@ -88,7 +85,7 @@ export default function RegisterPage() {
                 type="text"
                 value={nombre}
                 placeholder="Ingresa tu Nombre"
-                onChange= {handleChange}
+                onChange={handleChange}
                 name="nombre"
               />
               <InputComponent
@@ -101,20 +98,20 @@ export default function RegisterPage() {
 
               <Input
                 type={showPassword ? "text" : "password"}
+                name="clave"
                 placeholder="Ingrese contraseña"
                 value={clave}
                 onChange={handleChange}
                 icon={showPassword ? <FaEye /> : <FaEyeSlash />}
                 onMouseDown={handleMouseDown}
                 onMouseUp={handleMouseUp}
-                name="clave"
               />
 
               <AuthButton text="Registrate" />
             </form>
             <div className="flex gap-4">
               <p>¿Ya tienes una cuenta?</p>
-              <Link className="text-blue-500 underline" href={"/login"}>
+              <Link className="text-blue-500 underline" href="/login">
                 Inicia sesión
               </Link>
             </div>

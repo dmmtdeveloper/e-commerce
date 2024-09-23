@@ -1,19 +1,12 @@
+import { InputProps } from "@/types/types";
 import React from "react";
-
-interface InputProps {
-  type?: string;
-  placeholder?: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name:string
-}
 
 export const InputComponent: React.FC<InputProps> = ({
   type = "text",
   placeholder = "",
   value,
   onChange,
-  name
+  name,
 }) => {
   return (
     <div className="relative w-full">
