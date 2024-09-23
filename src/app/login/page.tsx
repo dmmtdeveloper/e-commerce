@@ -1,17 +1,18 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import MainLayout from "../layouts/MainLayout";
-import { login } from "../../utils/authHelpers";
-import Image from "next/image";
-import loginImage from "@/public/assets/img/Banner_login.jpg";
 import { AuthButton } from "@/components/buttons/AuthButton";
-import { Input } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Input } from "@/components/input/InputPassword";
 import { InputComponent } from "@/components/input/InputComponent";
-import Link from "next/link";
+import { login } from "../../utils/authHelpers";
 import { Title } from "@/components/title/Title";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import clsx from "clsx";
+import Image from "next/image";
+import Link from "next/link";
+import loginImage from "@/public/assets/img/Banner_login.jpg";
+import MainLayout from "../layouts/MainLayout";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
