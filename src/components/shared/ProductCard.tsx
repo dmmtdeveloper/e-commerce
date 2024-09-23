@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
-    <div className="border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer w-[25rem]">
+    <div className="border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
       <Image className="w-56 h-auto" width={300} height={500} src={notebook} alt="items" priority />
 
       <Link href={`/products/${product.productoId}`}>
