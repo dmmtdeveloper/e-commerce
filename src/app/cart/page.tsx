@@ -9,6 +9,8 @@ import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el m
 import { addPedido } from "@/utils/authHelpers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
+import axios from 'axios';
+
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
@@ -23,23 +25,34 @@ export default function CartPage() {
     const currentDate = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato "YYYY-MM-DD"
 
     const detallesPedido = items.map((item) => ({
-      pedidoDetalleId: 0, // Ajusta este valor según sea necesario
-      pedidoId: 0, // Ajusta este valor según sea necesario
-      productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
-      cantidad: item.quantity,
-      precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
+        pedidoDetalleId: 0, // Ajusta este valor según sea necesario
+        pedidoId: 0, // Ajusta este valor según sea necesario
+        productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
+        cantidad: item.quantity,
+        precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
     }));
 
-
     try {
-      await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
+        await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
 
-      // Redirige a la página de pedidos
-      router.push("/orders");
+        // Redirige a la página de pedidos
+        router.push("/orders");
     } catch (error) {
-      console.error("Error al crear el pedido:", error);
+        let errorMessage = "Error desconocido al crear el pedido.";
+
+        if (axios.isAxiosError(error)) {
+            // Acceder a la respuesta de Axios
+            errorMessage = error.response?.data?.message || error.message;
+        } else if (error instanceof Error) {
+            errorMessage = error.message;
+        }
+
+        alert("Error al crear el pedido: " + errorMessage);
+        console.error("Error al crear el pedido:", error);
     }
-  };
+};
+
+
 
   // Función para manejar la eliminación de un producto del carrito
   const handleRemove = (id: string) => {
