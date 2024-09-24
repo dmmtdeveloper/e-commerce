@@ -1,8 +1,8 @@
 "use client"
 import { useState, useEffect } from "react";
-import axios from "axios";
 import ProductCard from "@/components/shared/ProductCard";
 import { Product } from "@/types/product"; // Importar el tipo Product
+import axiosInstance from "@/utils/axiosInstance";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
@@ -11,8 +11,8 @@ export default function ProductsPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          "https://proyectosocius-hnfjbhheebgefpc7.eastus2-01.azurewebsites.net/api/Productos/habilitados",
+        const response = await axiosInstance.get(
+          "/api/Productos/habilitados",
           {
             headers: {
               accept: "text/plain",
@@ -32,7 +32,7 @@ export default function ProductsPage() {
 
   return (
     <section className="mt-32 mb-32">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4">
         {products.length > 0 ? (
           products.map((product) => (
             <ProductCard key={product.productoId} product={product} />

@@ -3,9 +3,18 @@ import { useState } from "react";
 import { Product } from "@/types/product";
 import useCartStore from "@/store/cartStore";
 import Modal from "@/components/Modal"; // Asegúrate de importar el componente Modal
+import Image from "next/image";
+import notebook from "@/public/assets/img/notebook.jpg";
 
 interface ProductCardProps {
   product: Product;
+}
+
+interface ModalProps {
+  product: Product;
+  onClose: () => void; // Función para cerrar el modal
+  onContinueShopping: () => void;
+  onGoToCart: () => void;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
@@ -23,6 +32,8 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+      <Image className="w-56 h-auto" width={300} height={500} src={notebook} alt="items" priority />
+
       <Link href={`/products/${product.productoId}`}>
         <h2 className="text-lg font-bold mt-2">{product.nombre}</h2>
       </Link>
@@ -38,12 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       </button>
 
       {/* Modal que aparece después de agregar al carrito */}
-      {isModalOpen && (
-        <Modal
-          product={product}
-          onClose={handleCloseModal}
-        />
-      )}
+      {isModalOpen && <Modal product={product} onClose={handleCloseModal} />}
     </div>
   );
 }
