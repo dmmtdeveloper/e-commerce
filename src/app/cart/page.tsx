@@ -6,11 +6,39 @@ import Link from "next/link";
 import MainLayout from "../layouts/MainLayout";
 import { FaPlus, FaMinus } from "react-icons/fa"; // Importar los íconos
 import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
+import { addPedido } from "@/utils/authHelpers";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
   const [itemToRemove, setItemToRemove] = useState<string | null>(null); // ID del producto a eliminar
+  const router = useRouter();
+  const { token } = useAuthStore(); // Obtener token de autenticación desde el store
+
+  const handlePedido = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const currentDate = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato "YYYY-MM-DD"
+
+    try {
+      await addPedido(0, token, 1, 1, currentDate, false, [
+        {
+          "pedidoDetalleId": 0,
+          "pedidoId": 0,
+          "productoId": 1,
+          "cantidad": 1,
+          "precioTotal": 200
+        }
+      ]);
+
+      // Redirige a la página de pedidos
+      router.push("/orders");
+    } catch (error) {
+      console.error("Error al crear el pedido:", error);
+    }
+  };
 
   // Función para manejar la eliminación de un producto del carrito
   const handleRemove = (id: string) => {
@@ -80,7 +108,9 @@ export default function CartPage() {
                 <h2 className="text-lg font-bold">{item.name}</h2>
                 <div className="flex items-center mt-2">
                   <button
-                    onClick={() => handleDecreaseQuantity(item.id, item.quantity)}
+                    onClick={() =>
+                      handleDecreaseQuantity(item.id, item.quantity)
+                    }
                     className="p-2 bg-gray-200 rounded"
                     aria-label="Decrease quantity"
                   >
@@ -88,7 +118,9 @@ export default function CartPage() {
                   </button>
                   <span className="mx-4 text-lg">{item.quantity}</span>
                   <button
-                    onClick={() => handleIncreaseQuantity(item.id, item.quantity)}
+                    onClick={() =>
+                      handleIncreaseQuantity(item.id, item.quantity)
+                    }
                     className="p-2 bg-gray-200 rounded"
                     aria-label="Increase quantity"
                   >
@@ -112,11 +144,12 @@ export default function CartPage() {
           >
             Vaciar carrito
           </button>
-          <Link href="/checkout">
-            <button className="bg-green-500 text-white py-2 px-4 rounded">
-              Proceder al pago
-            </button>
-          </Link>
+          <button
+            onClick={handlePedido}
+            className="bg-green-500 text-white py-2 px-4 rounded"
+          >
+            Crear pedido
+          </button>
         </div>
       </section>
 

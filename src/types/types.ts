@@ -18,3 +18,23 @@ export interface InputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
 }
+
+
+export interface DetallePedido {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  cantidad: number;
+  precioTotal: number;
+}
+
+export interface Pedido {
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+
+  detalles: DetallePedido[];
+}

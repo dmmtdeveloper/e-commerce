@@ -101,54 +101,58 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   return (
     <MainLayout>
       <section className="mt-32 p-4">
-        <h1 className="text-3xl font-bold">{product.nombre}</h1>
-        <p className="text-lg text-gray-600">{product.descripcion}</p>
-        <p className="text-xl font-semibold mt-4">Precio: ${product.precio}</p>
-        <p className="text-xl font-semibold mt-4">Stock: {product.stock}</p>
+        <div>
+          <h1 className="text-3xl font-bold">{product.nombre}</h1>
+          <p className="text-lg text-gray-600">{product.descripcion}</p>
+          <p className="text-xl font-semibold mt-4">
+            Precio: ${product.precio}
+          </p>
+          <p className="text-xl font-semibold mt-4">Stock: {product.stock}</p>
 
-        {/* Controles de cantidad o botón de agregar al carrito */}
-        <div className="flex items-center mt-4">
-          {quantity === 0 ? (
-            <button
-              onClick={handleAddToCart}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Agregar al carrito
-            </button>
-          ) : (
-            <>
+          {/* Controles de cantidad o botón de agregar al carrito */}
+          <div className="flex items-center mt-4">
+            {quantity === 0 ? (
               <button
-                onClick={handleDecreaseQuantity}
-                className="p-2 bg-gray-200 rounded"
-                aria-label="Decrease quantity"
+                onClick={handleAddToCart}
+                className="px-4 py-2 bg-blue-500 text-white rounded"
               >
-                <FaMinus />
+                Agregar al carrito
               </button>
-              <span className="mx-4 text-lg">{quantity}</span>
-              <button
-                onClick={handleIncreaseQuantity}
-                className="p-2 bg-gray-200 rounded"
-                aria-label="Increase quantity"
-              >
-                <FaPlus />
-              </button>
-            </>
+            ) : (
+              <>
+                <button
+                  onClick={handleDecreaseQuantity}
+                  className="p-2 bg-gray-200 rounded"
+                  aria-label="Decrease quantity"
+                >
+                  <FaMinus />
+                </button>
+                <span className="mx-4 text-lg">{quantity}</span>
+                <button
+                  onClick={handleIncreaseQuantity}
+                  className="p-2 bg-gray-200 rounded"
+                  aria-label="Increase quantity"
+                >
+                  <FaPlus />
+                </button>
+              </>
+            )}
+          </div>
+
+          {/* Mostrar modal cuando se agrega un producto */}
+          {showModal && product && (
+            <ModalProductId
+              product={{
+                nombre: product.nombre,
+                precio: product.precio,
+                quantity: quantity,
+              }}
+              onClose={() => setShowModal(false)}
+              onGoToCart={handleGoToCart}
+              onContinueShopping={handleContinueShopping}
+            />
           )}
         </div>
-
-        {/* Mostrar modal cuando se agrega un producto */}
-        {showModal && product && (
-          <ModalProductId
-            product={{
-              nombre: product.nombre,
-              precio: product.precio,
-              quantity: quantity,
-            }}
-            onClose={() => setShowModal(false)}
-            onGoToCart={handleGoToCart}
-            onContinueShopping={handleContinueShopping}
-          />
-        )}
       </section>
     </MainLayout>
   );

@@ -86,7 +86,7 @@ const Navbar = () => {
                   <Link href="/settings">Configuración</Link>
                 </li>
                 <li>
-                  <Link href="/orders">Mis Órdenes</Link>
+                  <Link href="/orders">Mis Pedidos</Link>
                 </li>
               </ul>
 
