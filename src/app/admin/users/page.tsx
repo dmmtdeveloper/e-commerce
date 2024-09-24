@@ -44,8 +44,9 @@ export default function UsersPage() {
   useEffect(() => {
     const { search, admin, habilitado } = filters;
     const filtered = usuarios.filter((usuario) => {
-      const matchesSearch = usuario.nombre.toLowerCase().includes(search.toLowerCase()) ||
-                             usuario.correo.toLowerCase().includes(search.toLowerCase());
+      const matchesSearch =
+        usuario.nombre.toLowerCase().includes(search.toLowerCase()) ||
+        usuario.correo.toLowerCase().includes(search.toLowerCase());
       const matchesAdmin = !admin || usuario.esAdmin;
       const matchesHabilitado = !habilitado || usuario.habilitado;
 
@@ -80,7 +81,9 @@ export default function UsersPage() {
     }
   };
 
-  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value, type, checked } = e.target as HTMLInputElement;
     setFilters((prevFilters) => ({
       ...prevFilters,
@@ -105,7 +108,10 @@ export default function UsersPage() {
         <section className="pt-8 p-4">
           {/* Botón para Crear Usuario */}
           <div className="mb-4 relative">
-            <Link href="/admin/users/create" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10">
+            <Link
+              href="/admin/users/create"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10"
+            >
               Crear Usuario
             </Link>
           </div>
@@ -118,7 +124,13 @@ export default function UsersPage() {
             >
               {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
             </button>
-            <div className={`transition-opacity duration-300 ${isPanelCollapsed ? "opacity-0 h-0 overflow-hidden" : "opacity-100"}`}>
+            <div
+              className={`transition-opacity duration-300 ${
+                isPanelCollapsed
+                  ? "opacity-0 h-0 overflow-hidden"
+                  : "opacity-100"
+              }`}
+            >
               <div className="flex flex-wrap gap-4">
                 <div className="flex flex-col flex-grow">
                   <label htmlFor="search">Buscar:</label>
@@ -160,8 +172,13 @@ export default function UsersPage() {
 
           {/* Tabla de Usuarios */}
           <div>
-            <h1 className="font-semibold text-4xl mb-4">Usuarios del Sistema</h1>
-            <p className="mb-4">A continuación se muestra la lista de usuarios registrados en el sistema:</p>
+            <h1 className="font-semibold text-4xl mb-4">
+              Usuarios del Sistema
+            </h1>
+            <p className="mb-4">
+              A continuación se muestra la lista de usuarios registrados en el
+              sistema:
+            </p>
 
             <table className="table-auto w-full border">
               <thead>
@@ -185,7 +202,11 @@ export default function UsersPage() {
                         type="checkbox"
                         checked={usuario.habilitado}
                         onChange={(e) =>
-                          handleCheckboxChange(usuario.usuarioId, "habilitado", e.target.checked)
+                          handleCheckboxChange(
+                            usuario.usuarioId,
+                            "habilitado",
+                            e.target.checked
+                          )
                         }
                         disabled={usuario.eliminado} // Desactiva si el registro está eliminado
                       />
@@ -195,7 +216,11 @@ export default function UsersPage() {
                         type="checkbox"
                         checked={usuario.eliminado}
                         onChange={(e) =>
-                          handleCheckboxChange(usuario.usuarioId, "eliminado", e.target.checked)
+                          handleCheckboxChange(
+                            usuario.usuarioId,
+                            "eliminado",
+                            e.target.checked
+                          )
                         }
                         disabled={usuario.eliminado} // Desactiva si el registro está eliminado
                       />
@@ -205,7 +230,11 @@ export default function UsersPage() {
                         type="checkbox"
                         checked={usuario.esAdmin}
                         onChange={(e) =>
-                          handleCheckboxChange(usuario.usuarioId, "esAdmin", e.target.checked)
+                          handleCheckboxChange(
+                            usuario.usuarioId,
+                            "esAdmin",
+                            e.target.checked
+                          )
                         }
                         disabled={usuario.eliminado} // Desactiva si el registro está eliminado
                       />
