@@ -22,16 +22,17 @@ export default function CartPage() {
 
     const currentDate = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato "YYYY-MM-DD"
 
+    const detallesPedido = items.map((item) => ({
+      pedidoDetalleId: 0, // Ajusta este valor según sea necesario
+      pedidoId: 0, // Ajusta este valor según sea necesario
+      productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
+      cantidad: item.quantity,
+      precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
+    }));
+
+
     try {
-      await addPedido(0, token, 1, 1, currentDate, false, [
-        {
-          "pedidoDetalleId": 0,
-          "pedidoId": 0,
-          "productoId": 1,
-          "cantidad": 1,
-          "precioTotal": 200
-        }
-      ]);
+      await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
 
       // Redirige a la página de pedidos
       router.push("/orders");
