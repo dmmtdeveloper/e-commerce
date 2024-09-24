@@ -137,7 +137,7 @@ export const UpdateEliminadoUsuario = async (usuarioId: number, eliminado: boole
 export const UpdateEsAdminUsuario = async (usuarioId: number, esAdmin: boolean): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
-      `/api/Usuario/update/esadmin/${usuarioId}/${esAdmin}`
+      `/api/Usuario/update/isadmin/${usuarioId}/${esAdmin}`
     );
 
     if (response.status === 204) {
