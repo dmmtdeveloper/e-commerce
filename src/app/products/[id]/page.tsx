@@ -29,7 +29,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
       if (data) {
         setProduct(data);
         const cartItem = items.find(
-          (item) => item.id === data.productoId.toString()
+          (item) => item.id === params.id
         );
         if (cartItem) {
           setQuantity(cartItem.quantity);

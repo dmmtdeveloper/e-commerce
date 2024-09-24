@@ -11,7 +11,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
       <div className="flex flex-col gap-10">
         {/* Admin section */}
         <div>
-          <h3 className="text-lg font-semibold">Admin</h3>
+          {/* <h3 className="text-lg font-semibold">Admin</h3> */}
           <div className="flex gap-10">
             <div className="flex flex-col items-center justify-center">
               <Link href={"/admin/products"} className="cursor-pointer text-xl">

@@ -98,11 +98,11 @@ export default function UsersPage() {
 
   return (
     <MainLayout>
-      <div className="relative">
+      <div className="relative mt-20">
         {/* Navbar */}
-        <NavAdmin className="fixed top-0 left-0 w-full z-50 bg-white shadow-md" />
+        <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
 
-        <section className="pt-16 p-4 mt-16">
+        <section className="pt-8 p-4">
           {/* Botón para Crear Usuario */}
           <div className="mb-4 relative">
             <Link href="/admin/users/create" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10">
