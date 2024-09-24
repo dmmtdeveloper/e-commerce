@@ -1,7 +1,40 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import axiosInstance from "./axiosInstance"; // Importa tu instancia de axios
 import jwt from "jsonwebtoken";
-import axios from 'axios';
+import axios from "axios";
+import { DetallePedido } from "@/types/types";
+
+export const addPedido = async (
+  pedidoId: number,
+  token: string,
+  estadoId: number,
+  valorTotal: number,
+  fecha: string,
+  eliminado: boolean,
+  detalles: DetallePedido[]
+) => {
+  try {
+    const response = await axiosInstance.post("/api/Pedido", {
+      pedidoId: 0,
+      token,
+      estadoId: 1,
+      valorTotal,
+      fecha,
+      eliminado: false,
+      detalles,
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error en la solicitud de pedido:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+
 
 export const register = async (
   nombre: string,
@@ -40,7 +73,6 @@ export interface Usuario {
   habilitado: boolean;
 }
 
-
 export const GetUsuarios = async (): Promise<Usuario[]> => {
   try {
     const response = await axiosInstance.get<Usuario[]>("/api/usuario");
@@ -65,7 +97,10 @@ export const GetUsuarioByToken = async (token: string): Promise<Usuario> => {
 };
 
 //metodo put para actualizar nombre
-export const UpdateNombreUsuario = async (usuarioId: number, nombre: string): Promise<void> => {
+export const UpdateNombreUsuario = async (
+  usuarioId: number,
+  nombre: string
+): Promise<void> => {
   try {
     // Enviamos la solicitud PUT
     const response = await axiosInstance.put<void>(
@@ -81,12 +116,14 @@ export const UpdateNombreUsuario = async (usuarioId: number, nombre: string): Pr
       throw new Error("Respuesta inesperada del servidor.");
     }
   } catch (error) {
-
     handleError(error);
   }
 };
 
-export const UpdateClaveUsuario = async (usuarioId: number, clave: string): Promise<void> => {
+export const UpdateClaveUsuario = async (
+  usuarioId: number,
+  clave: string
+): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/password/${usuarioId}/${clave}`
@@ -102,7 +139,10 @@ export const UpdateClaveUsuario = async (usuarioId: number, clave: string): Prom
   }
 };
 
-export const UpdateHabilitadoUsuario = async (usuarioId: number, habilitado: boolean): Promise<void> => {
+export const UpdateHabilitadoUsuario = async (
+  usuarioId: number,
+  habilitado: boolean
+): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/enabled/${usuarioId}/${habilitado}`
@@ -118,7 +158,10 @@ export const UpdateHabilitadoUsuario = async (usuarioId: number, habilitado: boo
   }
 };
 
-export const UpdateEliminadoUsuario = async (usuarioId: number, eliminado: boolean): Promise<void> => {
+export const UpdateEliminadoUsuario = async (
+  usuarioId: number,
+  eliminado: boolean
+): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/deleted/${usuarioId}/${eliminado}`
@@ -134,7 +177,10 @@ export const UpdateEliminadoUsuario = async (usuarioId: number, eliminado: boole
   }
 };
 
-export const UpdateEsAdminUsuario = async (usuarioId: number, esAdmin: boolean): Promise<void> => {
+export const UpdateEsAdminUsuario = async (
+  usuarioId: number,
+  esAdmin: boolean
+): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/isadmin/${usuarioId}/${esAdmin}`
@@ -164,7 +210,6 @@ const handleError = (error: any) => {
     throw new Error("Error desconocido.");
   }
 };
-
 
 interface LoginData {
   email: string;

@@ -22,17 +22,28 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false); // Estado para controlar el modal
 
   // Función para manejar agregar al carrito
-const handleAddToCart = () => {
-  addItem({ id: product.productoId.toString(), name: product.nombre, quantity: 1 });
-  setIsModalOpen(true); // Abrir el modal después de agregar al carrito
-};
+  const handleAddToCart = () => {
+    addItem({
+      id: product.productoId.toString(),
+      name: product.nombre,
+      quantity: 1,
+    });
+    setIsModalOpen(true); // Abrir el modal después de agregar al carrito
+  };
 
   // Función para cerrar el modal
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <div className="border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-      <Image className="w-56 h-auto" width={300} height={500} src={notebook} alt="items" priority />
+      <Image
+        className="w-56 h-auto"
+        width={300}
+        height={500}
+        src={notebook}
+        alt="items"
+        priority
+      />
 
       <Link href={`/products/${product.productoId}`}>
         <h2 className="text-lg font-bold mt-2">{product.nombre}</h2>
