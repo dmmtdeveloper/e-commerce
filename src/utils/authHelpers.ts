@@ -2,7 +2,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import axiosInstance from "./axiosInstance"; // Importa tu instancia de axios
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import { DetallePedido } from "@/types/types";
+import { DetallePedido, Pedido } from "@/types/types";
 
 export const addPedido = async (
   pedidoId: number,
@@ -79,6 +79,19 @@ export const GetUsuarios = async (): Promise<Usuario[]> => {
     return response.data; // Retorna la lista de usuarios
   } catch (error) {
     console.error("Error obteniendo la lista de usuarios:", error);
+    throw error;
+  }
+};
+
+// Función para obtener el Pedidos basados en el token
+export const GetPedidosByToken = async (token: string): Promise<Pedido[]> => {
+  try {
+    const response = await axiosInstance.get<Pedido[]>(
+      `/api/Pedido/ByToken/${token}`
+    );
+    return response.data; // El tipo será automáticamente Usuario
+  } catch (error) {
+    console.error("Error obteniendo el pedido:", error);
     throw error;
   }
 };
