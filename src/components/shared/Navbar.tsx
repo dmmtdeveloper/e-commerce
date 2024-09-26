@@ -12,6 +12,9 @@ import Image from "next/image";
 import userImg from "@/public/assets/img/user.png";
 import { FaBagShopping } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
+import { MdOutlineShoppingCart } from "react-icons/md";
+import { GiHamburgerMenu } from "react-icons/gi"; // Icono hamburguesa
+import { FiLogIn } from "react-icons/fi";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -51,48 +54,60 @@ const Navbar: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="fixed w-full flex justify-between items-center p-4 bg-gray-800 text-white z-[99999]">
-      <Link href="/" className="text-2xl font-bold">
+    <nav className="fixed w-full flex justify-between items-center py-6 bg-blue-900 text-white z-[99999] 2xl:px-16 px-4">
+      <Link href="/" className="text-1xl font-bold">
         e-commerce
       </Link>
 
-      <section className="flex gap-4 items-center">
-        {!isAuthenticated && (
+      <section className="flex gap-8 items-center">
+        <div className="flex gap-4">
           <>
-            <Link href="/register">Register</Link>
-            <Link href="/login">Login</Link>
+            {!isAuthenticated && (
+              <>
+                <Link href="/register">Registro</Link>
+                <Link href="/login">Login</Link>
+              </>
+            )}
           </>
-        )}
 
-        <Link href="/cart" className="relative">
-          <FaShoppingCart />
-          {totalItemsInCart > 0 && (
-            <span className="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full px-2 py-1">
-              {totalItemsInCart}
-            </span>
-          )}
-        </Link>
-        <Link href="/">
-          <FaHome />
-        </Link>
+          <Link href="/cart" className="relative">
+            <MdOutlineShoppingCart className="text-2xl" />
+            {totalItemsInCart > 0 && (
+              <span className="absolute bottom-2 left-4 bg-red-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
+                {totalItemsInCart}
+              </span>
+            )}
+          </Link>
+        </div>
 
         {/* Modal de usuario */}
         <div className="relative" ref={menuRef}>
-          <span
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="cursor-pointer"
-          >
-            {name || email}
-          </span>
+          {isAuthenticated && ( // Solo mostrar el nombre y el menú hamburguesa si el usuario está autenticado
+            <>
+              <span
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="cursor-pointer hidden md:block" // Mostrar solo en desktop
+              >
+                {name || email}
+              </span>
+
+              <span
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="cursor-pointer md:hidden" // Mostrar solo en móvil
+              >
+                <GiHamburgerMenu className="text-2xl" />
+              </span>
+            </>
+          )}
 
           {/* Modal con transición */}
           <div
-            className={`absolute right-0 mt-2 bg-white text-black p-4 shadow-lg w-72 rounded-3xl transform transition-transform duration-300 ease-in-out ${
+            className={`absolute right-0 mt-2 bg-slate-100 text-black p-4 shadow-xl w-72 rounded-3xl transform transition-transform duration-300 ease-in-out ${
               menuOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
             }`}
           >
             <div className="p-4">
-              <article className="flex justify-between items-center bg-slate-300 p-6 rounded-3xl shadow-sm">
+              <article className="flex justify-center items-center bg-slate-300 p-6 rounded-3xl shadow-sm">
                 <div className="flex flex-col items-center justify-center gap-2">
                   <Image
                     width={50}
@@ -103,6 +118,13 @@ const Navbar: React.FC = () => {
                   />
                   <p>{name}</p>
                   <p>{email}</p>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-black hover:text-red-500 transition-all bg-slate-200 p-2 rounded-xl"
+                  >
+                    <BiArrowToRight className="text-2xl" />
+                    Cerrar sesión
+                  </button>
                 </div>
               </article>
               <h3 className="text-xl font-semibold mb-4 mt-4">Menú</h3>
@@ -139,13 +161,6 @@ const Navbar: React.FC = () => {
                         <Link href="/admin/orders">Pedidos</Link>
                       </li>
                     </ul>
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-4 text-black hover:text-red-500 transition-all hover:bg-slate-200 p-2 rounded-xl"
-                    >
-                      <BiArrowToRight className="text-2xl" />
-                      Cerrar sesión
-                    </button>
                   </div>
                 </article>
               )}
