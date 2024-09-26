@@ -12,6 +12,7 @@
     "@types/jsonwebtoken": "^9.0.6",
     "axios": "^1.7.7",
     "clsx": "^2.1.1",
+    "e-commerce": "file:",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
     "next": "14.2.7",
