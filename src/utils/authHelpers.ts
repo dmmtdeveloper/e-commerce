@@ -260,6 +260,46 @@ export const UpdateClaveUsuario = async (
   }
 };
 
+//producto
+export const UpdateHabilitadoProducto = async (
+  productoId: number,
+  habilitado: boolean
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/enabled/${productoId}/${habilitado}`
+    );
+
+    if (response.status === 204) {
+      console.log("Estado de habilitado actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const UpdateEliminadoProducto = async (
+  productoId: number,
+  eliminado: boolean
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/deleted/${productoId}/${eliminado}`
+    );
+
+    if (response.status === 204) {
+      console.log("Estado de eliminado actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+//producto
+
 export const UpdateHabilitadoUsuario = async (
   usuarioId: number,
   habilitado: boolean
