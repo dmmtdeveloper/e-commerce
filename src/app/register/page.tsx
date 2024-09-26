@@ -47,7 +47,7 @@ export default function RegisterPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await register(correo, clave, nombre);
+      await register(nombre, correo, clave);
       alert("Usuario registrado con éxito");
       router.push("/login"); // Redirige a la página de login
     } catch (error) {

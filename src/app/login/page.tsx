@@ -35,7 +35,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const data = await login({ email, password });
+      await login({ email, password });
 
       alert("Login exitoso");
       // loginStore(email, data.token); // Inicia sesión en el store
@@ -69,6 +69,7 @@ export default function LoginPage() {
         <article className="2xl:w-[44rem] mt-40 2xl:mt-0 w-[20rem]">
           <div className="flex flex-col shadow-md gap-10 bg-slate-100 2xl:px-20 py-20 rounded-3xl px-4">
             <Title text="Iniciar Sesión" />
+
             <form onSubmit={handleLogin} className="flex flex-col gap-4">
               <InputComponent
                 type="email"
