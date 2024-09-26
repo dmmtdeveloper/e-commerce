@@ -26,6 +26,14 @@ export default function UsersPage() {
 
   // Estado para manejar el colapso del panel
   const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(true);
+  
+  // Estado para el modal
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [currentAction, setCurrentAction] = useState<{
+    usuarioId: number;
+    field: "habilitado" | "eliminado" | "esAdmin";
+    value: boolean;
+  } | null>(null);
 
   useEffect(() => {
     GetUsuarios()
@@ -55,11 +63,25 @@ export default function UsersPage() {
     setFilteredUsuarios(filtered);
   }, [filters, usuarios]);
 
-  const handleCheckboxChange = async (
-    usuarioId: number,
-    field: "habilitado" | "eliminado" | "esAdmin",
-    value: boolean
+  const handleCheckboxChange = (usuarioId: number, field: "habilitado" | "eliminado" | "esAdmin", value: boolean) => {
+    setCurrentAction({ usuarioId, field, value });
+    setIsModalOpen(true);
+  };
+
+  const handleFilterChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
+    const { name, value, type, checked } = e.target as HTMLInputElement;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleConfirm = async () => {
+    if (!currentAction) return;
+    const { usuarioId, field, value } = currentAction;
+
     try {
       if (field === "habilitado") {
         await UpdateHabilitadoUsuario(usuarioId, value);
@@ -79,16 +101,35 @@ export default function UsersPage() {
     } catch (error) {
       console.error(`Error actualizando ${field}:`, error);
     }
+
+    setIsModalOpen(false);
+    setCurrentAction(null);
   };
 
-  const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  const handleCancel = () => {
+    setIsModalOpen(false);
+    setCurrentAction(null);
+  };
+
+  const ConfirmationModal = () => {
+    if (!currentAction) return null;
+
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50">
+        <div className="bg-white p-4 rounded shadow-md">
+          <h2 className="text-lg font-semibold">Confirmación</h2>
+          <p>¿Estás seguro de que deseas cambiar este valor?</p>
+          <div className="mt-4">
+            <button onClick={handleConfirm} className="bg-blue-500 text-white py-2 px-4 rounded mr-2">
+              Confirmar
+            </button>
+            <button onClick={handleCancel} className="bg-gray-300 py-2 px-4 rounded">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -131,120 +172,95 @@ export default function UsersPage() {
                   : "opacity-100"
               }`}
             >
-              <div className="flex flex-wrap gap-4">
-                <div className="flex flex-col flex-grow">
-                  <label htmlFor="search">Buscar:</label>
+              <div className="mb-4">
+                <input
+                  type="text"
+                  name="search"
+                  placeholder="Buscar"
+                  value={filters.search}
+                  onChange={handleFilterChange}
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+              <div className="flex space-x-4">
+                <label>
                   <input
-                    id="search"
-                    name="search"
-                    type="text"
-                    value={filters.search}
-                    onChange={handleFilterChange}
-                    className="border p-2 rounded"
-                    placeholder="Nombre o Correo"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <input
-                    id="admin"
-                    name="admin"
                     type="checkbox"
+                    name="admin"
                     checked={filters.admin}
                     onChange={handleFilterChange}
-                    className="mr-2"
                   />
-                  <label htmlFor="admin">Mostrar solo administradores</label>
-                </div>
-                <div className="flex items-center gap-2">
+                  Admin
+                </label>
+                <label>
                   <input
-                    id="habilitado"
-                    name="habilitado"
                     type="checkbox"
+                    name="habilitado"
                     checked={filters.habilitado}
                     onChange={handleFilterChange}
-                    className="mr-2"
                   />
-                  <label htmlFor="habilitado">Mostrar solo habilitados</label>
-                </div>
+                  Habilitado
+                </label>
               </div>
             </div>
           </div>
 
           {/* Tabla de Usuarios */}
-          <div>
-            <h1 className="font-semibold text-4xl mb-4">
-              Usuarios del Sistema
-            </h1>
-            <p className="mb-4">
-              A continuación se muestra la lista de usuarios registrados en el
-              sistema:
-            </p>
-
-            <table className="table-auto w-full border">
-              <thead>
-                <tr>
-                  <th className="border p-2">Usuario ID</th>
-                  <th className="border p-2">Nombre</th>
-                  <th className="border p-2">Correo</th>
-                  <th className="border p-2">Habilitado</th>
-                  <th className="border p-2">Eliminado</th>
-                  <th className="border p-2">Admin</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredUsuarios.map((usuario) => (
-                  <tr key={usuario.usuarioId}>
-                    <td className="border p-2">{usuario.usuarioId}</td>
-                    <td className="border p-2">{usuario.nombre}</td>
-                    <td className="border p-2">{usuario.correo}</td>
-                    <td className="border p-2">
-                      <input
-                        type="checkbox"
-                        checked={usuario.habilitado}
-                        onChange={(e) =>
-                          handleCheckboxChange(
-                            usuario.usuarioId,
-                            "habilitado",
-                            e.target.checked
-                          )
-                        }
-                        disabled={usuario.eliminado} // Desactiva si el registro está eliminado
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="checkbox"
-                        checked={usuario.eliminado}
-                        onChange={(e) =>
-                          handleCheckboxChange(
-                            usuario.usuarioId,
-                            "eliminado",
-                            e.target.checked
-                          )
-                        }
-                        disabled={usuario.eliminado} // Desactiva si el registro está eliminado
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="checkbox"
-                        checked={usuario.esAdmin}
-                        onChange={(e) =>
-                          handleCheckboxChange(
-                            usuario.usuarioId,
-                            "esAdmin",
-                            e.target.checked
-                          )
-                        }
-                        disabled={usuario.eliminado} // Desactiva si el registro está eliminado
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <table className="min-w-full bg-white border border-gray-300">
+            <thead>
+              <tr>
+                <th className="border-b p-2">Nombre</th>
+                <th className="border-b p-2">Correo</th>
+                <th className="border-b p-2">Admin</th>
+                <th className="border-b p-2">Habilitado</th>
+                <th className="border-b p-2">Eliminado</th>
+              </tr>
+            </thead>
+            <tbody>
+  {filteredUsuarios.map((usuario) => (
+    <tr key={usuario.usuarioId}>
+      <td className="border-b p-2">{usuario.nombre}</td>
+      <td className="border-b p-2">{usuario.correo}</td>
+      <td className="border-b p-2">
+        <input
+          type="checkbox"
+          checked={usuario.esAdmin}
+          onChange={() =>
+            !usuario.eliminado && 
+            handleCheckboxChange(usuario.usuarioId, "esAdmin", !usuario.esAdmin)
+          }
+          disabled={usuario.eliminado} // Deshabilitar si está eliminado
+        />
+      </td>
+      <td className="border-b p-2">
+        <input
+          type="checkbox"
+          checked={usuario.habilitado}
+          onChange={() =>
+            !usuario.eliminado && 
+            handleCheckboxChange(usuario.usuarioId, "habilitado", !usuario.habilitado)
+          }
+          disabled={usuario.eliminado} // Deshabilitar si está eliminado
+        />
+      </td>
+      <td className="border-b p-2">
+        <input
+          type="checkbox"
+          checked={usuario.eliminado}
+          onChange={() =>
+            handleCheckboxChange(usuario.usuarioId, "eliminado", !usuario.eliminado)
+          }
+          disabled={usuario.eliminado} // Se deshabilita si el usuario está eliminado
+        />
+      </td>
+    </tr>
+  ))}
+</tbody>
+          </table>
         </section>
+
+        {/* Renderizar el modal */}
+        {isModalOpen && <ConfirmationModal />}
       </div>
     </MainLayout>
   );
