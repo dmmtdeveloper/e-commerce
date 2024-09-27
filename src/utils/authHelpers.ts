@@ -92,7 +92,9 @@ export const AddProducto = async (
   stockReservado: number,
   habilitado: boolean,
   eliminado: boolean,
-  foto: string
+  foto: string,
+  nombreFoto: string,
+  extension: string
 ) => {
   try {
     const response = await axiosInstance.post("/Api/Productos", {
@@ -105,6 +107,9 @@ export const AddProducto = async (
       habilitado: true,
       eliminado: false,
       foto,
+      nombreFoto,
+      extension
+
     });
 
     return response.data;
@@ -162,7 +167,9 @@ export const UpdateProductoAll = async (producto: Product): Promise<void> => {
         Precio: producto.precio,
         Habilitado: producto.habilitado,
         Eliminado: producto.eliminado,
-        Foto: ""
+        Foto: producto.foto ?? "",
+        NombreFoto: producto.nombreFoto ?? "",
+        Extension: producto.extension ?? ""
       }
     );
 
@@ -272,6 +279,25 @@ export const UpdateHabilitadoProducto = async (
 
     if (response.status === 204) {
       console.log("Estado de habilitado actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+//producto
+export const UpdateLimpiaFotoProducto = async (
+  productoId: number
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/cleanfoto/${productoId}`
+    );
+
+    if (response.status === 204) {
+      console.log("Foto de producto actualizada.");
     } else {
       throw new Error("Respuesta inesperada del servidor.");
     }

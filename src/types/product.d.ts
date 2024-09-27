@@ -8,4 +8,6 @@ export interface Product {
   habilitado: boolean;
   eliminado: boolean;
   foto:string;
+  nombreFoto:string;
+  extension:string;
 }
