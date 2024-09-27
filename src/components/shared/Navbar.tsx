@@ -21,6 +21,7 @@ const Navbar: React.FC = () => {
   const { email, name, isAuthenticated, logout, isAdmin } = useAuthStore();
   const { items } = useCartStore();
   const router = useRouter();
+
   const menuRef = useRef<HTMLDivElement | null>(
     null
   ) as MutableRefObject<HTMLDivElement | null>;
@@ -61,13 +62,12 @@ const Navbar: React.FC = () => {
 
       <section className="flex gap-8 items-center">
         <div className="flex gap-4">
-          <>
-            {!isAuthenticated && (
-              <>
-                <Link href="/register">Registro</Link>
-                <Link href="/login">Login</Link>
-              </>
-            )}
+          <>{!isAuthenticated && (
+            <>
+              <Link href="/register" className="hover:underline">Registro</Link>
+              <Link href="/login" className="hover:underline">Login</Link>
+            </>
+          )}
           </>
 
           <Link href="/cart" className="relative">
