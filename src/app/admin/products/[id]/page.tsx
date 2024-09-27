@@ -112,8 +112,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
           errorMessage = error.message;
         }
 
-        alert("Error al actualizar el producto: " + errorMessage);
-        console.error("Error al actualizar el producto:", error);
+        alert(errorMessage);
       }
     }
   };
