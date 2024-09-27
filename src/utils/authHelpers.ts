@@ -3,6 +3,7 @@ import axiosInstance from "./axiosInstance"; // Importa tu instancia de axios
 import jwt from "jsonwebtoken";
 import axios from "axios";
 import { DetallePedido, Pedido } from "@/types/types";
+import { Product } from "@/types/product";
 
 export const addPedido = async (
   pedidoId: number,
@@ -83,6 +84,107 @@ export const GetUsuarios = async (): Promise<Usuario[]> => {
   }
 };
 
+export const AddProducto = async (
+  nombre: string,
+  descripcion: string,
+  precio: number,
+  stock: number,
+  stockReservado: number,
+  habilitado: boolean,
+  eliminado: boolean,
+  foto: string,
+  nombreFoto: string,
+  extension: string
+) => {
+  try {
+    const response = await axiosInstance.post("/Api/Productos", {
+      productoId: 0, // Esto se asume que se autogenera en el backend
+      nombre,
+      descripcion,
+      precio,
+      stock,
+      stockReservado: 0,
+      habilitado: true,
+      eliminado: false,
+      foto,
+      nombreFoto,
+      extension
+
+    });
+
+    return response.data;
+  } catch (error: any) {
+    console.error(
+      "Error en la solicitud de agregar producto:",
+      error.response?.data || error.message
+    );
+    throw error;
+  }
+};
+
+export const GetProductosHabilitados = async (): Promise<Product[]> => {
+  try {
+    const response = await axiosInstance.get<Product[]>("/api/Productos/habilitados");
+    return response.data; // Retorna la lista de productos habilitados
+  } catch (error) {
+    console.error("Error obteniendo la lista de productos:", error);
+    throw error;
+  }
+};
+
+export const GetProductos = async (): Promise<Product[]> => {
+  try {
+    const response = await axiosInstance.get<Product[]>("/api/Productos");
+    return response.data; // Retorna la lista de productos habilitados
+  } catch (error) {
+    console.error("Error obteniendo la lista de productos:", error);
+    throw error;
+  }
+};
+
+export const GetProductoById = async (id: number): Promise<Product> => {
+  try {
+    const response = await axiosInstance.get<Product>(
+      `/api/Productos/${id}`
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error obteniendo el producto:", error);
+    throw error;
+  }
+};
+
+export const UpdateProductoAll = async (producto: Product): Promise<void> => {
+  try {
+    
+    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
+      `/api/Productos/update/all`, // Cambia a POST y elimina el ID del URL
+      {
+        ProductoId: producto.productoId, // Incluye el ID del producto en el cuerpo
+        Nombre: producto.nombre,
+        Descripcion: producto.descripcion,
+        Stock: producto.stock,
+        Precio: producto.precio,
+        Habilitado: producto.habilitado,
+        Eliminado: producto.eliminado,
+        Foto: producto.foto ?? "",
+        NombreFoto: producto.nombreFoto ?? "",
+        Extension: producto.extension ?? ""
+      }
+    );
+
+    // Verifica si la respuesta es exitosa
+    if (response.data.isSuccess) {
+      console.log("Producto actualizado con éxito.");
+    } else {
+      console.error(response.data.Message); // Captura el mensaje personalizado de error
+      throw new Error(response.data.Message); // Lanza un error con el mensaje personalizado
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
 // Función para obtener el Pedidos basados en el token
 export const GetPedidosByToken = async (token: string): Promise<Pedido[]> => {
   try {
@@ -91,7 +193,20 @@ export const GetPedidosByToken = async (token: string): Promise<Pedido[]> => {
     );
     return response.data; // El tipo será automáticamente Usuario
   } catch (error) {
-    console.error("Error obteniendo el pedido:", error);
+    console.error("Error obteniendo los pedidos:", error);
+    throw error;
+  }
+};
+
+// Función para obtener el Pedidos basados en el token
+export const GetPedidos = async (): Promise<Pedido[]> => {
+  try {
+    const response = await axiosInstance.get<Pedido[]>(
+      `/api/Pedido/`
+    );
+    return response.data; // El tipo será automáticamente Usuario
+  } catch (error) {
+    console.error("Error obteniendo los pedidos:", error);
     throw error;
   }
 };
@@ -151,6 +266,65 @@ export const UpdateClaveUsuario = async (
     handleError(error);
   }
 };
+
+//producto
+export const UpdateHabilitadoProducto = async (
+  productoId: number,
+  habilitado: boolean
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/enabled/${productoId}/${habilitado}`
+    );
+
+    if (response.status === 204) {
+      console.log("Estado de habilitado actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+//producto
+export const UpdateLimpiaFotoProducto = async (
+  productoId: number
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/cleanfoto/${productoId}`
+    );
+
+    if (response.status === 204) {
+      console.log("Foto de producto actualizada.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const UpdateEliminadoProducto = async (
+  productoId: number,
+  eliminado: boolean
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/productos/update/deleted/${productoId}/${eliminado}`
+    );
+
+    if (response.status === 204) {
+      console.log("Estado de eliminado actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+//producto
 
 export const UpdateHabilitadoUsuario = async (
   usuarioId: number,

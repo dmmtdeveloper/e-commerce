@@ -6,15 +6,17 @@ import Link from "next/link";
 import MainLayout from "../layouts/MainLayout";
 import { FaPlus, FaMinus } from "react-icons/fa"; // Importar los íconos
 import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
+import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
 import { addPedido } from "@/utils/authHelpers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
-import axios from 'axios';
-
+import axios from "axios";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
-  const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal
+  const [showRemoveModal, setShowRemoveModal] = useState(false); // Estado para mostrar el modal de eliminar
+  const [showClearModal, setShowClearModal] = useState(false); // Estado para mostrar el modal de vaciar
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // Estado para mostrar el modal de éxito
   const [itemToRemove, setItemToRemove] = useState<string | null>(null); // ID del producto a eliminar
   const router = useRouter();
   const { token } = useAuthStore(); // Obtener token de autenticación desde el store
@@ -25,53 +27,48 @@ export default function CartPage() {
     const currentDate = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato "YYYY-MM-DD"
 
     const detallesPedido = items.map((item) => ({
-        pedidoDetalleId: 0, // Ajusta este valor según sea necesario
-        pedidoId: 0, // Ajusta este valor según sea necesario
-        productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
-        cantidad: item.quantity,
-        precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
+      pedidoDetalleId: 0, // Ajusta este valor según sea necesario
+      pedidoId: 0, // Ajusta este valor según sea necesario
+      productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
+      cantidad: item.quantity,
+      precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
     }));
 
     try {
-        await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
-
-        // Redirige a la página de pedidos
-        router.push("/orders");
+      await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
+      alert("Pedido Realizad con exito")
+      // setShowSuccessModal(true); // Muestra el modal de éxito
+      clearCart(); // Limpia el carrito después de crear el pedido
     } catch (error) {
-        let errorMessage = "Error desconocido al crear el pedido.";
-
-        if (axios.isAxiosError(error)) {
-            // Acceder a la respuesta de Axios
-            errorMessage = error.response?.data?.message || error.message;
-        } else if (error instanceof Error) {
-            errorMessage = error.message;
-        }
-
-        alert("Error al crear el pedido: " + errorMessage);
-        console.error("Error al crear el pedido:", error);
+      let errorMessage = "Error desconocido al crear el pedido.";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      alert("Error al crear el pedido: " + errorMessage);
+      console.error("Error al crear el pedido:", error);
     }
-};
-
-
+  };
 
   // Función para manejar la eliminación de un producto del carrito
   const handleRemove = (id: string) => {
     setItemToRemove(id);
-    setShowModal(true);
+    setShowRemoveModal(true);
   };
 
   // Función para confirmar la eliminación
   const confirmRemove = () => {
     if (itemToRemove) {
       removeItem(itemToRemove);
-      setShowModal(false);
+      setShowRemoveModal(false);
       setItemToRemove(null);
     }
   };
 
   // Función para cancelar la eliminación
   const cancelRemove = () => {
-    setShowModal(false);
+    setShowRemoveModal(false);
     setItemToRemove(null);
   };
 
@@ -89,7 +86,18 @@ export default function CartPage() {
 
   // Función para vaciar el carrito
   const handleClearCart = () => {
+    setShowClearModal(true); // Muestra el modal de confirmación
+  };
+
+  // Función para confirmar vaciar el carrito
+  const confirmClearCart = () => {
     clearCart();
+    setShowClearModal(false); // Cierra el modal
+  };
+
+  // Función para cancelar el vaciado del carrito
+  const cancelClearCart = () => {
+    setShowClearModal(false); // Cierra el modal
   };
 
   // Si no hay productos en el carrito
@@ -167,11 +175,27 @@ export default function CartPage() {
         </div>
       </section>
 
-      {/* Modal de confirmación */}
+      {/* Modal de confirmación para eliminar producto */}
       <ConfirmationModal
-        isOpen={showModal}
+        isOpen={showRemoveModal}
         onConfirm={confirmRemove}
         onCancel={cancelRemove}
+        message="¿Estás seguro de que deseas eliminar este producto del carrito?"
+      />
+
+      {/* Modal de confirmación para vaciar el carrito */}
+      <ConfirmationModal
+        isOpen={showClearModal}
+        onConfirm={confirmClearCart}
+        onCancel={cancelClearCart}
+        message="¿Estás seguro de que deseas vaciar el carrito?"
+      />
+
+      {/* Modal de éxito al crear pedido */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)} // Cierra el modal
+        message="¡Pedido realizado con éxito!"
       />
     </MainLayout>
   );

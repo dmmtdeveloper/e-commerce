@@ -10,7 +10,6 @@ export default function MainLayout({
   return (
     <main className="flex flex-col relative min-h-screen">
       <Navbar />
-
       {children}
       <Footer />
     </main>

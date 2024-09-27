@@ -3,5 +3,11 @@ export interface Product {
   nombre: string;
   descripcion: string;
   precio: number;
-  stock: 100;
+  stock: number;
+  stockReservado: number;
+  habilitado: boolean;
+  eliminado: boolean;
+  foto:string;
+  nombreFoto:string;
+  extension:string;
 }
