@@ -3,12 +3,14 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/shared/ProductCard";
 import { Product } from "@/types/product"; // Importar el tipo Product
 import axiosInstance from "@/utils/axiosInstance";
+import { GoChevronLeft } from "react-icons/go";
+import { GoChevronRight } from "react-icons/go";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
-  const [itemsPerPage, setItemsPerPage] = useState(5); // Estado para la cantidad de productos por página
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Estado para la cantidad de productos por página
 
   // Consumir la API al cargar el componente
   useEffect(() => {
@@ -61,18 +63,6 @@ export default function ProductsPage() {
           onChange={(e) => setSearchTerm(e.target.value)} // Actualizar el estado del término de búsqueda
         />
 
-        <select
-          className="border p-2 rounded mb-4"
-          value={itemsPerPage}
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
-            setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
-          }}
-        >
-          <option value={2}>2</option>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-        </select>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4">
@@ -86,28 +76,39 @@ export default function ProductsPage() {
       </div>
 
       {/* Controles de paginación */}
-      <div className="flex justify-between mt-4">
+      <div className="flex items-center justify-center gap-5 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
           disabled={currentPage === 1}
-          className="border p-2 rounded"
-        >
-          Anterior
+          
+        > 
+        <GoChevronLeft className="text-2xl"/>
         </button>
 
-        <span>
-          Página {currentPage} de {totalPages}
-        </span>
+        <span>Página {currentPage} de {totalPages}</span>
 
         <button
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           } // Ir a la página siguiente
           disabled={currentPage === totalPages}
-          className="border p-2 rounded"
-        >
-          Siguiente
+          
+          >
+          <GoChevronRight className="text-2xl"/>
         </button>
+
+        <select
+          className="border p-2 rounded"
+          value={itemsPerPage}
+          onChange={(e) => {
+            setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
+            setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
+          }}
+        >
+          <option value={10}>10</option>
+          <option value={5}>5</option>
+          <option value={2}>2</option>
+        </select>
       </div>
     </section>
   );

@@ -35,26 +35,30 @@ export default function ProductCard({ product }: ProductCardProps) {
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
-    <div className="border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
-      <Image
-        className="w-56 h-auto"
-        width={300}
-        height={500}
-        src={product.foto ? `data:image/${product.extension};base64,${product.foto}`  : notebook}
-        alt="items"
-        priority
-      />
-
+    <div className=" flex flex-col justify-between border p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
       <Link href={`/products/${product.productoId}`}>
-        <h2 className="text-lg font-bold mt-2">{product.nombre}</h2>
+        <Image
+          className="w-56 h-auto"
+          width={300}
+          height={500}
+          src={
+            product.foto
+              ? `data:image/${product.extension};base64,${product.foto}`
+              : notebook
+          }
+          alt="items"
+          priority
+        />
+
+        <h2 className="text-lg mt-2">{product.nombre}</h2>
+        <p className="text-sm text-gray-600">{product.descripcion}</p>
+        <p className="text-md font-semibold mt-2">${product.precio}</p>
       </Link>
-      <p className="text-sm text-gray-600">{product.descripcion}</p>
-      <p className="text-md font-semibold mt-2">${product.precio}</p>
 
       {/* Botón para agregar al carrito */}
       <button
         onClick={handleAddToCart}
-        className="bg-blue-500 text-white p-2 mt-4 w-full"
+        className="bg-blue-700 text-white p-2 mt-4 w-full rounded-xl"
       >
         Agregar al carrito
       </button>
