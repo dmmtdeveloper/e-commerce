@@ -386,8 +386,8 @@ export const UpdateEsAdminUsuario = async (
 const handleError = (error: any) => {
   if (axios.isAxiosError(error) && error.response) {
     if (error.response.status === 500) {
-      console.error("Error interno del servidor:", error);
-      throw new Error("Error interno del servidor.");
+      console.error("Error interno del servidor:", error.response.data.message);
+      throw new Error(error.response.data.message);
     } else {
       console.error("Error en la solicitud:", error);
       throw new Error("Error en la solicitud.");
