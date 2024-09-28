@@ -5,6 +5,7 @@ import { Product } from "@/types/product"; // Importar el tipo Product
 import axiosInstance from "@/utils/axiosInstance";
 import { GoChevronLeft } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
+import { InputComponent } from "./input/InputComponent";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
@@ -55,12 +56,12 @@ export default function ProductsPage() {
   return (
     <section className="pt-24 pb-32 bg-slate-100">
       <div className="p-4">
-        <input
+        <InputComponent
           type="text"
           placeholder="Buscar productos..."
-          className="border p-2 rounded mb-4 w-full"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Actualizar el estado del término de búsqueda
+          onChange={(e) => setSearchTerm(e.target.value)}
+          name="search"
         />
 
       </div>
@@ -80,21 +81,21 @@ export default function ProductsPage() {
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
           disabled={currentPage === 1}
-          
-        > 
-        <GoChevronLeft className="text-2xl"/>
+        >
+          <GoChevronLeft className="text-2xl" />
         </button>
 
-        <span>Página {currentPage} de {totalPages}</span>
+        <span>
+          Página {currentPage} de {totalPages}
+        </span>
 
         <button
           onClick={() =>
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           } // Ir a la página siguiente
           disabled={currentPage === totalPages}
-          
-          >
-          <GoChevronRight className="text-2xl"/>
+        >
+          <GoChevronRight className="text-2xl" />
         </button>
 
         <select

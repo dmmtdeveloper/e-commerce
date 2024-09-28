@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
   }, [menuOpen]);
 
   return (
-    <nav className="fixed w-full flex justify-between items-center py-6 bg-blue-900 text-white z-[99999] 2xl:px-16 px-4">
+    <nav className="fixed w-full flex justify-between items-center py-6 bg-blue-800 text-white z-[99999] 2xl:px-16 px-4">
       <Link href="/" className="text-1xl font-bold">
         e-commerce
       </Link>
@@ -65,8 +65,8 @@ const Navbar: React.FC = () => {
         <div className="flex gap-4">
           <>{!isAuthenticated && (
             <>
-              <Link href="/register" className="hover:underline">Registro</Link>
-              <Link href="/login" className="hover:underline">Login</Link>
+              <Link href="/register" className="hover:text-blue-300">Registro</Link>
+              <Link href="/login" className="hover:hover:text-blue-300">Login</Link>
             </>
           )}
           </>
