@@ -154,7 +154,7 @@ export default function ProductsPage() {
 
   return (
     <MainLayout>
-      <div className="relative mt-20">
+      <div className="relative mt-20 mb-20">
         {/* Navbar */}
         <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
 
