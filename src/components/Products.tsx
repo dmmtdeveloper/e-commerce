@@ -63,10 +63,9 @@ export default function ProductsPage() {
           onChange={(e) => setSearchTerm(e.target.value)}
           name="search"
         />
-
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
         {currentProducts.length > 0 ? (
           currentProducts.map((product) => (
             <ProductCard key={product.productoId} product={product} />
@@ -82,7 +81,9 @@ export default function ProductsPage() {
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
           disabled={currentPage === 1}
         >
-          <GoChevronLeft className="text-2xl" />
+          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+            <GoChevronLeft className="text-2xl" />
+          </div>
         </button>
 
         <span>
@@ -95,11 +96,13 @@ export default function ProductsPage() {
           } // Ir a la página siguiente
           disabled={currentPage === totalPages}
         >
-          <GoChevronRight className="text-2xl" />
+          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+            <GoChevronRight className="text-2xl" />
+          </div>
         </button>
 
         <select
-          className="border p-2 rounded"
+          className="border p-2 rounded focus:outline-none"
           value={itemsPerPage}
           onChange={(e) => {
             setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
