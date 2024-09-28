@@ -1,26 +1,28 @@
 "use client";
-import { useState, useEffect } from "react";
-import MainLayout from "../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
-import { GetPedidos } from "@/utils/authHelpers";
-import { Pedido } from "@/types/types";
-import Link from "next/link";
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Product } from '@/types/product';
+import { GetPedidos } from "@/utils/authHelpers"; 
+import MainLayout from "../../layouts/MainLayout"; 
+import NavAdmin from "@/components/shared/NavAdmin"; 
+import Link from 'next/link';
+import { VmPedido } from "@/types/types";
 
 export default function OrdersPage() {
-  const [pedidos, setPedidos] = useState<Pedido[]>([]);
-  const [filteredPedidos, setFilteredPedidos] = useState<Pedido[]>([]);
+  const [VmPedidos, setPedidos] = useState<VmPedido[]>([]);
+  const [filteredPedidos, setFilteredPedidos] = useState<VmPedido[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   // Estados para los filtros
   const [filters, setFilters] = useState({
-    search: "",
-    estadoId: "",
-    eliminado: false,
+    estadoId: "1", // Estado "Pendiente" por defecto
   });
 
-  // Estado para manejar el colapso del panel
   const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(true);
+  const [fechaDesde, setFechaDesde] = useState<string>("");
+  const [fechaHasta, setFechaHasta] = useState<string>("");
 
   // Estados para la paginación
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -41,26 +43,34 @@ export default function OrdersPage() {
   }, []);
 
   useEffect(() => {
-    const { search, estadoId, eliminado } = filters;
-    const filtered = pedidos.filter((pedido) => {
-      const matchesSearch =
-        pedido.token.toLowerCase().includes(search.toLowerCase());
+    const { estadoId } = filters;
+    const filtered = VmPedidos.filter((pedido) => {
       const matchesEstadoId = !estadoId || pedido.estadoId === Number(estadoId);
-      const matchesEliminado = !eliminado || pedido.eliminado;
+      const matchesFechaDesde = !fechaDesde || new Date(pedido.fecha) >= new Date(fechaDesde);
+      const matchesFechaHasta = !fechaHasta || new Date(pedido.fecha) <= new Date(fechaHasta);
 
-      return matchesSearch && matchesEstadoId && matchesEliminado;
+      return matchesEstadoId && matchesFechaDesde && matchesFechaHasta;
     });
     setFilteredPedidos(filtered);
-  }, [filters, pedidos]);
+  }, [filters, VmPedidos, fechaDesde, fechaHasta]);
 
   const handleFilterChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLSelectElement>
   ) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement;
+    const { name, value } = e.target;
     setFilters((prevFilters) => ({
       ...prevFilters,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: value,
     }));
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    if (name === "fechaDesde") {
+      setFechaDesde(value);
+    } else {
+      setFechaHasta(value);
+    }
   };
 
   // Manejo del cambio de página
@@ -96,16 +106,7 @@ export default function OrdersPage() {
         <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
 
         <section className="pt-8 p-4">
-          {/* Botón para Crear Pedido */}
-          <div className="mb-4 relative">
-            <Link
-              href="/admin/orders/create"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10"
-            >
-              Crear Pedido
-            </Link>
-          </div>
-
+          <h1 className="font-semibold text-4xl mb-4">Historial de Pedidos</h1>
           {/* Panel de Filtros */}
           <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
             <button
@@ -123,18 +124,6 @@ export default function OrdersPage() {
             >
               <div className="flex flex-wrap gap-4">
                 <div className="flex flex-col flex-grow">
-                  <label htmlFor="search">Buscar por Token:</label>
-                  <input
-                    id="search"
-                    name="search"
-                    type="text"
-                    value={filters.search}
-                    onChange={handleFilterChange}
-                    className="border p-2 rounded"
-                    placeholder="Token"
-                  />
-                </div>
-                <div className="flex flex-col flex-grow">
                   <label htmlFor="estadoId">Estado:</label>
                   <select
                     id="estadoId"
@@ -145,58 +134,65 @@ export default function OrdersPage() {
                   >
                     <option value="">Todos</option>
                     <option value="1">Pendiente</option>
-                    <option value="2">En Proceso</option>
-                    <option value="3">Completado</option>
+                    <option value="2">Completado</option>
+                    <option value="3">Cancelado</option>
+                    <option value="4">Anulado</option>
                   </select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-col flex-grow">
+                  <label htmlFor="fechaDesde">Fecha Desde:</label>
                   <input
-                    id="eliminado"
-                    name="eliminado"
-                    type="checkbox"
-                    checked={filters.eliminado}
-                    onChange={handleFilterChange}
-                    className="mr-2"
+                    id="fechaDesde"
+                    name="fechaDesde"
+                    type="date"
+                    value={fechaDesde}
+                    onChange={handleDateChange}
+                    className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
+                    onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
                   />
-                  <label htmlFor="eliminado">Mostrar solo eliminados</label>
                 </div>
+                <div className="flex flex-col flex-grow">
+                  <label htmlFor="fechaHasta">Fecha Hasta:</label>
+                  <input
+                    id="fechaHasta"
+                    name="fechaHasta"
+                    type="date"
+                    value={fechaHasta}
+                    onChange={handleDateChange}
+                    className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
+                    onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
+                  />
+                </div>
+
               </div>
             </div>
           </div>
 
           {/* Tabla de Pedidos */}
           <div>
-            <h1 className="font-semibold text-4xl mb-4">Pedidos del Sistema</h1>
-            <p className="mb-4">
-              A continuación se muestra la lista de pedidos registrados en el
-              sistema:
-            </p>
-
             <table className="table-auto w-full border mb-6">
               <thead>
                 <tr>
-                  <th className="border p-2">Pedido ID</th>
-                  <th className="border p-2">Token</th>
-                  <th className="border p-2">Estado ID</th>
-                  <th className="border p-2">Valor Total</th>
+                  <th className="border p-2"></th>
                   <th className="border p-2">Fecha</th>
-                  <th className="border p-2">Eliminado</th>
+                  <th className="border p-2">Usuario</th>
+                  <th className="border p-2">Estado</th>
+                  <th className="border p-2">Cantidad Productos</th>
+                  <th className="border p-2">Valor Total</th>
+                  <th className="border px-4 py-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {currentPedidos.map((pedido) => (
                   <tr key={pedido.pedidoId}>
-                    <td className="border p-2">{pedido.pedidoId}</td>
-                    <td className="border p-2">{pedido.token}</td>
-                    <td className="border p-2">{pedido.estadoId}</td>
-                    <td className="border p-2">{pedido.valorTotal}</td>
+                    <td className="border p-2">#{pedido.pedidoId}</td>
                     <td className="border p-2">{pedido.fecha}</td>
+                    <td className="border p-2">{pedido.nombreUsuario}</td>
+                    <td className="border p-2">{pedido.estadoNombre}</td>
+                    <td className="border p-2">{pedido.cantidadDetalles}</td>
+                    <td className="border p-2">{pedido.valorTotal}</td>
                     <td className="border p-2">
-                      <input
-                        type="checkbox"
-                        checked={pedido.eliminado}
-                        disabled={pedido.eliminado}
-                      />
+                      <Link href={`/admin/orders/${pedido.pedidoId}`} className="text-blue-500 hover:underline">Ver Detalle</Link>
                     </td>
                   </tr>
                 ))}

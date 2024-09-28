@@ -224,6 +224,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 required
                 className="border p-2 rounded w-full"
               />
+              <label className="block mb-1"> Stock Reservado: {producto.stockReservado || '0'}</label>
             </div>
             <div className="mb-4">
               <label className="block mb-1">Foto (selecciona archivo):</label>

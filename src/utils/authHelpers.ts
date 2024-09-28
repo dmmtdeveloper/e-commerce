@@ -2,8 +2,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import axiosInstance from "./axiosInstance"; // Importa tu instancia de axios
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import { DetallePedido, Pedido } from "@/types/types";
-import { Product } from "@/types/product";
+import { DetallePedido, Pedido, VmDetallePedido, VmPedido } from "@/types/types";
+import { Product} from "@/types/product";
 
 export const addPedido = async (
   pedidoId: number,
@@ -199,9 +199,72 @@ export const GetPedidosByToken = async (token: string): Promise<Pedido[]> => {
 };
 
 // Función para obtener el Pedidos basados en el token
-export const GetPedidos = async (): Promise<Pedido[]> => {
+export const GetPedidoAdminById = async (id: number): Promise<VmPedido> => {
   try {
-    const response = await axiosInstance.get<Pedido[]>(
+    const response = await axiosInstance.get<VmPedido>(
+      `/api/Pedido/admin/ById/${id}`
+    );
+    return response.data; // El tipo será automáticamente Usuario
+  } catch (error) {
+    console.error("Error obteniendo los pedidos:", error);
+    throw error;
+  }
+};
+
+// Función para obtener el Pedidos basados en el token
+export const GetPedidoDetallesAdminByPedidoId = async (pedidoId: number): Promise<VmDetallePedido[]> => {
+  try {
+    const response = await axiosInstance.get<VmDetallePedido[]>(
+      `/api/PedidoDetalle/admin/ByPedidoId/${pedidoId}`
+    );
+    return response.data; // El tipo será automáticamente Usuario
+  } catch (error) {
+    console.error("Error obteniendo los pedidos:", error);
+    throw error;
+  }
+};
+
+export const UpdateEstadoPedido = async (
+  pedidoId: number
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/Pedido/update/state/${pedidoId}`
+    );
+
+    if (response.status === 204) {
+      console.log("Pedido actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const UpdateEstadoPedidoCancelado = async (
+  pedidoId: number,
+  estadoId: number
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/Pedido/update/stateCancelado/${pedidoId}/${estadoId}`
+    );
+
+    if (response.status === 204) {
+      console.log("Pedido actualizado con éxito.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+// Función para obtener el Pedidos basados en el token
+export const GetPedidos = async (): Promise<VmPedido[]> => {
+  try {
+    const response = await axiosInstance.get<VmPedido[]>(
       `/api/Pedido/`
     );
     return response.data; // El tipo será automáticamente Usuario

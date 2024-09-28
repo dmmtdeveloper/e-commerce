@@ -38,3 +38,30 @@ export interface Pedido {
 
   detalles: DetallePedido[];
 }
+
+export interface VmPedido{
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  estadoNombre: string;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+  cantidadDetalles: number;
+  nombreUsuario: string;
+  correoUsuario: string;
+}
+
+export interface VmDetallePedido {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  productoNombre: string;
+  productoDescripcion: string;
+  cantidad: number;
+  precioUnitario: number;
+  precioTotal: number;
+  foto: string;
+  nombreFoto: string;
+  extension: string;
+}
