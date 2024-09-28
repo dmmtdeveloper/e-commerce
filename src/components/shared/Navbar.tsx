@@ -1,20 +1,20 @@
-import Link from "next/link";
-import { useState, useRef, useEffect, MutableRefObject } from "react";
-import { FaShoppingCart, FaHome } from "react-icons/fa";
-import { useAuthStore } from "@/store/useAuthStore";
-import useCartStore from "@/store/cartStore";
-import { useRouter } from "next/navigation";
-import { BiArrowToRight } from "react-icons/bi";
-import { AiOutlineSetting } from "react-icons/ai";
-import { CiDeliveryTruck } from "react-icons/ci";
-import { FaUsers } from "react-icons/fa6";
-import Image from "next/image";
-import userImg from "@/public/assets/img/user.png";
-import { FaBagShopping } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
+import { AiOutlineSetting } from "react-icons/ai";
+import { BiArrowToRight } from "react-icons/bi";
+import { CiDeliveryTruck } from "react-icons/ci";
+import { FaBagShopping } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa6";
+import { GiHamburgerMenu } from "react-icons/gi"; 
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { GiHamburgerMenu } from "react-icons/gi"; // Icono hamburguesa
-import { FiLogIn } from "react-icons/fi";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
+import { useState, useRef, useEffect, MutableRefObject } from "react";
+
+import Image from "next/image";
+import Link from "next/link";
+import useCartStore from "@/store/cartStore";
+import userImg from "@/public/assets/img/user.png";
+
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -33,7 +33,8 @@ const Navbar: React.FC = () => {
 
   const handleLogout = (): void => {
     logout();
-    router.push("/login");
+    setMenuOpen(false);
+    router.push("/");
   };
 
   const handleClickOutside = (event: MouseEvent): void => {

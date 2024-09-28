@@ -53,7 +53,7 @@ export default function ProductsPage() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <section className="mt-32 mb-32">
+    <section className="pt-24 pb-32 bg-slate-100">
       <div className="p-4">
         <input
           type="text"
