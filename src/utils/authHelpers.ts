@@ -21,7 +21,7 @@ export const addPedido = async (
       0
     );
     console.log(totalPedido);
-    
+
     const response = await axiosInstance.post("/api/Pedido", {
       pedidoId: 0,
       token,
@@ -434,6 +434,14 @@ export const UpdateEliminadoUsuario = async (
     handleError(error);
   }
 };
+
+// export const GetPedidoAdminById = async (
+//   usuarioId: number,
+//   esAdmin: boolean
+// ): Promise<void> => {
+  
+// };
+
 
 export const UpdateEsAdminUsuario = async (
   usuarioId: number,

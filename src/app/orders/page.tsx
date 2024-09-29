@@ -153,17 +153,27 @@ export default function OrdersPage() {
             <table className="table-auto w-full border">
               <thead>
                 <tr>
-                  <th className="border p-2">Pedido ID</th>
-                  <th className="border p-2">Estado</th>
-                  <th className="border p-2">Fecha</th>
+                <th className="border p-2">Fecha</th>
+                <th className="border p-2">Estado</th>
+                <th className="border p-2">Cantidad Producto</th>
+                <th className="border p-2">Valor Total</th>
+                <th className="border p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredPedidos.map((pedido) => (
                   <tr key={pedido.pedidoId}>
-                    <td className="border p-2">{pedido.pedidoId}</td>
-                    <td className="border p-2">{pedido.estadoId}</td>
-                    <td className="border p-2">{pedido.fecha}</td>
+                    <td className="border p-2">
+                      {new Date(pedido.fecha).toLocaleDateString()}
+                    </td>                    
+                    <td className="border p-2">{pedido.estadoNombre}</td>
+                    <td className="border p-2">{pedido.cantidad}</td>
+                    <td className="border p-2">{pedido.valorTotal}</td>
+                    <td className="border p-2">
+                      <Link href={`/orders/ordersDetails/${pedido.pedidoId}`} className="text-blue-500 hover:underline">
+                        Ver Detalle
+                      </Link>
+                    </td>
                   </tr>
                 ))}
               </tbody>
