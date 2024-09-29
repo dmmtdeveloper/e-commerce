@@ -142,13 +142,13 @@ const Navbar: React.FC = () => {
                   <h3 className="font-semibold mb-4 mt-4">Menú</h3>
                   <article className="flex flex-col gap-4">
                     <ul className="flex flex-col gap-1">
-                      <li className="flex items-center gap-2 hover:text-purple-500 transition-all duration-300 hover:bg-slate-200 p-2 rounded-xl">
+                      <li className="flex items-center gap-2 hover:text-blue-500 transition-all duration-300 hover:bg-slate-200 p-2 rounded-xl">
                         <CiDeliveryTruck className="text-2xl" />
                         <Link className="text-sm" href="/orders">
                           Mis Pedidos
                         </Link>
                       </li>
-                      <li className="flex items-center gap-2 hover:text-purple-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
+                      <li className="flex items-center gap-2 hover:text-blue-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
                         <AiOutlineSetting className="text-2xl" />
                         <Link className="text-sm" href="/settings">
                           Configuración
@@ -162,21 +162,21 @@ const Navbar: React.FC = () => {
 
                       <div className="flex flex-col gap-2">
                         <ul className="flex flex-col gap-1">
-                          <li className="font-normal flex gap-4 hover:text-purple-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
+                          <li className="font-normal flex gap-4 hover:text-blue-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
                             <AiFillProduct className="text-2xl" />
                             <Link className="text-sm" href="/admin/products">
                               Productos
                             </Link>
                           </li>
 
-                          <li className="flex gap-4 hover:text-purple-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
+                          <li className="flex gap-4 hover:text-blue-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
                             <FaUsers className="text-2xl" />
                             <Link className="text-sm" href="/admin/users">
                               Usuarios
                             </Link>
                           </li>
 
-                          <li className="items-center flex gap-4 hover:text-purple-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
+                          <li className="items-center flex gap-4 hover:text-blue-500 transition-all hover:bg-slate-200 p-2 rounded-xl">
                             <FaBagShopping className="text-2xl" />
                             <Link className="text-sm" href="/admin/orders">
                               Pedidos
