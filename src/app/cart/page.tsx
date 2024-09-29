@@ -31,7 +31,8 @@ export default function CartPage() {
       pedidoId: 0, // Ajusta este valor según sea necesario
       productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
       cantidad: item.quantity,
-      precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
+      precio: item.price,
+      precioTotal: item.quantity * item.price, // Ajusta el precio total según la lógica de tu aplicación
     }));
 
     try {
@@ -148,6 +149,8 @@ export default function CartPage() {
                   >
                     <FaPlus />
                   </button>
+                  <span className="mx-4 text-lg">Precio Unitario: {item.price}</span>
+                  <span className="mx-4 text-lg">Precio Total: {item.totalPrice}</span>
                 </div>
               </div>
               <button

@@ -27,6 +27,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     addItem({
       id: product.productoId.toString(),
       name: product.nombre,
+      price: product.precio,
+      totalPrice: product.precio,
       quantity: 1,
     });
     setIsModalOpen(true); // Abrir el modal después de agregar al carrito
