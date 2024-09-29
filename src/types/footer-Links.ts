@@ -56,7 +56,7 @@ export const footerLinks = [
     {
       id: "social-media-2",
       icon: FaInstagram,
-      link: "https://www.instagram.com/enregla_oficial?igsh=MTl2a2R5dzFvaGR3NA==",
+      link: "https://www.instagram.com/",
     },
     {
       id: "social-media-3",

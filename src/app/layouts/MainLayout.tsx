@@ -1,6 +1,6 @@
 "use client";
 import Navbar from "@/components/shared/Navbar";
-import {Footer }from "@/components/shared/Footer";
+import { Footer } from "@/components/shared/Footer";
 
 export default function MainLayout({
   children,
@@ -10,7 +10,7 @@ export default function MainLayout({
   return (
     <main className="flex flex-col relative min-h-screen">
       <Navbar />
-      {children}
+      <div className="flex-grow">{children}</div>
       <Footer />
     </main>
   );
