@@ -65,3 +65,7 @@ export interface VmDetallePedido {
   nombreFoto: string;
   extension: string;
 }
+
+
+
+

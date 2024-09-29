@@ -70,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {product.stock - product.stockReservado > 0 ? (
         <button
           onClick={handleAddToCart}
-          className="flex items-center justify-center gap-4 border-2 border-blue-500 hover:text-blue-700 font-semibold transition-all text-blue-600 py-3 mt-4 w-full rounded-xl group"
+          className="flex items-center justify-center gap-4 bg-blue-500 hover:bg-blue-600 font-semibold transition-all text-slate-50 py-2 mt-4 w-full rounded-xl group"
         >
           Agregar al carrito
           <MdOutlineShoppingCart className="text-2xl transition-transform group-hover:translate-x-4" />
