@@ -25,6 +25,7 @@ export interface DetallePedido {
   pedidoId: number;
   productoId: number;
   cantidad: number;
+  precio: number;
   precioTotal: number;
 }
 
@@ -59,7 +60,7 @@ export interface VmDetallePedido {
   productoNombre: string;
   productoDescripcion: string;
   cantidad: number;
-  precioUnitario: number;
+  precio: number;
   precioTotal: number;
   foto: string;
   nombreFoto: string;

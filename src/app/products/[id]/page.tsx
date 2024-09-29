@@ -49,6 +49,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         addItem({
           id: product.productoId.toString(),
           name: product.nombre,
+          price: product.precio,
+          totalPrice: product.precio,
           quantity: newQuantity,
         });
         updateItemQuantity(product.productoId.toString(), newQuantity);
@@ -78,6 +80,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
       addItem({
         id: product.productoId.toString(),
         name: product.nombre,
+        price: product.precio,
+        totalPrice: product.precio,
         quantity: 1,
       });
       setQuantity(1);
@@ -135,6 +139,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 >
                   <FaPlus />
                 </button>
+                <span className="mx-4 text-lg">Precio Unitario: {product.precio}</span>
+                <span className="mx-4 text-lg">Precio Total: {product.precio * quantity}</span>
               </>
             )}
           </div>

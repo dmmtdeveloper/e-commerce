@@ -159,7 +159,7 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
                           <h3 className="font-bold text-lg">{detalle.productoNombre}</h3>
                           <h4 className="text-md">{detalle.productoDescripcion}</h4>
                           <p className="text-sm text-gray-600">Cantidad: {detalle.cantidad}</p>
-                          <p className="text-sm text-gray-600">Precio unitario: ${detalle.precioUnitario.toFixed(2)}</p>
+                          <p className="text-sm text-gray-600">Precio unitario: ${detalle.precio.toFixed(2)}</p>
                         </div>
                         <div className="text-right">
                           <span className="text-lg font-semibold">${detalle.precioTotal.toFixed(2)}</span>

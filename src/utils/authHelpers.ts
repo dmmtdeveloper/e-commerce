@@ -15,11 +15,18 @@ export const addPedido = async (
   detalles: DetallePedido[]
 ) => {
   try {
+    // Calcular el valor total sumando el valor de cada elemento en la lista "detalles"
+    const totalPedido = detalles.reduce(
+      (acc, detalle) => acc + detalle.precioTotal, // Suponiendo que cada detalle tiene una propiedad `totalPrice`
+      0
+    );
+    console.log(totalPedido);
+    
     const response = await axiosInstance.post("/api/Pedido", {
       pedidoId: 0,
       token,
       estadoId: 1,
-      valorTotal,
+      valorTotal: totalPedido, // Usar el total calculado
       fecha,
       eliminado: false,
       detalles,
@@ -34,6 +41,7 @@ export const addPedido = async (
     throw error;
   }
 };
+
 
 
 
