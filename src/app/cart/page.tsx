@@ -118,59 +118,57 @@ export default function CartPage() {
 
   return (
     <MainLayout>
-      <section className="p-6 mt-32">
-        <h1 className="text-2xl font-bold mb-4">Tu carrito de compras</h1>
-        <ul>
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className="border p-4 mb-4 flex justify-between items-center"
-            >
-              <div>
-                <h2 className="text-lg font-bold">{item.name}</h2>
-                <div className="flex items-center mt-2">
-                  <button
-                    onClick={() =>
-                      handleDecreaseQuantity(item.id, item.quantity)
-                    }
-                    className="p-2 bg-gray-200 rounded"
-                    aria-label="Decrease quantity"
-                  >
+      <section className="p-6 mt-32 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Lista de productos */}
+        <div className="lg:col-span-2">
+          <h1 className="text-2xl font-bold mb-4">Tu carrito de compras</h1>
+          <ul>
+            {items.map((item) => (
+              <li key={item.id} className="border p-4 mb-4 flex justify-between items-center">
+                <div className="flex">
+                  <img src={item.imageUrl} alt={item.name} className="w-16 h-16 mr-4" />
+                  <div>
+                    <h2 className="text-lg font-bold">{item.name}</h2>
+                    <p className="text-sm">ID {item.id}</p>
+                    <p className="text-sm text-gray-500">Precio: ${item.price}</p>
+                  </div>
+                </div>
+                <div className="flex items-center">
+                  <button onClick={() => handleDecreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
                     <FaMinus />
                   </button>
                   <span className="mx-4 text-lg">{item.quantity}</span>
-                  <button
-                    onClick={() =>
-                      handleIncreaseQuantity(item.id, item.quantity)
-                    }
-                    className="p-2 bg-gray-200 rounded"
-                    aria-label="Increase quantity"
-                  >
+                  <button onClick={() => handleIncreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
                     <FaPlus />
                   </button>
                 </div>
-              </div>
-              <button
-                onClick={() => handleRemove(item.id)}
-                className="bg-red-500 text-white py-2 px-4 rounded"
-              >
-                Eliminar
-              </button>
-            </li>
-          ))}
-        </ul>
-        <div className="flex justify-between mt-4">
-          <button
-            onClick={handleClearCart}
-            className="bg-red-500 text-white py-2 px-4 rounded"
-          >
-            Vaciar carrito
-          </button>
-          <button
-            onClick={handlePedido}
-            className="bg-green-500 text-white py-2 px-4 rounded"
-          >
-            Crear pedido
+                <div>
+                  <button onClick={() => handleRemove(item.id)} className="bg-red-500 text-white py-2 px-4 rounded">
+                    Eliminar
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Resumen de compra */}
+        <div className="bg-gray-100 p-4 rounded-lg">
+          <h2 className="text-lg font-bold mb-4">Resumen de tu compra</h2>
+          <div className="mb-2 flex justify-between">
+            <span>Total transferencia</span>
+            <span className="font-bold">${items.reduce((acc, item) => acc + item.price * item.quantity, 0)}</span>
+          </div>
+          <p className="text-sm text-gray-500 mb-4">
+            El costo de envío se calculará al añadir la dirección.
+          </p>
+          <Link href="/">
+            <button className="bg-green-500 text-white w-full py-2 rounded mb-2">
+              Agregar más productos
+            </button>
+          </Link>
+          <button onClick={handlePedido} className="bg-black text-white w-full py-2 rounded">
+            Crear Pedido
           </button>
         </div>
       </section>
