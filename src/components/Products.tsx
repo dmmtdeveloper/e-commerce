@@ -55,7 +55,7 @@ export default function ProductsPage() {
 
   return (
     <section className="pt-24 pb-32 bg-slate-100">
-      <div className="p-4">
+      <div className="p-4 mt-10 2xl:mt-0">
         <InputComponent
           type="text"
           placeholder="Buscar productos..."

@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
     <div>
       <nav className="fixed w-full flex justify-between items-center bg-slate-100 z-[99999]  flex-col">
         <div className="bg-blue-500 w-full py-2">
-          <p className="text-center text-sm text-slate-50">Precios únicos  | adelantamos el <span className="font-semibold">Cyber</span> | Aprovecha cuotas sin interés 4a28 </p>
+          <p className="text-center text-sm text-slate-50">Precios únicos | adelantamos el <span className="font-semibold">Cyber</span> | Aprovecha cuotas sin interés 4a28 </p>
         </div>
 
         <div className="flex w-full justify-between px-4 2xl:px-16 mt-2 py-4">

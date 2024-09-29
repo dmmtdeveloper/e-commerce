@@ -4,6 +4,8 @@ import clsx from "clsx";
 import { footerLinks, socialMedia } from "@/types/footer-Links";
 import Link from "next/link";
 import { Reveal } from "@/animation/Reveal";
+import Image from "next/image";
+import logo from "@/public/assets/icons/LOGO.svg"
 
 export const Footer = () => {
   return (
@@ -26,6 +28,9 @@ export const Footer = () => {
         )}
       >
         <div className="flex-1 flex flex-col gap-2">
+              <div>
+                <Image className="w-32 h-auto" height={100} width={100} src={logo} alt="logo" priority/>
+              </div>
           <small className={clsx("text-black", "text-black-100", "text-[11px]")}>
             Síguenos en nuestras redes sociales
           </small>
@@ -99,7 +104,7 @@ export const Footer = () => {
       <Reveal>
         <div className="w-full md:flex-col flex justify-between items-center  flex-col  border-t-[1px] border-t-black-200">
           <small className="text-black text-black-200 text-xs text-center mt-4">
-          Copyright © 2024 pcstore.cl. Todos los derechos reservados. Prohibida su copia parcial o total bajo la ley nacional e internacional. Registro dibam N°000000
+          Copyright © 2024 pcstore.cl. Todos los derechos reservados.
           </small>
           {/* <p className="text-xs text-center dark:text-white-200 text-black-200 ">
             <span>About this website:</span> built with React & Next.js, TypeScript, Tailwind CSS,
