@@ -31,7 +31,8 @@ export default function CartPage() {
       pedidoId: 0, // Ajusta este valor según sea necesario
       productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
       cantidad: item.quantity,
-      precioTotal: item.quantity * 200, // Ajusta el precio total según la lógica de tu aplicación
+      precio: item.price,
+      precioTotal: item.quantity * item.price, // Ajusta el precio total según la lógica de tu aplicación
     }));
 
     try {
@@ -126,7 +127,7 @@ export default function CartPage() {
             {items.map((item) => (
               <li key={item.id} className="border p-4 mb-4 flex justify-between items-center">
                 <div className="flex">
-                  <img src={item.imageUrl} alt={item.name} className="w-16 h-16 mr-4" />
+                  {/* <img src={item.imageUrl} alt={item.name} className="w-16 h-16 mr-4" /> */}
                   <div>
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm">ID {item.id}</p>
@@ -141,6 +142,8 @@ export default function CartPage() {
                   <button onClick={() => handleIncreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
                     <FaPlus />
                   </button>
+                  <span className="mx-4 text-lg">Precio Unitario: {item.price}</span>
+                  <span className="mx-4 text-lg">Precio Total: {item.totalPrice}</span>
                 </div>
                 <div>
                   <button onClick={() => handleRemove(item.id)} className="bg-red-500 text-white py-2 px-4 rounded">

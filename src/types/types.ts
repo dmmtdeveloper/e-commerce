@@ -26,6 +26,7 @@ export interface DetallePedido {
   pedidoId: number;
   productoId: number;
   cantidad: number;
+  precio: number;
   precioTotal: number;
 }
 
@@ -40,6 +41,116 @@ export interface Pedido {
   eliminado: boolean;
   detalles: DetallePedido[];
 }
+
+export interface VmPedido{
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  estadoNombre: string;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+  cantidadDetalles: number;
+  nombreUsuario: string;
+  correoUsuario: string;
+}
+
+export interface VmDetallePedido {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  productoNombre: string;
+  productoDescripcion: string;
+  cantidad: number;
+  precio: number;
+  precioTotal: number;
+  foto: string;
+  nombreFoto: string;
+  extension: string;
+}
+
+export interface PedidoDto {
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  estadoNombre: string;
+  cantidad: number;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+}
+
+export interface PedidoDetalleDTO {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  productoNombre: string;
+  productoDescripcion: string;
+  cantidad: number;
+  precioUnitario: number;
+  precioTotal: number;
+  foto: string;
+  nombreFoto: string;
+  extension: string;
+}
+
+
+
+
+export interface VmPedido{
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  estadoNombre: string;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+  cantidadDetalles: number;
+  nombreUsuario: string;
+  correoUsuario: string;
+}
+
+export interface VmDetallePedido {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  productoNombre: string;
+  productoDescripcion: string;
+  cantidad: number;
+  precio: number;
+  precioTotal: number;
+  foto: string;
+  nombreFoto: string;
+  extension: string;
+}
+
+export interface PedidoDto {
+  pedidoId: number;
+  token: string;
+  estadoId: number;
+  estadoNombre: string;
+  cantidad: number;
+  valorTotal: number;
+  fecha: string;
+  eliminado: boolean;
+}
+
+export interface PedidoDetalleDTO {
+  pedidoDetalleId: number;
+  pedidoId: number;
+  productoId: number;
+  productoNombre: string;
+  productoDescripcion: string;
+  cantidad: number;
+  precioUnitario: number;
+  precioTotal: number;
+  foto: string;
+  nombreFoto: string;
+  extension: string;
+}
+
+
+
 
 export interface PedidoDto {
   pedidoId: number;

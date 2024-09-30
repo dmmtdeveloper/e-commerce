@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/shared/ProductCard";
 import { Product } from "@/types/product"; // Importar el tipo Product
 import axiosInstance from "@/utils/axiosInstance";
+import { GoChevronLeft } from "react-icons/go";
+import { GoChevronRight } from "react-icons/go";
+import { InputComponent } from "./input/InputComponent";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
-  const [itemsPerPage, setItemsPerPage] = useState(5); // Estado para la cantidad de productos por página
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Estado para la cantidad de productos por página
 
   // Consumir la API al cargar el componente
   useEffect(() => {
@@ -51,31 +54,18 @@ export default function ProductsPage() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <section className="mt-32 mb-32">
+    <section className="pt-24 pb-32 bg-slate-100">
       <div className="p-4">
-        <input
+        <InputComponent
           type="text"
           placeholder="Buscar productos..."
-          className="border p-2 rounded mb-4 w-full"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} // Actualizar el estado del término de búsqueda
+          onChange={(e) => setSearchTerm(e.target.value)}
+          name="search"
         />
-
-        <select
-          className="border p-2 rounded mb-4"
-          value={itemsPerPage}
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
-            setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
-          }}
-        >
-          <option value={2}>2</option>
-          <option value={5}>5</option>
-          <option value={10}>10</option>
-        </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4">
+      <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
         {currentProducts.length > 0 ? (
           currentProducts.map((product) => (
             <ProductCard key={product.productoId} product={product} />
@@ -86,13 +76,14 @@ export default function ProductsPage() {
       </div>
 
       {/* Controles de paginación */}
-      <div className="flex justify-between mt-4">
+      <div className="flex items-center justify-center gap-5 mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
           disabled={currentPage === 1}
-          className="border p-2 rounded"
         >
-          Anterior
+          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+            <GoChevronLeft className="text-2xl" />
+          </div>
         </button>
 
         <span>
@@ -104,10 +95,24 @@ export default function ProductsPage() {
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           } // Ir a la página siguiente
           disabled={currentPage === totalPages}
-          className="border p-2 rounded"
         >
-          Siguiente
+          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+            <GoChevronRight className="text-2xl" />
+          </div>
         </button>
+
+        <select
+          className="border p-2 rounded focus:outline-none"
+          value={itemsPerPage}
+          onChange={(e) => {
+            setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
+            setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
+          }}
+        >
+          <option value={10}>10</option>
+          <option value={5}>5</option>
+          <option value={2}>2</option>
+        </select>
       </div>
     </section>
   );

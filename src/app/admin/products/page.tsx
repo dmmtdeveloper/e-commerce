@@ -5,6 +5,8 @@ import NavAdmin from "@/components/shared/NavAdmin";
 import { GetProductos, UpdateHabilitadoProducto, UpdateEliminadoProducto } from "@/utils/authHelpers"; //
 import { Product } from "@/types/product";
 import Link from "next/link";
+import Slider from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 export default function ProductsPage() {
   const [productos, setProductos] = useState<Product[]>([]);
@@ -24,6 +26,10 @@ export default function ProductsPage() {
   const [filters, setFilters] = useState({
     nombre: "",
     descripcion: "",
+    habilitado: true,
+    noEliminado: true,
+    precioMinimo: 0,
+    precioMaximo: 10000000,
   });
 
   // Estado para manejar el colapso del panel
@@ -47,12 +53,15 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    const { nombre, descripcion } = filters;
+    const { nombre, descripcion, habilitado, noEliminado, precioMinimo, precioMaximo } = filters;
     const filtered = productos.filter((producto) => {
       const matchesNombre = producto.nombre.toLowerCase().includes(nombre.toLowerCase());
       const matchesDescripcion = producto.descripcion.toLowerCase().includes(descripcion.toLowerCase());
+      const matchesHabilitado = habilitado ? producto.habilitado : true; // Si habilitado está desmarcado, no filtra por habilitado
+      const matchesNoEliminado = noEliminado ? !producto.eliminado : true; // Si no eliminado está desmarcado, no filtra por eliminado
+      const matchesPrecio = producto.precio >= precioMinimo && producto.precio <= precioMaximo;
 
-      return matchesNombre && matchesDescripcion;
+      return matchesNombre && matchesDescripcion && matchesHabilitado && matchesNoEliminado && matchesPrecio;
     });
     setFilteredProductos(filtered);
   }, [filters, productos]);
@@ -145,22 +154,14 @@ export default function ProductsPage() {
 
   return (
     <MainLayout>
-      <div className="relative mt-20">
+      <div className="relative mt-20 mb-20">
         {/* Navbar */}
         <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
 
         <section className="pt-8 p-4">
-          {/* Botón para Crear Producto */}
-          <div className="mb-4 relative">
-            <Link
-              href="/admin/products/create"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10"
-            >
-              Crear Producto
-            </Link>
-          </div>
+          <h1 className="font-semibold text-4xl mb-4">Productos</h1>
 
-          {/* Panel de Filtros */}
+
           <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
             <button
               className="text-blue-500 mb-4 block"
@@ -173,107 +174,153 @@ export default function ProductsPage() {
                 isPanelCollapsed ? "opacity-0 h-0 overflow-hidden" : "opacity-100"
               }`}
             >
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="nombre"
-                  placeholder="Buscar por Nombre"
-                  value={filters.nombre}
-                  onChange={handleFilterChange}
-                  className="border p-2 rounded w-full"
-                />
-              </div>
-              <div className="mb-4">
-                <input
-                  type="text"
-                  name="descripcion"
-                  placeholder="Buscar por Descripción"
-                  value={filters.descripcion}
-                  onChange={handleFilterChange}
-                  className="border p-2 rounded w-full"
-                />
+              {/* Fila de filtros en una sola fila */}
+              <div className="mb-4 flex flex-wrap items-center space-x-4">
+                <div className="flex-1 min-w-[200px]">
+                  <input
+                    type="text"
+                    name="nombre"
+                    placeholder="Buscar por Nombre"
+                    value={filters.nombre}
+                    onChange={handleFilterChange}
+                    className="border p-2 rounded w-full"
+                  />
+                </div>
+                <div className="flex-1 min-w-[200px]">
+                  <input
+                    type="text"
+                    name="descripcion"
+                    placeholder="Buscar por Descripción"
+                    value={filters.descripcion}
+                    onChange={handleFilterChange}
+                    className="border p-2 rounded w-full"
+                  />
+                </div>
+                <div className="flex-1 min-w-[150px]">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="habilitado"
+                      checked={filters.habilitado}
+                      onChange={handleFilterChange}
+                      className="mr-2"
+                    />
+                    Habilitado
+                  </label>
+                </div>
+                <div className="flex-1 min-w-[150px]">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      name="noEliminado"
+                      checked={filters.noEliminado}
+                      onChange={handleFilterChange}
+                      className="mr-2"
+                    />
+                    No Eliminado
+                  </label>
+                </div>
+                <div className="flex-1 min-w-[300px]">
+                  <label className="block mb-2">Rango de Precio</label>
+                  <Slider
+                    range
+                    min={0}
+                    max={1000000}
+                    value={[filters.precioMinimo, filters.precioMaximo]}
+                    onChange={(value) => {
+                      const [min, max] = value as number[];
+                      setFilters((prevFilters) => ({
+                        ...prevFilters,
+                        precioMinimo: min,
+                        precioMaximo: max,
+                      }));
+                    }}
+                  />
+                  <div className="flex justify-between mt-2">
+                    <span>Precio Mínimo: {filters.precioMinimo}</span>
+                    <span>Precio Máximo: {filters.precioMaximo}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Botón para Crear Producto */}
+          <div className="mb-4 relative">
+            <Link
+              href="/admin/products/create"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10"
+            >
+              Crear Producto
+            </Link>
+          </div>
+
+
           {/* Tabla de Productos */}
-          <table className="min-w-full bg-white border border-gray-300">
-            <thead>
-              <tr>
-                <th className="border p-2">ID</th>
-                <th className="border p-2">Nombre</th>
-                <th className="border p-2">Descripción</th>
-                <th className="border p-2">Precio</th>
-                <th className="border p-2">Stock</th>
-                <th className="border p-2">Reservado</th>
-                <th className="border p-2">Habilitado</th>
-                <th className="border p-2">Eliminado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentProductos.map((producto) => (
-                <tr key={producto.productoId}>
-                  <td className="border p-2">
-                    {producto.eliminado ? (
-                        <span>{producto.productoId}</span>
-                    ) : (
-                        <Link href={`/admin/products/${producto.productoId}`}>
-                        {producto.productoId}
-                        </Link>
-                    )}
-                  </td>
-                  <td className="border-b p-2">{producto.nombre}</td>
-                  <td className="border-b p-2">{producto.descripcion}</td>
-                  <td className="border-b p-2">{producto.precio}</td>
-                  <td className="border-b p-2">{producto.stock}</td>
-                  <td className="border-b p-2">{producto.stockReservado}</td>
-                  <td className="border-b p-2">
-                    <input
-                      type="checkbox"
-                      checked={producto.habilitado}
-                      onChange={() =>
-                        !producto.eliminado &&
-                        handleCheckboxChange(producto.productoId, "habilitado", !producto.habilitado)
-                      }
-                      disabled={producto.eliminado}
-                    />
-                  </td>
-                  <td className="border-b p-2">
-                    <input
-                      type="checkbox"
-                      checked={producto.eliminado}
-                      onChange={() =>
-                        handleCheckboxChange(producto.productoId, "eliminado", !producto.eliminado)
-                      }
-                      disabled={producto.eliminado}
-                    />
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border">
+              <thead>
+                <tr className="bg-gray-200">
+                  <th className="border px-4 py-2">Nombre</th>
+                  <th className="border px-4 py-2">Descripción</th>
+                  <th className="border px-4 py-2">Precio</th>
+                  <th className="border px-4 py-2">Stock</th>
+                  <th className="border px-4 py-2">Habilitado</th>
+                  <th className="border px-4 py-2">Eliminado</th>
+                  <th className="border px-4 py-2">Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentProductos.map((producto) => (
+                  <tr key={producto.productoId}>
+                    <td className="border px-4 py-2">{producto.nombre}</td>
+                    <td className="border px-4 py-2">{producto.descripcion}</td>
+                    <td className="border px-4 py-2">{producto.precio}</td>
+                    <td className="border px-4 py-2">
+                      <div className="flex-grow">
+                          <p className="font-bold text-sm text-gray-600">Stock {producto.stock}</p>
+                          <p className="text-sm text-gray-600">Stock Reservado: {producto.stockReservado}</p>
+                        </div>
+                      
+                    </td>
+                    <td className="border px-4 py-2">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={producto.habilitado}
+                          onChange={() => handleCheckboxChange(producto.productoId, "habilitado", !producto.habilitado)}
+                          disabled={producto.eliminado}
+                        />
+                      </label>
+                    </td>
+                    <td className="border px-4 py-2">
+                      <label>
+                        <input
+                          type="checkbox"
+                          checked={producto.eliminado}
+                          onChange={() => handleCheckboxChange(producto.productoId, "eliminado", !producto.eliminado)}
+                          disabled={producto.eliminado}
+                        />
+                      </label>
+                    </td>
+                    <td className="border px-4 py-2">
+                      <Link href={`/admin/products/${producto.productoId}`} className="text-blue-500 hover:underline">Editar</Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
           {/* Paginación */}
           <div className="mt-4">
-            <span>Página {currentPage} de {totalPages}</span>
-            <div className="mt-2">
-              <button
-                onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
-                className="bg-gray-300 px-4 py-2 rounded mr-2"
-              >
-                Anterior
-              </button>
-              <button
-                onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
-                className="bg-gray-300 px-4 py-2 rounded"
-              >
-                Siguiente
-              </button>
-            </div>
+            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="bg-gray-300 px-4 py-2 rounded mr-2">Anterior</button>
+            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className="bg-gray-300 px-4 py-2 rounded">Siguiente</button>
+            <p className="mt-2">Página {currentPage} de {totalPages}</p>
           </div>
         </section>
 
-        {/* Renderizar el modal */}
+        {/* Modal de Confirmación */}
         {isModalOpen && <ConfirmationModal />}
       </div>
     </MainLayout>
