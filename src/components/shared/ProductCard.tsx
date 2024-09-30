@@ -6,6 +6,7 @@ import Modal from "@/components/Modal"; // Asegúrate de importar el componente 
 import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
+import { Reveal } from "@/animation/Reveal";
 
 interface ProductCardProps {
   product: Product;
@@ -58,14 +59,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
         </div>
       </Link>
-      <div className="flex flex-col items-start">
-        <h2 className="text-lg font-semibold text-slate-900">{product.nombre}</h2>
-        <p className="text-sm text-gray-600">{product.descripcion}</p>
-        <p className="text-md font-semibold mt-2 text-slate-600">${product.precio}</p>
-        <p className="text-sm mt-2">
-          Stock disponible: {product.stock - product.stockReservado}
-        </p>
-      </div>
+      <Link href={`/products/${product.productoId}`}>
+        <div className="flex flex-col items-start">
+          <h2 className="text-lg font-semibold text-slate-900">
+            {product.nombre}
+          </h2>
+          <p className="text-sm text-gray-600">{product.descripcion}</p>
+          <p className="text-md font-semibold mt-2 text-slate-600">
+            ${product.precio}
+          </p>
+          <p className="text-sm mt-2">
+            Stock disponible: {product.stock - product.stockReservado}
+          </p>
+        </div>
+      </Link>
 
       {/* Botón para agregar al carrito */}
 

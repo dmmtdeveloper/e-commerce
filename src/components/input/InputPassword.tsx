@@ -21,7 +21,7 @@ export const Input: React.FC<InputPasswordProps> = ({
         value={value}
         onChange={onChange}
         autoComplete="true"
-        className="border border-slate-300 py-2 px-4 w-full rounded-xl focus:outline-blue-400" // Añade espacio a la derecha para el ícono
+        className="border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-blue-400" // Añade espacio a la derecha para el ícono
       />
       {icon && (
         <button

@@ -5,7 +5,7 @@ import { footerLinks, socialMedia } from "@/types/footer-Links";
 import Link from "next/link";
 import { Reveal } from "@/animation/Reveal";
 import Image from "next/image";
-import logo from "@/public/assets/icons/LOGO.svg"
+import logo from "@/public/assets/icons/LOGO.svg";
 
 export const Footer = () => {
   return (
@@ -16,8 +16,7 @@ export const Footer = () => {
         "flex-col px-5",
         "xl:px-44",
         "border-t-1",
-        "border-gray-950/[.1] bg-slate-50",
-       
+        "border-gray-950/[.1] bg-slate-50"
       )}
     >
       <div
@@ -28,12 +27,24 @@ export const Footer = () => {
         )}
       >
         <div className="flex-1 flex flex-col gap-2">
-              <div>
-                <Image className="w-32 h-auto" height={100} width={100} src={logo} alt="logo" priority/>
-              </div>
-          <small className={clsx("text-black", "text-black-100", "text-[11px]")}>
-            Síguenos en nuestras redes sociales
-          </small>
+          <Reveal>
+            <Image
+              className="w-32 h-auto"
+              height={100}
+              width={100}
+              src={logo}
+              alt="logo"
+              priority
+            />
+          </Reveal>
+
+          <Reveal>
+            <small
+              className={clsx("text-black", "text-black-100", "text-[11px]")}
+            >
+              Síguenos en nuestras redes sociales
+            </small>
+          </Reveal>
           <Reveal>
             <div className="flex gap-4 flex-row md:mt-0">
               {socialMedia.map((social, index) => (
@@ -46,7 +57,6 @@ export const Footer = () => {
                     "w-10 h-auto",
                     "text-black",
                     "hover:text-blue-500",
-            
 
                     /*hover efect*/
                     "hover:scale-[1.15]",
@@ -63,7 +73,12 @@ export const Footer = () => {
         </div>
 
         <div
-          className={clsx("flex-[2]", "w-full flex xl:flex-row", "justify-between", "flex-wrap")}
+          className={clsx(
+            "flex-[2]",
+            "w-full flex xl:flex-row",
+            "justify-between",
+            "flex-wrap"
+          )}
         >
           {footerLinks.map((footerLink, index) => (
             <div key={index} className="flex flex-col my-4 min-w-[150px]">
@@ -78,7 +93,7 @@ export const Footer = () => {
                     <li
                       key={linkIndex}
                       className={clsx(
-                        "my-2 text-small",
+                        "my-2 text-sm",
                         "dark:text-white-100",
                         "text-black-200",
                         "leading-[24px]",
@@ -88,7 +103,9 @@ export const Footer = () => {
                       )}
                     >
                       {link.link ? (
-                        <Link className="hover:text-blue-500" href={link.link}>{link.name}</Link>
+                        <Link className="hover:text-blue-500" href={link.link}>
+                          {link.name}
+                        </Link>
                       ) : (
                         <span className="hover:text-blue-500">{link.name}</span>
                       )}
@@ -104,7 +121,7 @@ export const Footer = () => {
       <Reveal>
         <div className="w-full md:flex-col flex justify-between items-center  flex-col  border-t-[1px] border-t-black-200">
           <small className="text-black text-black-200 text-xs text-center mt-4">
-          Copyright © 2024 pcstore.cl. Todos los derechos reservados.
+            Copyright © 2024 pcstore.cl. Todos los derechos reservados.
           </small>
           {/* <p className="text-xs text-center dark:text-white-200 text-black-200 ">
             <span>About this website:</span> built with React & Next.js, TypeScript, Tailwind CSS,
