@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import { AuthButton } from "@/components/buttons/AuthButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -13,6 +13,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MainLayout from "../layouts/MainLayout";
 import registerImage from "@/public/assets/img/register.jpg";
+import { Reveal } from "@/animation/Reveal";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -60,62 +61,70 @@ export default function RegisterPage() {
     <MainLayout>
       <section
         className={clsx(
-          "min-h-screen mt-32 2xl:mt-0",
-          "2xl:grid 2xl:grid-cols-2",
-          "md:flex md:flex-col-reverse",
-          "flex flex-col-reverse",
-          "items-center justify-center"
+          "min-h-screen flex items-center justify-center bg-slate-100"
         )}
       >
-        <Image
-          className="2xl:h-[54rem] 2xl:w-[44rem] w-full"
-          width={900}
-          height={1500}
-          alt="register"
-          src={registerImage}
-          priority
-        />
+        <article className="2xl:w-[60rem] mt-40 2xl:mt-0 p-4 grid grid-cols-1 2xl:grid-cols-2 flex-col-reverse">
+          {/* Imagen */}
 
-        <article className="2xl:w-[44rem] mt-40 2xl:mt-0 w-[20rem]">
-          <div className="flex flex-col shadow-md gap-10 bg-slate-100 2xl:px-20 py-20 rounded-3xl px-4">
-            <Title text="Registro" />
-
-            <form onSubmit={handleRegister} className="flex flex-col gap-4">
-              <InputComponent
-                type="text"
-                value={nombre}
-                placeholder="Ingresa tu Nombre"
-                onChange={handleChange}
-                name="nombre"
+          <Reveal>
+            <div className="flex justify-center items-center">
+              <Image
+                className="h-[30rem] 2xl:w-[24rem] w-full shadow-xl rounded-3xl"
+                width={800}
+                height={1500}
+                alt="register"
+                src={registerImage}
+                priority
               />
-              <InputComponent
-                type="email"
-                value={correo}
-                placeholder="Ingresa tu correo electrónico"
-                onChange={handleChange}
-                name="correo"
-              />
-
-              <Input
-                type={showPassword ? "text" : "password"}
-                name="clave"
-                placeholder="Ingrese contraseña"
-                value={clave}
-                onChange={handleChange}
-                icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-              />
-
-              <AuthButton text="Registrate" />
-            </form>
-            <div className="flex gap-4">
-              <p>¿Ya tienes una cuenta?</p>
-              <Link className="text-blue-500 underline" href="/login">
-                Inicia sesión
-              </Link>
             </div>
-          </div>
+          </Reveal>
+
+          {/* Formulario */}
+          <Reveal>
+            <div className="flex flex-col  gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
+              <Title text="Registro" />
+
+              <form onSubmit={handleRegister} className="flex flex-col gap-4">
+                <InputComponent
+                  type="text"
+                  value={nombre}
+                  placeholder="Ingresa tu Nombre"
+                  onChange={handleChange}
+                  name="nombre"
+                />
+                <InputComponent
+                  type="email"
+                  value={correo}
+                  placeholder="Ingresa tu correo electrónico"
+                  onChange={handleChange}
+                  name="correo"
+                />
+
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  name="clave"
+                  placeholder="Ingrese contraseña"
+                  value={clave}
+                  onChange={handleChange}
+                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                />
+
+                <AuthButton text="Registrate" />
+              </form>
+              <div className="flex gap-4">
+                <p className="text-sm">¿Ya tienes una cuenta?</p>
+                <Link
+                  className="text-blue-500 hover:underline text-sm"
+                  href="/login"
+                >
+                  Inicia sesión
+                </Link>
+              </div>
+            </div>
+          </Reveal>
         </article>
       </section>
     </MainLayout>

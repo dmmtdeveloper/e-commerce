@@ -16,7 +16,7 @@ export const InputComponent: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         autoComplete="true"
-        className="border border-slate-300 py-2 px-4 w-full rounded-xl focus:outline-blue-400"
+        className="border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-blue-400"
         name={name}
       />
     </div>
