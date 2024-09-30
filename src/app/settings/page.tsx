@@ -96,7 +96,7 @@ export default function SettingsPage() {
         const imageUrl = await uploadImage(file, filePath);
         console.log("Uploaded image URL:", imageUrl);
         setAvatar(imageUrl); // Establecemos la URL de la imagen
-
+        sessionStorage.setItem("avatar", imageUrl);
         if (imageUrl && id) {
             await UpdateFotoUsuario(id, imageUrl);
             openSuccessModal("Avatar actualizado de forma correcta.");
