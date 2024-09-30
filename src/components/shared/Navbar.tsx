@@ -18,7 +18,7 @@ import logo from "@/public/assets/icons/LOGO.svg";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { email, name, isAuthenticated, logout, isAdmin } = useAuthStore();
+  const { email, name, isAuthenticated, logout, isAdmin, avatar } = useAuthStore();
   const { items } = useCartStore();
   const router = useRouter();
 
@@ -121,6 +121,10 @@ const Navbar: React.FC = () => {
                 <div className="p-4">
                   <article className="flex justify-center items-center bg-slate-300 p-6 rounded-3xl shadow-sm">
                     <div className="flex flex-col items-center justify-center gap-2">
+                    {avatar !== null && avatar !== ""  && avatar !== undefined ? (
+                      // <img src={avatar} alt="Avatar" style={{ borderRadius: '50%', objectFit: 'cover' }}  width={50} height={50}/>
+                      <Image src={avatar} alt="Avatar" style={{ borderRadius: '50%', objectFit: 'cover' }}  width={50} height={50} priority/>
+                    ) : (
                       <Image
                         width={50}
                         height={50}
@@ -128,6 +132,8 @@ const Navbar: React.FC = () => {
                         src={userImg}
                         alt="user"
                       />
+                    )}
+                      
                       <p className="text-sm">{name}</p>
                       <p className="text-sm">{email}</p>
                       <button
