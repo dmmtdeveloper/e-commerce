@@ -1,5 +1,5 @@
 "use client";
-import Navbar from "@/components/shared/Navbar";
+import Navbar from "@/components/shared/navbar-component/Navbar";
 import { Footer } from "@/components/shared/Footer";
 
 export default function MainLayout({
