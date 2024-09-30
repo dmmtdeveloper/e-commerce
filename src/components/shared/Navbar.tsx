@@ -14,13 +14,14 @@ import { useState, useRef, useEffect, MutableRefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import useCartStore from "@/store/cartStore";
-import userImg from "@/public/assets/img/user.png";
+import userImage from "@/public/assets/img/user.png";
 import logo from "@/public/assets/icons/LOGO.svg";
 import { motion } from "framer-motion";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  const { email, name, isAuthenticated, logout, isAdmin, avatar } = useAuthStore();
+  const { email, name, isAuthenticated, logout, isAdmin, avatar } =
+    useAuthStore();
   const { items } = useCartStore();
   const router = useRouter();
 
@@ -120,7 +121,27 @@ const Navbar: React.FC = () => {
                     onClick={() => setMenuOpen(!menuOpen)}
                     className="cursor-pointer hidden md:block hover:text-blue-600"
                   >
-                    {name || email}
+                    {avatar !== null &&
+                    avatar !== "" &&
+                    avatar !== undefined ? (
+                      <Image
+                        src={avatar}
+                        alt="Avatar"
+                        style={{ borderRadius: "50%", objectFit: "cover" }}
+                        width={50}
+                        height={50}
+                        priority
+                      />
+                    ) : (
+                      <Image
+                        src={userImage}
+                        alt="user"
+                        style={{ borderRadius: "50%", objectFit: "cover" }}
+                        width={50}
+                        height={50}
+                        priority
+                      />
+                    )}
                   </span>
 
                   <span
@@ -149,19 +170,28 @@ const Navbar: React.FC = () => {
                 <div className="p-4">
                   <article className="flex justify-center items-center bg-slate-300 p-6 rounded-3xl shadow-sm">
                     <div className="flex flex-col items-center justify-center gap-2">
-                    {avatar !== null && avatar !== ""  && avatar !== undefined ? (
-                      // <img src={avatar} alt="Avatar" style={{ borderRadius: '50%', objectFit: 'cover' }}  width={50} height={50}/>
-                      <Image src={avatar} alt="Avatar" style={{ borderRadius: '50%', objectFit: 'cover' }}  width={50} height={50} priority/>
-                    ) : (
-                      <Image
-                        width={50}
-                        height={50}
-                        priority
-                        src={userImg}
-                        alt="user"
-                      />
-                    )}
-                      
+                      {avatar !== null &&
+                      avatar !== "" &&
+                      avatar !== undefined ? (
+                        <Image
+                          src={avatar}
+                          alt="Avatar"
+                          style={{ borderRadius: "50%", objectFit: "cover" }}
+                          width={50}
+                          height={50}
+                          priority
+                        />
+                      ) : (
+                        <Image
+                          src={userImage}
+                          alt="user"
+                          style={{ borderRadius: "50%", objectFit: "cover" }}
+                          width={50}
+                          height={50}
+                          priority
+                        />
+                      )}
+
                       <p className="text-sm">{name}</p>
                       <p className="text-sm">{email}</p>
                       <button

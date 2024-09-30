@@ -253,7 +253,7 @@ export default function SettingsPage() {
               <td className="p-2">
               {!avatar && <input type="file" onChange={handleFileChange} />}
               
-              {avatar && <img src={avatar} width={300} height={300} alt="User Avatar"/>}
+              {avatar && <Image src={avatar} width={300} height={300} alt="User Avatar"/>}
               </td>
               <td className="p-2">
                   {avatar && 
