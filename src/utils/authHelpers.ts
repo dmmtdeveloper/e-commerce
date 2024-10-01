@@ -6,12 +6,12 @@ import { DetallePedido, Pedido, VmDetallePedido, VmPedido } from "@/types/types"
 import { Product} from "@/types/product";
 
 export const addPedido = async (
-  pedidoId: number,
+  // pedidoId: number,
   token: string,
-  estadoId: number,
+  // estadoId: number,
   valorTotal: number,
-  fecha: string,
-  eliminado: boolean,
+  // fecha: string,
+  // eliminado: boolean,
   detalles: DetallePedido[]
 ) => {
   try {
@@ -20,15 +20,16 @@ export const addPedido = async (
       (acc, detalle) => acc + detalle.precioTotal, // Suponiendo que cada detalle tiene una propiedad `totalPrice`
       0
     );
+
     console.log(totalPedido);
 
-    const response = await axiosInstance.post("/api/Pedido", {
-      pedidoId: 0,
+    const response = await axiosInstance.post(`/api/Pedido`, {
+      // pedidoId: 0,
       token,
-      estadoId: 1,
+      // estadoId: 1,
       valorTotal: totalPedido, // Usar el total calculado
-      fecha,
-      eliminado: false,
+      // fecha: '',
+      // eliminado: false,
       detalles,
     });
 
@@ -51,7 +52,7 @@ export const register = async (
   clave: string
 ) => {
   try {
-    const response = await axiosInstance.post("/api/Usuario", {
+    const response = await axiosInstance.post(`/api/Usuario`, {
       usuarioId: 0,
       nombre,
       correo,
@@ -59,6 +60,7 @@ export const register = async (
       esAdmin: false,
       eliminado: false,
       habilitado: true,
+      foto: ''
     });
 
     return response.data;
@@ -80,6 +82,7 @@ export interface Usuario {
   esAdmin: boolean;
   eliminado: boolean;
   habilitado: boolean;
+  foto: string;
 }
 
 export const GetUsuarios = async (): Promise<Usuario[]> => {
@@ -105,7 +108,7 @@ export const AddProducto = async (
   extension: string
 ) => {
   try {
-    const response = await axiosInstance.post("/Api/Productos", {
+    const response = await axiosInstance.post(`/Api/Productos`, {
       productoId: 0, // Esto se asume que se autogenera en el backend
       nombre,
       descripcion,
@@ -338,6 +341,82 @@ export const UpdateClaveUsuario = async (
   }
 };
 
+// export const UpdateFotoUsuario = async (
+//   usuarioId: number,
+//   foto: string
+// ): Promise<void> => {
+//   try {
+//     const response = await axiosInstance.put<void>(
+//       `/api/Usuario/update/avatar/${usuarioId}/${foto}`
+//     );
+
+//     if (response.status === 204) {
+//       console.log("Foto actualizada con éxito.");
+//     } else {
+//       throw new Error("Respuesta inesperada del servidor.");
+//     }
+//   } catch (error) {
+//     handleError(error);
+//   }
+// };
+
+export const UpdateFotoUsuario = async (
+  usuarioId: number,
+  foto: string
+): Promise<void> => {
+  try {
+
+    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
+      `/api/Usuario/update/avatar`, 
+      {
+        usuarioId: usuarioId,
+        foto: foto 
+      }
+    );
+
+    if (response.data.isSuccess) {
+      console.log("Avatar actualizado con éxito.");
+    } else {
+      console.error(response.data.Message); // Captura el mensaje personalizado de error
+      throw new Error(response.data.Message); // Lanza un error con el mensaje personalizado
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const UpdateProductoAll2 = async (producto: Product): Promise<void> => {
+  try {
+    
+    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
+      `/api/Productos/update/all`, // Cambia a POST y elimina el ID del URL
+      {
+        ProductoId: producto.productoId, // Incluye el ID del producto en el cuerpo
+        Nombre: producto.nombre,
+        Descripcion: producto.descripcion,
+        Stock: producto.stock,
+        Precio: producto.precio,
+        Habilitado: producto.habilitado,
+        Eliminado: producto.eliminado,
+        Foto: producto.foto ?? "",
+        NombreFoto: producto.nombreFoto ?? "",
+        Extension: producto.extension ?? ""
+      }
+    );
+
+    // Verifica si la respuesta es exitosa
+    if (response.data.isSuccess) {
+      console.log("Producto actualizado con éxito.");
+    } else {
+      console.error(response.data.Message); // Captura el mensaje personalizado de error
+      throw new Error(response.data.Message); // Lanza un error con el mensaje personalizado
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+
 //producto
 export const UpdateHabilitadoProducto = async (
   productoId: number,
@@ -369,6 +448,24 @@ export const UpdateLimpiaFotoProducto = async (
 
     if (response.status === 204) {
       console.log("Foto de producto actualizada.");
+    } else {
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+export const UpdateLimpiaFotoUsuario = async (
+  usuarioId: number
+): Promise<void> => {
+  try {
+    const response = await axiosInstance.put<void>(
+      `/api/usuario/update/cleanfoto/${usuarioId}`
+    );
+
+    if (response.status === 204) {
+      console.log("Foto de usuario eliminada.");
     } else {
       throw new Error("Respuesta inesperada del servidor.");
     }
@@ -496,14 +593,16 @@ export const login = async (data: LoginData) => {
       decodedToken &&
       typeof decodedToken === "object" &&
       "Token" in decodedToken &&
-      "NombreUsuario" in decodedToken
+      "NombreUsuario" in decodedToken && 
+      "Avatar" in decodedToken
     ) {
       // Llamar al store para iniciar sesión
       useAuthStore
         .getState()
-        .login(data.email, decodedToken.Token, decodedToken.NombreUsuario);
+        .login(data.email, decodedToken.Token, decodedToken.NombreUsuario, decodedToken.Avatar);
       console.log(decodedToken.Token);
       console.log(decodedToken.NombreUsuario);
+      console.log(decodedToken.Avatar);
     } else {
       console.error("El token no pudo ser decodificado o es inválido.");
       throw new Error("Token inválido");

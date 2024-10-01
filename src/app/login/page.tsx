@@ -7,12 +7,12 @@ import { login } from "../../utils/authHelpers";
 import { Title } from "@/components/title/Title";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import loginImage from "@/public/assets/img/Banner_login.jpg";
 import MainLayout from "../layouts/MainLayout";
+import { Reveal } from "@/animation/Reveal";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -30,15 +30,12 @@ export default function LoginPage() {
   };
 
   const router = useRouter();
-  // const loginStore = login();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login({ email, password });
-
       alert("Login exitoso");
-      // loginStore(email, data.token); // Inicia sesión en el store
       router.push("/");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
@@ -48,59 +45,64 @@ export default function LoginPage() {
 
   return (
     <MainLayout>
-      <section
-        className={clsx(
-          "min-h-screen mt-32 2xl:mt-0",
-          "2xl:grid 2xl:grid-cols-2",
-          "md:flex md:flex-col-reverse",
-          "flex flex-col-reverse",
-          "items-center justify-center"
-        )}
-      >
-        <Image
-          className="2xl:h-[54rem] 2xl:w-[44rem] w-full"
-          width={900}
-          height={1500}
-          alt="login"
-          src={loginImage}
-          priority
-        />
-
-        <article className="2xl:w-[44rem] mt-40 2xl:mt-0 w-[20rem]">
-          <div className="flex flex-col shadow-md gap-10 bg-slate-100 2xl:px-20 py-20 rounded-3xl px-4">
-            <Title text="Iniciar Sesión" />
-
-            <form onSubmit={handleLogin} className="flex flex-col gap-4">
-              <InputComponent
-                type="email"
-                value={email}
-                placeholder="Ingresa tu correo electrónico"
-                onChange={(e) => setEmail(e.target.value)}
-                name="email"
+      <Reveal>
+        <section
+          className={clsx(
+            "min-h-screen flex items-center justify-center bg-slate-100"
+          )}
+        >
+          <article className="2xl:w-[60rem] mt-40 2xl:mt-0 p-4 grid grid-cols-1 2xl:grid-cols-2 flex-col-reverse">
+            {/* Imagen */}
+            <div className="flex justify-center items-center">
+              <Image
+                className="h-[30rem] 2xl:w-[24rem] w-full shadow-xl rounded-3xl mb-8"
+                width={800}
+                height={1500}
+                alt="login"
+                src={loginImage}
+                priority
               />
-
-              <Input
-                type={showPassword ? "text" : "password"}
-                placeholder="Ingrese contraseña"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                onMouseDown={handleMouseDown}
-                onMouseUp={handleMouseUp}
-                name="password"
-              />
-
-              <AuthButton text="Iniciar Sesión" />
-            </form>
-            <div className="flex gap-4">
-              <p>¿Eres nuevo?</p>
-              <Link className="text-blue-500 underline" href={"/register"}>
-                Regístrate
-              </Link>
             </div>
-          </div>
-        </article>
-      </section>
+
+            {/* Formulario */}
+            <div className="flex flex-col gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
+              <Title text="Iniciar Sesión" />
+
+              <form onSubmit={handleLogin} className="flex flex-col gap-4">
+                <InputComponent
+                  type="email"
+                  value={email}
+                  placeholder="Ingresa tu correo electrónico"
+                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                />
+
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Ingrese contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                  name="password"
+                />
+
+                <AuthButton text="Iniciar Sesión" />
+              </form>
+              <div className="flex gap-4">
+                <p className="text-sm">¿Eres nuevo?</p>
+                <Link
+                  className="text-blue-500 hover:underline text-sm"
+                  href="/register"
+                >
+                  Regístrate
+                </Link>
+              </div>
+            </div>
+          </article>
+        </section>
+      </Reveal>
     </MainLayout>
   );
 }

@@ -8,12 +8,16 @@ import MainLayout from "../../layouts/MainLayout";
 import NavAdmin from "@/components/shared/NavAdmin"; 
 import Link from 'next/link';
 import { VmPedido } from "@/types/types";
+import useAdmin from '@/hooks/useAdmin';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function OrdersPage() {
+  useAdmin();
   const [VmPedidos, setPedidos] = useState<VmPedido[]>([]);
   const [filteredPedidos, setFilteredPedidos] = useState<VmPedido[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAdmin } = useAuthStore();
 
   // Estados para los filtros
   const [filters, setFilters] = useState({
@@ -100,6 +104,8 @@ export default function OrdersPage() {
   }
 
   return (
+    <>
+    {isAdmin && (
     <MainLayout>
       <div className="relative mt-20">
         {/* Navbar */}
@@ -239,5 +245,7 @@ export default function OrdersPage() {
         </section>
       </div>
     </MainLayout>
+    )}
+    </>
   );
 }

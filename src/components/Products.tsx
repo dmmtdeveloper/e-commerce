@@ -6,6 +6,7 @@ import axiosInstance from "@/utils/axiosInstance";
 import { GoChevronLeft } from "react-icons/go";
 import { GoChevronRight } from "react-icons/go";
 import { InputComponent } from "./input/InputComponent";
+import { Reveal } from "@/animation/Reveal";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
@@ -54,66 +55,70 @@ export default function ProductsPage() {
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
-    <section className="pt-24 pb-32 bg-slate-100">
-      <div className="p-4">
-        <InputComponent
-          type="text"
-          placeholder="Buscar productos..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          name="search"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
-        {currentProducts.length > 0 ? (
-          currentProducts.map((product) => (
-            <ProductCard key={product.productoId} product={product} />
-          ))
-        ) : (
-          <p>No se encontraron productos.</p>
-        )}
-      </div>
-
-      {/* Controles de paginación */}
-      <div className="flex items-center justify-center gap-5 mt-4">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
-          disabled={currentPage === 1}
-        >
-          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
-            <GoChevronLeft className="text-2xl" />
+    <Reveal>
+      <section className="pt-24 pb-32 bg-slate-100">
+        <Reveal>
+          <div className="p-4 mt-10 2xl:mt-10">
+            <InputComponent
+              type="text"
+              placeholder="Buscar productos..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              name="search"
+            />
           </div>
-        </button>
+        </Reveal>
 
-        <span>
-          Página {currentPage} de {totalPages}
-        </span>
+        <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
+          {currentProducts.length > 0 ? (
+            currentProducts.map((product) => (
+              <ProductCard key={product.productoId} product={product} />
+            ))
+          ) : (
+            <p>No se encontraron productos.</p>
+          )}
+        </div>
 
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          } // Ir a la página siguiente
-          disabled={currentPage === totalPages}
-        >
-          <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
-            <GoChevronRight className="text-2xl" />
-          </div>
-        </button>
+        {/* Controles de paginación */}
+        <div className="flex items-center justify-center gap-5 mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
+            disabled={currentPage === 1}
+          >
+            <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+              <GoChevronLeft className="text-2xl" />
+            </div>
+          </button>
 
-        <select
-          className="border p-2 rounded focus:outline-none"
-          value={itemsPerPage}
-          onChange={(e) => {
-            setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
-            setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
-          }}
-        >
-          <option value={10}>10</option>
-          <option value={5}>5</option>
-          <option value={2}>2</option>
-        </select>
-      </div>
-    </section>
+          <span>
+            Página {currentPage} de {totalPages}
+          </span>
+
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            } // Ir a la página siguiente
+            disabled={currentPage === totalPages}
+          >
+            <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
+              <GoChevronRight className="text-2xl" />
+            </div>
+          </button>
+
+          <select
+            className="border p-2 rounded focus:outline-none"
+            value={itemsPerPage}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página
+              setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
+            }}
+          >
+            <option value={10}>10</option>
+            <option value={5}>5</option>
+            <option value={2}>2</option>
+          </select>
+        </div>
+      </section>
+    </Reveal>
   );
 }

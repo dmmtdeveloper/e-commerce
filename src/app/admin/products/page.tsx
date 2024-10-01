@@ -5,15 +5,19 @@ import NavAdmin from "@/components/shared/NavAdmin";
 import { GetProductos, UpdateHabilitadoProducto, UpdateEliminadoProducto } from "@/utils/authHelpers"; //
 import { Product } from "@/types/product";
 import Link from "next/link";
+import Image from "next/image";
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
+import useAdmin from '@/hooks/useAdmin';
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function ProductsPage() {
+  useAdmin();
   const [productos, setProductos] = useState<Product[]>([]);
   const [filteredProductos, setFilteredProductos] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  
+  const { isAdmin } = useAuthStore();
   // Estado para el modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentAction, setCurrentAction] = useState<{
@@ -153,6 +157,8 @@ export default function ProductsPage() {
   }
 
   return (
+    <>
+    {isAdmin && (
     <MainLayout>
       <div className="relative mt-20 mb-20">
         {/* Navbar */}
@@ -261,10 +267,7 @@ export default function ProductsPage() {
             <table className="min-w-full border">
               <thead>
                 <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">Nombre</th>
-                  <th className="border px-4 py-2">Descripción</th>
-                  <th className="border px-4 py-2">Precio</th>
-                  <th className="border px-4 py-2">Stock</th>
+                  <th className="border px-4 py-2">Producto</th>
                   <th className="border px-4 py-2">Habilitado</th>
                   <th className="border px-4 py-2">Eliminado</th>
                   <th className="border px-4 py-2">Acciones</th>
@@ -273,15 +276,25 @@ export default function ProductsPage() {
               <tbody>
                 {currentProductos.map((producto) => (
                   <tr key={producto.productoId}>
-                    <td className="border px-4 py-2">{producto.nombre}</td>
-                    <td className="border px-4 py-2">{producto.descripcion}</td>
-                    <td className="border px-4 py-2">{producto.precio}</td>
                     <td className="border px-4 py-2">
-                      <div className="flex-grow">
-                          <p className="font-bold text-sm text-gray-600">Stock {producto.stock}</p>
-                          <p className="text-sm text-gray-600">Stock Reservado: {producto.stockReservado}</p>
+                      <div className="flex items-center space-x-4">
+                        {producto.foto && producto.foto !== "" ? (
+                          <Image src={`data:image/${producto.extension};base64,${producto.foto}`} alt={producto.nombre} className="w-32 h-32 object-cover rounded" height={80} width={80} priority />
+                        ) : (
+                          <div className="h-32 w-32 bg-gray-200 mr-4"></div>
+                        )}
+                        
+                        <div>
+                          <p className="font-bold text-lg">{producto.nombre}</p>
+                          <p className="text-sm text-gray-600">{producto.descripcion}</p>
+                          <p className="text-sm font-bold text-gray-800">Precio: ${producto.precio}</p>
                         </div>
-                      
+                        <div>
+                        <p className="text-sm text-gray-600">Stock: {producto.stock}</p>
+                        <p className="text-sm text-gray-600">Stock Reservado: {producto.stockReservado}</p>
+                        <p className="font-bold text-md text-gray-600">Stock Disponible: {producto.stock - producto.stockReservado}</p>
+                        </div>
+                      </div>
                     </td>
                     <td className="border px-4 py-2">
                       <label>
@@ -324,5 +337,7 @@ export default function ProductsPage() {
         {isModalOpen && <ConfirmationModal />}
       </div>
     </MainLayout>
+    )}
+    </>
   );
 }

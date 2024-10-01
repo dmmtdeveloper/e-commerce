@@ -6,7 +6,7 @@ export const footerLinks = [
       title: "Contacto",
       links: [
         {
-          name: "contacto@pcStore.net",
+          name: "contacto@pcStore.cl",
           link: "",
         },
         {
