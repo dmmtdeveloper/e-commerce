@@ -13,7 +13,7 @@ import clsx from "clsx";
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
-  const { isAuthenticated, logout } = useAuthStore();
+  const { isAuthenticated, logout, isAdmin } = useAuthStore();
 
   const router = useRouter();
 
@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
         <TopBar />
 
         {/* Barra principal */}
-        <div className="flex w-full items-center justify-between px-4 2xl:px-16">
+        <div className="flex w-full items-center justify-between px-4 2xl:px-16 pd-20">
           <section className="flex w-full items-center justify-between">
             <NavbarHeader menuOpen={menuOpen} toggleMenu={toggleMenu} />
             <div>
@@ -90,7 +90,7 @@ const Navbar: React.FC = () => {
                       {/* User */}
                       <UserMenu handleLogout={handleLogout} />
                       {/* Admin */}
-                      <AdminMenu />
+                      {isAdmin && (<AdminMenu />)}
                     </div>
                   </div>
                 </div>

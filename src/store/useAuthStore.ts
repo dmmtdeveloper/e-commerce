@@ -59,6 +59,9 @@ export const useAuthStore = create<AuthState>()(
               usuario,
               isAdmin: usuario.esAdmin, // Establecer si es admin
             });
+
+            sessionStorage.setItem("isAdmin", usuario.esAdmin? "true":"false");
+
           } catch (error) {
             console.error("Error verificando admin:", error);
             set({ isAdmin: false }); // Si hay error, no es admin

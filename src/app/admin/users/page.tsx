@@ -5,6 +5,8 @@ import NavAdmin from "@/components/shared/NavAdmin";
 import { GetUsuarios } from "@/utils/authHelpers";
 import { Usuario } from "@/utils/authHelpers";
 import Link from "next/link";
+import useAdmin from '@/hooks/useAdmin';
+import { useAuthStore } from "@/store/useAuthStore";
 import {
   UpdateHabilitadoUsuario,
   UpdateEliminadoUsuario,
@@ -12,10 +14,13 @@ import {
 } from "@/utils/authHelpers";
 
 export default function UsersPage() {
+  useAdmin();
+  
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [filteredUsuarios, setFilteredUsuarios] = useState<Usuario[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { isAdmin } = useAuthStore();
 
   // Estados para los filtros
   const [filters, setFilters] = useState({
@@ -44,13 +49,13 @@ export default function UsersPage() {
     GetUsuarios()
       .then((usuarios) => {
         setUsuarios(usuarios);
-        setLoading(false);
+        // setLoading(false);
         setFilteredUsuarios(usuarios);
       })
       .catch((error) => {
         setError("Error obteniendo los usuarios");
         console.error("Error obteniendo los usuarios:", error);
-        setLoading(false);
+        // setLoading(false);
       });
   }, []);
 
@@ -155,15 +160,17 @@ export default function UsersPage() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  // if (loading) {
+  //   return <div>Cargando...</div>;
+  // }
 
   if (error) {
     return <div>{error}</div>;
   }
 
   return (
+    <>
+    {isAdmin && (
     <MainLayout>
       <div className="relative mt-20">
         {/* Navbar */}
@@ -315,5 +322,7 @@ export default function UsersPage() {
         {isModalOpen && <ConfirmationModal />}
       </div>
     </MainLayout>
+        )}
+    </>
   );
 }

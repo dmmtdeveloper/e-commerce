@@ -238,7 +238,7 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <section className="p-4 mt-32 gap-10 flex flex-col">
+      <section className="p-4 mt-16 gap-10 flex flex-col">
         <NavSetting />
   
         <div>
