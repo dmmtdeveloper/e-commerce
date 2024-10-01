@@ -42,7 +42,7 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
             <Link href="/cart" className="relative">
               <MdOutlineShoppingCart className="text-2xl" />
               {totalItemsInCart > 0 && (
-                <span className="absolute bottom-2 left-4 bg-red-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
+                <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
                   {totalItemsInCart}
                 </span>
               )}
