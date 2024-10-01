@@ -6,12 +6,12 @@ import { DetallePedido, Pedido, VmDetallePedido, VmPedido } from "@/types/types"
 import { Product} from "@/types/product";
 
 export const addPedido = async (
-  pedidoId: number,
+  // pedidoId: number,
   token: string,
-  estadoId: number,
+  // estadoId: number,
   valorTotal: number,
-  fecha: string,
-  eliminado: boolean,
+  // fecha: string,
+  // eliminado: boolean,
   detalles: DetallePedido[]
 ) => {
   try {
@@ -20,15 +20,16 @@ export const addPedido = async (
       (acc, detalle) => acc + detalle.precioTotal, // Suponiendo que cada detalle tiene una propiedad `totalPrice`
       0
     );
+
     console.log(totalPedido);
 
-    const response = await axiosInstance.post("/api/Pedido", {
-      pedidoId: 0,
+    const response = await axiosInstance.post(`/api/Pedido`, {
+      // pedidoId: 0,
       token,
-      estadoId: 1,
+      // estadoId: 1,
       valorTotal: totalPedido, // Usar el total calculado
-      fecha,
-      eliminado: false,
+      // fecha: '',
+      // eliminado: false,
       detalles,
     });
 
@@ -51,7 +52,7 @@ export const register = async (
   clave: string
 ) => {
   try {
-    const response = await axiosInstance.post("/api/Usuario", {
+    const response = await axiosInstance.post(`/api/Usuario`, {
       usuarioId: 0,
       nombre,
       correo,
@@ -59,6 +60,7 @@ export const register = async (
       esAdmin: false,
       eliminado: false,
       habilitado: true,
+      foto: ''
     });
 
     return response.data;
@@ -106,7 +108,7 @@ export const AddProducto = async (
   extension: string
 ) => {
   try {
-    const response = await axiosInstance.post("/Api/Productos", {
+    const response = await axiosInstance.post(`/Api/Productos`, {
       productoId: 0, // Esto se asume que se autogenera en el backend
       nombre,
       descripcion,

@@ -21,7 +21,7 @@ export interface InputProps {
 
 
 export interface DetallePedido {
-  foto: boolean;
+  // foto: string;
   pedidoDetalleId: number;
   pedidoId: number;
   productoId: number;

@@ -32,11 +32,11 @@ export default function CartPage() {
       productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
       cantidad: item.quantity,
       precio: item.price,
-      precioTotal: item.quantity * item.price, // Ajusta el precio total según la lógica de tu aplicación
+      precioTotal: item.quantity * item.price
     }));
 
     try {
-      await addPedido(0, token, 1, 1, currentDate, false, detallesPedido);
+      await addPedido(token, 1, detallesPedido); //await addPedido(0, token, 1, 1, '', false, detallesPedido);
       alert("Pedido Realizad con exito")
       // setShowSuccessModal(true); // Muestra el modal de éxito
       clearCart(); // Limpia el carrito después de crear el pedido
