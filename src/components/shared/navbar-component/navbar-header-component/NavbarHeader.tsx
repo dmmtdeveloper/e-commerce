@@ -1,18 +1,28 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import logo from '@/public/assets/icons/LOGO.svg';
-import { MdOutlineShoppingCart } from 'react-icons/md';
+import Link from "next/link";
+import Image from "next/image";
+import logo from "@/public/assets/icons/LOGO.svg";
+import { MdOutlineShoppingCart } from "react-icons/md";
 import { useAuthStore } from "@/store/useAuthStore";
-import useCartStore from '@/store/cartStore';
+import useCartStore from "@/store/cartStore";
+import NavbarToggle from "../navbar-toogle-component/NavbarToggle";
+import { FC } from "react";
 
-const NavbarHeader: React.FC = () => {
+interface NavbarHeaderProps {
+  menuOpen: boolean;
+  toggleMenu: () => void;
+}
+
+const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
   const { isAuthenticated } = useAuthStore();
   const { items } = useCartStore();
-  
-  const totalItemsInCart = items.reduce((total, item) => total + item.quantity, 0);
+
+  const totalItemsInCart = items.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
 
   return (
-    <div className="flex w-full items-center justify-between px-4 2xl:px-16 py-6 gap-4">
+    <div className="flex w-full items-center justify-between px-4 2xl:px-8 py-4 gap-4">
       <Link href="/" className="text-2xl font-bold">
         <Image height={100} width={100} src={logo} alt="logo" priority />
       </Link>
@@ -21,8 +31,12 @@ const NavbarHeader: React.FC = () => {
         <div className="flex gap-4">
           {!isAuthenticated ? (
             <>
-              <Link href="/register" className="hover:text-blue-600">Registro</Link>
-              <Link href="/login" className="hover:text-blue-600">Login</Link>
+              <Link href="/register" className="hover:text-blue-600">
+                Registro
+              </Link>
+              <Link href="/login" className="hover:text-blue-600">
+                Login
+              </Link>
             </>
           ) : (
             <Link href="/cart" className="relative">
@@ -35,6 +49,7 @@ const NavbarHeader: React.FC = () => {
             </Link>
           )}
         </div>
+        <NavbarToggle menuOpen={menuOpen} toggleMenu={toggleMenu} />
       </section>
     </div>
   );

@@ -1,11 +1,27 @@
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
+
+import AdminMenu from "./admin-menu-component/AdminMenu";
 import NavbarHeader from "./navbar-header-component/NavbarHeader";
-import ModalMenu from "./modal-menu-component/ModalMenu";
+import TopBar from "./top-bar-component/TopBar";
+import UserMenu from "./user-menu-component/UserMenu";
+import ClouseMenuButton from "@/components/buttons/ClouseMenuButton";
+import clsx from "clsx";
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
+  const { isAuthenticated, logout } = useAuthStore();
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    toggleMenu();
+    router.push("/");
+  };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -42,21 +58,44 @@ const Navbar: React.FC = () => {
         initial="hidden"
         animate="visible"
         transition={{ duration: 0.5, delay: 0.25 }}
-        className="fixed w-full flex flex-col justify-between items-center bg-slate-300 z-[99999]"
+        className={clsx(
+          "fixed w-full",
+          "flex flex-col",
+          "justify-between",
+          "items-center",
+          "bg-slate-100",
+          "border-b-2 z-[99999]"
+        )}
       >
         {/* Barra superior */}
-        <div className="bg-blue-500 w-full py-2">
-          <p className="text-center text-sm text-slate-50">
-            Precios únicos | adelantamos el{" "}
-            <span className="font-semibold">Cyber</span>
-          </p>
-        </div>
+        <TopBar />
 
         {/* Barra principal */}
         <div className="flex w-full items-center justify-between px-4 2xl:px-16">
           <section className="flex w-full items-center justify-between">
-            <NavbarHeader />
-            <ModalMenu menuOpen={menuOpen} toggleMenu={toggleMenu} />
+            <NavbarHeader menuOpen={menuOpen} toggleMenu={toggleMenu} />
+            <div>
+              {isAuthenticated && (
+                <div className="relative" ref={menuRef}>
+                  {/* Modal */}
+                  <div
+                    className={`absolute mt-4 right-0 h-[37rem] w-[22.5rem] bg-slate-200 text-black p-4 rounded-3xl transition-all duration-300 ease-in-out z-[99999] ${
+                      menuOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
+                    }`}
+                  >
+                    {/* Button clouse modal */}
+                    <ClouseMenuButton onClick={toggleMenu} />
+
+                    <div className="p-2">
+                      {/* User */}
+                      <UserMenu handleLogout={handleLogout} />
+                      {/* Admin */}
+                      <AdminMenu />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </section>
         </div>
       </motion.nav>
