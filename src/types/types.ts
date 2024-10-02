@@ -87,7 +87,7 @@ export interface PedidoDetalleDTO {
   productoNombre: string;
   productoDescripcion: string;
   cantidad: number;
-  precioUnitario: number;
+  precio: number;
   precioTotal: number;
   foto: string;
   nombreFoto: string;

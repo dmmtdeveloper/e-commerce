@@ -38,6 +38,11 @@ import Image from "next/image";
     }
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+
   useEffect(() => {
     if (pedidoId) {
       fetchPedido(pedidoId);
@@ -58,7 +63,9 @@ import Image from "next/image";
             <div className="flex justify-between">              
               <div className="w-1/2 pl-4 bg-gray-100 p-4 rounded-md">
                 <h3 className="font-semibold text-lg mb-3 text-gray-700">Detalles del Pedido</h3>
-                <p><strong>Total Compra:</strong> <span className="text-xl font-bold">${pedido?.valorTotal.toFixed(2)}</span></p>
+                <p><strong>Total Compra:</strong> <span className="text-xl font-bold">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
+              ? `${formatCurrency.format(pedido.valorTotal)}`
+              : 'N/A'}</span></p>
                 <p><strong>Cantidad de Productos:</strong> {pedido.cantidad}</p>
                 <p><strong>Fecha Compra:</strong> {new Date(pedido.fecha).toLocaleDateString()}</p>
                 <p><strong>Estado:</strong> {pedido?.estadoNombre}</p>
@@ -95,13 +102,17 @@ import Image from "next/image";
                           <h3 className="font-semibold text-lg">{detalle.productoNombre}</h3>
                           <p className="text-sm text-gray-600">Cantidad: {detalle.cantidad}</p>
                           <p className="text-sm text-gray-600">
-                            Precio unitario: ${detalle.precioUnitario.toFixed(2)}
+                            Precio unitario: ${detalle.precio !== undefined && detalle.precio !== null
+              ? `${formatCurrency.format(detalle.precio)}`
+              : 'N/A'}
                           </p>
                         </div>
 
                         <div className="text-right">
                           <span className="text-lg font-semibold">
-                            ${detalle.precioTotal.toFixed(2)}
+                          ${detalle.precioTotal !== undefined && detalle.precioTotal !== null
+              ? `${formatCurrency.format(detalle.precioTotal)}`
+              : 'N/A'}
                           </span>
                         </div>
                       </div>

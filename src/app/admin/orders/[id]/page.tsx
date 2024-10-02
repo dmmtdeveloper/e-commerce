@@ -71,6 +71,11 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
     }
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -122,7 +127,9 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
               {/* Columna 2: Información del pedido */}
               <div className="w-1/2 pl-4 bg-gray-100 p-4 rounded-md">
                 <h3 className="font-semibold text-lg mb-3 text-gray-700">Detalles del Pedido</h3>
-                <p><strong>Total Compra:</strong> <span className="text-xl font-bold">${pedido.valorTotal.toFixed(2)}</span></p>
+                <p><strong>Total Compra:</strong> <span className="text-xl font-bold">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
+              ? `${formatCurrency.format(pedido.valorTotal)}`
+              : 'N/A'}</span></p>
                 <p><strong>Cantidad de Productos:</strong> {pedido.cantidadDetalles}</p>
                 <p><strong>Fecha Compra:</strong> {new Date(pedido.fecha).toLocaleDateString()}</p>
                 <p><strong>Estado:</strong> {pedido.estadoNombre}</p>
@@ -159,10 +166,14 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
                           <h3 className="font-bold text-lg">{detalle.productoNombre}</h3>
                           <h4 className="text-md">{detalle.productoDescripcion}</h4>
                           <p className="text-sm text-gray-600">Cantidad: {detalle.cantidad}</p>
-                          <p className="text-sm text-gray-600">Precio unitario: ${detalle.precio.toFixed(2)}</p>
+                          <p className="text-sm text-gray-600">Precio unitario: ${detalle.precio !== undefined && detalle.precio !== null
+              ? `${formatCurrency.format(detalle.precio)}`
+              : 'N/A'}</p>
                         </div>
                         <div className="text-right">
-                          <span className="text-lg font-semibold">${detalle.precioTotal.toFixed(2)}</span>
+                          <span className="text-lg font-semibold">${detalle.precioTotal !== undefined && detalle.precioTotal !== null
+              ? `${formatCurrency.format(detalle.precioTotal)}`
+              : 'N/A'}</span>
                         </div>
                       </div>
                     </td>

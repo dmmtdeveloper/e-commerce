@@ -104,6 +104,11 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
     window.location.href = "/cart";
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+
   if (!product) {
     return <p>Loading...</p>;
   }
@@ -122,9 +127,11 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           )}
           </p>
           <p className="text-xl font-semibold mt-4">
-            Precio: ${product.precio}
+            Precio: ${product.precio !== undefined && product.precio !== null
+              ? `${formatCurrency.format(product.precio)}`
+              : 'N/A'}
           </p>
-          <p className="text-xl font-semibold mt-4">Stock: {product.stock - product.stockReservado}</p>
+          <p className="text-xl font-semibold mt-4">Stock Disponible: {product.stock - product.stockReservado}</p>
 
           {/* Controles de cantidad o botón de agregar al carrito */}
           <div className="flex items-center mt-4">

@@ -113,6 +113,7 @@ export default function ProductsPage() {
               setCurrentPage(1); // Reiniciar a la primera página al cambiar la cantidad de productos por página
             }}
           >
+            <option value={20}>20</option>
             <option value={10}>10</option>
             <option value={5}>5</option>
             <option value={2}>2</option>
