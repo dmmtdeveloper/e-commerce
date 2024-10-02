@@ -286,12 +286,12 @@ export default function SettingsPage() {
               </div>
 
               <div className="flex gap-4">
-                <ButtonSettingComponent
+                <ButtonCtaComponent
                   text="Guardar Cambios"
                   onClick={handleSaveChanges}
                 />
 
-                <ButtonSettingComponent
+                <ButtonCtaComponent
                   className="bg-red-500 hover:bg-red-600"
                   text="Eliminar Cuenta"
                   onClick={() =>
