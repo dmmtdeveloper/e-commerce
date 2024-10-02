@@ -24,6 +24,8 @@ import ErrorModal from "@/components/modals/setting-modal-component/error-modal-
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
 import NavAdmin from "@/components/shared/NavAdmin";
+import { Input } from "@/components/input/InputPassword";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -31,6 +33,7 @@ export default function SettingsPage() {
   const [correo, setCorreo] = useState<string>("");
   const [clave, setClave] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [habilitado, setHabilitado] = useState<boolean>(false);
   const [eliminado, setEliminado] = useState<boolean>(false);
@@ -42,6 +45,7 @@ export default function SettingsPage() {
 
   const [isClient, setIsClient] = useState(false);
 
+
   // Estado para manejar la visibilidad de los modales
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
@@ -50,6 +54,16 @@ export default function SettingsPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
+    // Mostrar contraseña al mantener presionado
+    const handleMouseDown = () => {
+      setShowPassword(true);
+    };
+  
+    // Ocultar contraseña al soltar el botón del mouse
+    const handleMouseUp = () => {
+      setShowPassword(false);
+    };
+  
   useEffect(() => {
     setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente
     const token = sessionStorage.getItem("token");
@@ -276,10 +290,13 @@ export default function SettingsPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <LabelComponent text="Contraseña" className="pl-1" />
-                <InputComponent
+                <Input
                   name="password"
-                  type="password"
-                  placeholder="Ingresa tu clave"
+                  type={showPassword ? "text" : "password"}
+                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                  placeholder="Ingresa tu contraseña"
                   value={clave}
                   onChange={(e) => setClave(e.target.value)}
                 />
