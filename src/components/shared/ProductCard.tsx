@@ -37,6 +37,11 @@ export default function ProductCard({ product }: ProductCardProps) {
     setIsModalOpen(true); // Abrir el modal después de agregar al carrito
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+
   // Función para cerrar el modal
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -68,7 +73,9 @@ export default function ProductCard({ product }: ProductCardProps) {
           </h2>
           <p className="text-sm text-gray-600">{product.descripcion}</p>
           <p className="text-md font-semibold mt-2 text-slate-600">
-            ${product.precio}
+            {product.precio !== undefined && product.precio !== null
+              ? `$${formatCurrency.format(product.precio)}`
+              : 'N/A'}
           </p>
           <p className="text-sm mt-2">
             Stock disponible: {product.stock - product.stockReservado}

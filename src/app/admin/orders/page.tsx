@@ -95,6 +95,11 @@ export default function OrdersPage() {
 
   const totalPages = Math.ceil(filteredPedidos.length / itemsPerPage);
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+  
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -196,7 +201,9 @@ export default function OrdersPage() {
                     <td className="border p-2">{pedido.nombreUsuario}</td>
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidadDetalles}</td>
-                    <td className="border p-2">{pedido.valorTotal}</td>
+                    <td className="border p-2">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
+              ? `${formatCurrency.format(pedido.valorTotal)}`
+              : 'N/A'}</td>
                     <td className="border p-2">
                       <Link href={`/admin/orders/${pedido.pedidoId}`} className="text-blue-500 hover:underline">Ver Detalle</Link>
                     </td>
