@@ -141,6 +141,11 @@ export default function CartPage() {
     setShowClearModal(false); // Cierra el modal
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+  
   // Si no hay productos en el carrito
   if (items.length === 0) {
     return (
@@ -186,7 +191,9 @@ export default function CartPage() {
                   <div>
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm">ID {item.id}</p>
-                    <p className="text-sm text-gray-500">Precio: ${item.price}</p>
+                    <p className="text-sm text-gray-500">Precio: ${item.price !== undefined && item.price !== null
+              ? `${formatCurrency.format(item.price)}`
+              : 'N/A'}</p>
                   </div>
                 </div>
                 <div className="flex items-center">
@@ -198,7 +205,9 @@ export default function CartPage() {
                     <FaPlus />
                   </button>
                   {/* <span className="mx-4 text-lg">Precio Unitario: {item.price}</span> */}
-                  <span className="mx-4 text-lg">Precio Total: {item.totalPrice}</span>
+                  <span className="mx-4 text-lg">Precio Total: ${item.totalPrice !== undefined && item.totalPrice !== null
+              ? `${formatCurrency.format(item.totalPrice)}`
+              : 'N/A'}</span>
                 </div>
                 <div>
                   <button onClick={() => handleRemove(item.id)} className="bg-red-500 text-white py-2 px-4 rounded">
@@ -215,7 +224,7 @@ export default function CartPage() {
           <h2 className="text-lg font-bold mb-4">Resumen de tu compra</h2>
           <div className="mb-2 flex justify-between">
             <span>Total transferencia</span>
-            <span className="font-bold">${items.reduce((acc, item) => acc + item.price * item.quantity, 0)}</span>
+            <span className="font-bold">${formatCurrency.format(items.reduce((acc, item) => acc + item.price * item.quantity, 0))}</span>
           </div>
           <p className="text-sm text-gray-500 mb-4">
             El costo de envío se calculará al añadir la dirección.

@@ -12,7 +12,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
-  const [itemsPerPage, setItemsPerPage] = useState(20); // Estado para la cantidad de productos por página
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Estado para la cantidad de productos por página
 
   // Consumir la API al cargar el componente
   useEffect(() => {

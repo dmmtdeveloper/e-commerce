@@ -65,6 +65,11 @@ export default function OrdersPage() {
     }));
   };
 
+  const formatCurrency = new Intl.NumberFormat('es-ES', { 
+    minimumFractionDigits: 0, 
+    maximumFractionDigits: 0 
+  });
+  
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -137,7 +142,9 @@ export default function OrdersPage() {
                     </td>                    
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidad}</td>
-                    <td className="border p-2">{pedido.valorTotal}</td>
+                    <td className="border p-2">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
+              ? `${formatCurrency.format(pedido.valorTotal)}`
+              : 'N/A'}</td>
                     <td className="border p-2">
                       <Link href={`/orders/ordersDetails/${pedido.pedidoId}`} className="text-blue-500 hover:underline">
                         Ver Detalle

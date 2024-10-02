@@ -197,7 +197,7 @@ export default function OrdersPage() {
                 {currentPedidos.map((pedido) => (
                   <tr key={pedido.pedidoId}>
                     <td className="border p-2">#{pedido.pedidoId}</td>
-                    <td className="border p-2">{pedido.fecha}</td>
+                    <td className="border p-2">{new Date(pedido.fecha).toLocaleDateString()}</td>
                     <td className="border p-2">{pedido.nombreUsuario}</td>
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidadDetalles}</td>
