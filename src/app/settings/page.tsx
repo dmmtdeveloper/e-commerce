@@ -22,9 +22,6 @@ import SuccessModal from "@/components/modals/setting-modal-component/sucess-mod
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
 import ButtonSettingComponent from "@/components/buttons-components/button-setting-component/button-setting-component";
 import LabelComponent from "@/components/label-component/label-component";
-import { AiOutlineSetting } from "react-icons/ai";
-import { CiDeliveryTruck } from "react-icons/ci";
-import Link from "next/link";
 import { NavSetting } from "@/components/shared/NavSetting";
 import NavAdmin from "@/components/shared/NavAdmin";
 
@@ -216,8 +213,8 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <section className="bg-slate-100 w-full pt-20 2xl:pt-10 md:mt-10 lg:mt-10 pb-10">
-        <section className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
+        <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
           {!isAdmin ? <NavSetting /> : <NavAdmin />}
 
           <div>
@@ -300,7 +297,7 @@ export default function SettingsPage() {
               </div>
             </article>
           </div>
-        </section>
+        </div>
 
         {/* Modales */}
         {isModalOpen && (
