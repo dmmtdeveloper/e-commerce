@@ -221,7 +221,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
             <div className="flex flex-col gap-2">
               <LabelComponent text="Descripción" className="pl-1" />
               <TextareaComponent
-                name="Descripción"
+                name="descripcion"
                 value={producto.descripcion}
                 onChange={handleChange}
               />
