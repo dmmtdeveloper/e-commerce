@@ -52,6 +52,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           price: product.precio,
           totalPrice: product.precio,
           quantity: newQuantity,
+          foto: product.foto,
+          extension: product.extension
         });
         updateItemQuantity(product.productoId.toString(), newQuantity);
       }
@@ -83,6 +85,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         price: product.precio,
         totalPrice: product.precio,
         quantity: 1,
+        foto: product.foto,
+        extension: product.extension
       });
       setQuantity(1);
       setShowModal(true); // Mostrar modal cuando se agrega al carrito

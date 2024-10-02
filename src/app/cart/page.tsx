@@ -11,20 +11,35 @@ import { addPedido } from "@/utils/authHelpers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
 import axios from "axios";
+import { AuthButton } from "@/components/buttons/AuthButton";
+import { Input } from "@/components/input/InputPassword";
+import { InputComponent } from "@/components/input/InputComponent";
+import { login } from "../../utils/authHelpers";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Image from "next/image";
+import notebook from "@/public/assets/img/notebook.png";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
   const [showRemoveModal, setShowRemoveModal] = useState(false); // Estado para mostrar el modal de eliminar
   const [showClearModal, setShowClearModal] = useState(false); // Estado para mostrar el modal de vaciar
   const [showSuccessModal, setShowSuccessModal] = useState(false); // Estado para mostrar el modal de éxito
+  const [showLoginModal, setShowLoginModal] = useState(false); // Estado para mostrar el modal de login
   const [itemToRemove, setItemToRemove] = useState<string | null>(null); // ID del producto a eliminar
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { token } = useAuthStore(); // Obtener token de autenticación desde el store
-
+  
   const handlePedido = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const currentDate = new Date().toISOString().split("T")[0]; // Obtener fecha actual en formato "YYYY-MM-DD"
+    // Verifica si el usuario está autenticado
+    if (!token) {
+      setShowLoginModal(true); // Si no está autenticado, muestra el modal de inicio de sesión
+      return;
+    }
 
     const detallesPedido = items.map((item) => ({
       pedidoDetalleId: 0, // Ajusta este valor según sea necesario
@@ -32,14 +47,15 @@ export default function CartPage() {
       productoId: parseInt(item.id), // Asegúrate de que el id sea numérico
       cantidad: item.quantity,
       precio: item.price,
-      precioTotal: item.quantity * item.price
+      precioTotal: item.quantity * item.price,
+
     }));
 
     try {
-      await addPedido(token, 1, detallesPedido); //await addPedido(0, token, 1, 1, '', false, detallesPedido);
-      alert("Pedido Realizad con exito")
-      // setShowSuccessModal(true); // Muestra el modal de éxito
+      await addPedido(token, 1, detallesPedido);
+      alert("Pedido realizado con éxito");
       clearCart(); // Limpia el carrito después de crear el pedido
+      router.push("/orders");
     } catch (error) {
       let errorMessage = "Error desconocido al crear el pedido.";
       if (axios.isAxiosError(error)) {
@@ -49,6 +65,30 @@ export default function CartPage() {
       }
       alert("Error al crear el pedido: " + errorMessage);
       console.error("Error al crear el pedido:", error);
+    }
+  };
+
+  // Mostrar contraseña al mantener presionado
+  const handleMouseDown = () => {
+    setShowPassword(true);
+  };
+
+  // Ocultar contraseña al soltar el botón del mouse
+  const handleMouseUp = () => {
+    setShowPassword(false);
+  };
+
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      await login({ email, password });
+      setShowLoginModal(false); // Cierra el modal al iniciar sesión exitosamente
+      alert("Login exitoso");
+      router.push("/cart");
+    } catch (error) {
+      console.error("Error al iniciar sesión:", error);
+      alert("Error en el login");
     }
   };
 
@@ -127,7 +167,22 @@ export default function CartPage() {
             {items.map((item) => (
               <li key={item.id} className="border p-4 mb-4 flex justify-between items-center">
                 <div className="flex">
-                  {/* <img src={item.imageUrl} alt={item.name} className="w-16 h-16 mr-4" /> */}
+                  
+                  <div className="relative w-50 h-50 overflow-hidden flex items-center justify-center mb-8">
+                    <Image
+                      className="w-48 h-auto"
+                      width={260}
+                      height={260} // Asegúrate de que la altura sea igual al ancho para mantener la proporción
+                      src={
+                        item.foto
+                          ? `data:image/${item.extension};base64,${item.foto}`
+                          : notebook
+                      }
+                      alt="items"
+                      priority
+                    />
+                  </div>
+                    
                   <div>
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm">ID {item.id}</p>
@@ -142,7 +197,7 @@ export default function CartPage() {
                   <button onClick={() => handleIncreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
                     <FaPlus />
                   </button>
-                  <span className="mx-4 text-lg">Precio Unitario: {item.price}</span>
+                  {/* <span className="mx-4 text-lg">Precio Unitario: {item.price}</span> */}
                   <span className="mx-4 text-lg">Precio Total: {item.totalPrice}</span>
                 </div>
                 <div>
@@ -175,6 +230,65 @@ export default function CartPage() {
           </button>
         </div>
       </section>
+
+      {/* Modal de inicio de sesión */}
+      {showLoginModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-bold text-center mb-4">Iniciar Sesión</h2>
+            <form onSubmit={handleLogin}>
+              <div className="mb-4">
+                <label className="block mb-1 text-sm font-medium">Email:</label>
+                <InputComponent
+                  type="email"
+                  value={email}
+                  placeholder="Ingresa tu correo electrónico"
+                  onChange={(e) => setEmail(e.target.value)}
+                  name="email"
+                />
+              </div>
+              <div className="mb-4">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Ingresa tu contraseña"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
+                  onMouseDown={handleMouseDown}
+                  onMouseUp={handleMouseUp}
+                  name="password"
+                />
+              </div>
+              <div className="flex justify-between mb-4">
+                <button 
+                  onClick={() => setShowLoginModal(false)} 
+                  className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
+                >
+                  Cancelar
+                </button>
+                <button 
+                  type="submit"
+                  className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none shadow-lg"
+                >
+                  Iniciar Sesión
+                </button>
+              </div>
+            </form>
+
+            <div className="flex flex-col items-center">
+              <p className="text-sm">¿Eres nuevo?</p>
+              <Link
+                className="text-blue-500 hover:underline text-sm mt-1"
+                href="/register"
+              >
+                Regístrate
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* Modal de confirmación para eliminar producto */}
       <ConfirmationModal

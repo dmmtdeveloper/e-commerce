@@ -31,6 +31,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       price: product.precio,
       totalPrice: product.precio,
       quantity: 1,
+      foto: product.foto,
+      extension: product.extension
     });
     setIsModalOpen(true); // Abrir el modal después de agregar al carrito
   };
