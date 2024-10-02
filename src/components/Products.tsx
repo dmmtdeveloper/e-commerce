@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 import ProductCard from "@/components/shared/ProductCard";
 import { Product } from "@/types/product"; // Importar el tipo Product
 import axiosInstance from "@/utils/axiosInstance";
-import { GoChevronLeft } from "react-icons/go";
-import { GoChevronRight } from "react-icons/go";
 import { InputComponent } from "./input/InputComponent";
 import { Reveal } from "@/animation/Reveal";
+import Pagination from "./pagination-component/pagination-component";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
@@ -81,32 +80,9 @@ export default function ProductsPage() {
 
         {/* Controles de paginación */}
         <div className="flex items-center justify-center gap-5 mt-4">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} // Ir a la página anterior
-            disabled={currentPage === 1}
-          >
-            <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
-              <GoChevronLeft className="text-2xl" />
-            </div>
-          </button>
-
-          <span>
-            Página {currentPage} de {totalPages}
-          </span>
-
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            } // Ir a la página siguiente
-            disabled={currentPage === totalPages}
-          >
-            <div className="bg-slate-300 p-2 rounded-full hover:bg-blue-300 transition-all">
-              <GoChevronRight className="text-2xl" />
-            </div>
-          </button>
-
+        <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
           <select
-            className="border p-2 rounded focus:outline-none"
+            className="border p-2 rounded focus:outline-none text-sm"
             value={itemsPerPage}
             onChange={(e) => {
               setItemsPerPage(Number(e.target.value)); // Actualizar la cantidad de productos por página

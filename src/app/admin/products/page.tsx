@@ -20,6 +20,7 @@ import { InputComponent } from "@/components/input/InputComponent";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
+import Pagination from "@/components/pagination-component/pagination-component";
 
 export default function ProductsPage() {
   useAdmin();
@@ -201,8 +202,8 @@ export default function ProductsPage() {
     <>
       {isAdmin && (
         <MainLayout>
-          <div className="relative mt-20 mb-20">
-            <section className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          <section className="relative mt-20 mb-20">
+            <article className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
               <NavAdmin />
               <Title text="Productos" />
               <div className="bg-gray-100   border-gray-200">
@@ -222,7 +223,7 @@ export default function ProductsPage() {
                       : "opacity-100"
                   }`}
                 >
-                  <div className="flex flex-wrap items-center gap-10">
+                  <div className="2xl:flex md:flex lg:flex flex flex-col gap-4 2xl:gap-8 md:flex-row">
                     <div className="flex-1 min-w-[200px]">
                       <InputComponent
                         type="text"
@@ -242,32 +243,39 @@ export default function ProductsPage() {
                       />
                     </div>
 
-                    <div className="flex">
-                      <input
-                        type="checkbox"
-                        name="habilitado"
-                        checked={filters.habilitado}
-                        onChange={handleFilterChange}
-                        className="mr-2"
-                      />
-                      <LabelComponent text="Habilitado" />
-                    </div>
+                    <div className="2xl:flex md:flex lg:flex flex flex-col gap-4 md:flex-row">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="habilitado"
+                          checked={filters.habilitado}
+                          onChange={handleFilterChange}
+                          className="mr-2"
+                        />
+                        <LabelComponent text="Habilitado" />
+                      </div>
 
-                    <div className="flex">
-                      <input
-                        type="checkbox"
-                        name="noEliminado"
-                        checked={filters.noEliminado}
-                        onChange={handleFilterChange}
-                        className="mr-2"
-                      />
-                      <LabelComponent text="No eliminado" />
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          name="noEliminado"
+                          checked={filters.noEliminado}
+                          onChange={handleFilterChange}
+                          className="mr-2"
+                        />
+                        <LabelComponent text="No eliminado" />
+                      </div>
                     </div>
 
                     <div className="flex-1 min-w-[300px]">
-                      <label className="block mb-2 text-sm">
-                        Rango de Precio
-                      </label>
+                        <div className="flex justify-between">
+                          <span className="text-sm">
+                            Precio Mínimo: {filters.precioMinimo}
+                          </span>
+                          <span className="text-sm">
+                            Precio Máximo: {filters.precioMaximo}
+                          </span>
+                        </div>
                       <Slider
                         range
                         min={0}
@@ -282,32 +290,27 @@ export default function ProductsPage() {
                           }));
                         }}
                       />
-                      <div className="flex justify-between">
-                        <span className="text-sm">
-                          Precio Mínimo: {filters.precioMinimo}
-                        </span>
-                        <span className="text-sm">
-                          Precio Máximo: {filters.precioMaximo}
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* Botón para Crear Producto */}
-              <div className="mb-4 relative">
+             
                 <Link href={"/admin/products/create"}>
-                  <ButtonCtaComponent text="Crear Producto" />
+                  <ButtonCtaComponent
+                    className="bg-green-500 hover:bg-green-600 translate-all duration-300"
+                    text="Crear Producto"
+                  />
                 </Link>
-              </div>
+            
 
               <div className="overflow-x-center">
-                <div className="grid grid-cols-4 bg-blue-400 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
-                  <div>Producto</div>
-                  <div>Habilitado</div>
-                  <div>Eliminado</div>
-                  <div>Acciones</div>
+                <div className="grid grid-cols-4 bg-slate-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
+                  <LabelComponent text="Producto"/>
+                  <LabelComponent text="Habilitado"/>
+                  <LabelComponent text="Eliminado"/>
+                  <LabelComponent text="Acciones"/>
                 </div>
                 {currentProductos.map((producto) => (
                   <div
@@ -330,7 +333,7 @@ export default function ProductsPage() {
                           <div className="w-32 h-32 bg-gray-200"></div>
                         )}
                       </div>
-                      <div>
+                      <div className="hidden 2xl:block md:block lg:block">
                         <p className="font-bold text-lg">{producto.nombre}</p>
                         <p className="text-sm text-gray-600">
                           {producto.descripcion}
@@ -402,29 +405,17 @@ export default function ProductsPage() {
 
               {/* Paginación */}
               <div className="mt-4">
-                <button
-                  onClick={() => handlePageChange(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="bg-gray-300 px-4 py-2 rounded mr-2"
-                >
-                  Anterior
-                </button>
-                <button
-                  onClick={() => handlePageChange(currentPage + 1)}
-                  disabled={currentPage === totalPages}
-                  className="bg-gray-300 px-4 py-2 rounded"
-                >
-                  Siguiente
-                </button>
-                <p className="mt-2">
-                  Página {currentPage} de {totalPages}
-                </p>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  setCurrentPage={setCurrentPage}
+                />
               </div>
-            </section>
+            </article>
 
             {/* Modal de Confirmación */}
             {isModalOpen && <ConfirmationModal />}
-          </div>
+          </section>
         </MainLayout>
       )}
     </>

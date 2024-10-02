@@ -11,7 +11,7 @@ interface ButtonFilterComponent {
 const FilterButtonComponent: React.FC<ButtonFilterComponent> = ({ text, onclick, className, isPanelCollapsed }) => {
   return (
     <button
-      className={`text-blue-500 text-sm flex items-center justify-center ${className}`}
+      className={`text-blue-500 hover:text-blue-600 text-sm flex items-center justify-center ${className}`}
       onClick={onclick} // Ejecuta la función onclick pasada por props
     >
       {/* Renderiza el ícono dinámicamente según el estado isPanelCollapsed */}
