@@ -134,49 +134,65 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           <p className="text-xl font-semibold mt-4">Stock Disponible: {product.stock - product.stockReservado}</p>
 
           {/* Controles de cantidad o botón de agregar al carrito */}
+
           <div className="flex items-center mt-4">
-            {quantity === 0 ? (
-              <button
-                onClick={handleAddToCart}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                Agregar al carrito
-              </button>
-            ) : (
-              <>
-              <div>
-                <button
-                  onClick={handleDecreaseQuantity}
-                  className="p-2 bg-gray-200 rounded"
-                  aria-label="Decrease quantity"
-                >
-                  <FaMinus />
-                </button>
-                <span className="mx-4 text-lg">{quantity}</span>
-                <button
-                  onClick={handleIncreaseQuantity}
-                  className="p-2 bg-gray-200 rounded"
-                  aria-label="Increase quantity"
-                >
-                  <FaPlus />
-                </button>
-                <p><div className="mx-4 text-lg">Total: {product.precio * quantity}</div></p>
-                </div>
-                <div className="flex space-x-4">
-                  <Link href="/cart">
-                    <button type="button" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-                      Ir al Carrito
-                    </button>
-                  </Link>
-                  <Link href="/">
-                    <button type="button" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-                      Seguir Comprando
-                    </button>
-                  </Link>
-                </div>
-              </>
-            )}
+  {(product.stock - product.stockReservado) === 0 ? (
+    <div className="px-4 py-2 bg-gray-200 text-white rounded">
+      No Disponible
+    </div>
+  ) : (
+    quantity === 0 ? (
+      <button
+        onClick={handleAddToCart}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Agregar al carrito
+      </button>
+    ) : (
+      <>
+        <div>
+          <button
+            onClick={handleDecreaseQuantity}
+            className="p-2 bg-gray-200 rounded"
+            aria-label="Decrease quantity"
+          >
+            <FaMinus />
+          </button>
+          <span className="mx-4 text-lg">{quantity}</span>
+          <button
+            onClick={handleIncreaseQuantity}
+            className="p-2 bg-gray-200 rounded"
+            aria-label="Increase quantity"
+          >
+            <FaPlus />
+          </button>
+          <div className="mx-4 text-lg">
+            Total: {product.precio * quantity}
           </div>
+        </div>
+        <div className="flex space-x-4 mt-4">
+          <Link href="/cart">
+            <button
+              type="button"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Ir al Carrito
+            </button>
+          </Link>
+          <Link href="/">
+            <button
+              type="button"
+              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+            >
+              Seguir Comprando
+            </button>
+          </Link>
+        </div>
+      </>
+    )
+  )}
+</div>
+
 
           {/* Mostrar modal cuando se agrega un producto */}
           {showModal && product && (
