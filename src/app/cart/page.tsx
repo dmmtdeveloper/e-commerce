@@ -229,6 +229,10 @@ export default function CartPage() {
             Crear Pedido
           </button>
         </div>
+        {/* Botón para vaciar el carrito */}
+        <button onClick={handleClearCart} className="bg-red-500 text-white w-full py-2 rounded mb-2">
+          Vaciar Carrito
+        </button>
       </section>
 
       {/* Modal de inicio de sesión */}
