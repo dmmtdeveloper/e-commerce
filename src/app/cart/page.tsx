@@ -11,7 +11,7 @@ import { addPedido } from "@/utils/authHelpers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
 import axios from "axios";
-import { AuthButton } from "@/components/buttons/AuthButton";
+// import { AuthButton } from "@/components/buttons/AuthButton";
 import { Input } from "@/components/input/InputPassword";
 import { InputComponent } from "@/components/input/InputComponent";
 import { login } from "../../utils/authHelpers";
