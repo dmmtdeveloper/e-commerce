@@ -1,10 +1,9 @@
 import Link from "next/link";
 import React from "react";
 import { AiOutlineSetting } from "react-icons/ai";
-import { BsBoxSeam } from "react-icons/bs";
 import { CiDeliveryTruck } from "react-icons/ci";
-import { FaUser } from "react-icons/fa";
-import { FaBagShopping } from "react-icons/fa6";
+import { FaBagShopping, FaUsers } from "react-icons/fa6";
+import { AiFillProduct} from "react-icons/ai";
 
 interface NavAdminProps {
   className?: string; // Aceptar la prop className
@@ -12,7 +11,7 @@ interface NavAdminProps {
 
 const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
   return (
-    <section className={className}>
+    <section  className={`hidden md:block 2xl:block ${className}`}>
       {" "}
       <div className="flex flex-col gap-10">
         <div className="flex gap-10">
@@ -21,7 +20,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               href={"/admin/products"}
               className="cursor-pointer flex flex-col items-center"
             >
-              <BsBoxSeam className="text-2xl" />
+              <AiFillProduct className="text-2xl" />
               Productos
             </Link>
           </div>
@@ -31,7 +30,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               href={"/admin/users"}
               className="flex flex-col items-center justify-center"
             >
-              <FaUser className="text-2xl" />
+              <FaUsers className="text-2xl" />
               Usuarios
             </Link>
           </div>

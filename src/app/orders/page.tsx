@@ -77,8 +77,7 @@ export default function OrdersPage() {
     <MainLayout>
       <div className="relative mt-20">
         {/* Navbar */}
-        {/* <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" /> */}
-        {!isAdmin ? <NavSetting /> : <NavAdmin />}
+        {!isAdmin ? <NavSetting/> : <NavAdmin/>}
 
         <section className="pt-8 p-4">
           {/* Panel de Filtros */}
