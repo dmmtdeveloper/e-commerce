@@ -1,16 +1,27 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { useRouter } from 'next/navigation';
-import { Product } from '@/types/product';
-import { GetProductoById, UpdateProductoAll, UpdateLimpiaFotoProducto } from '@/utils/authHelpers'; 
-import MainLayout from "../../../layouts/MainLayout"; 
-import NavAdmin from "@/components/shared/NavAdmin"; 
-import Link from 'next/link';
-import axios from 'axios';
+import { useEffect, useState, useRef } from "react";
+import { useRouter } from "next/navigation";
+import { Product } from "@/types/product";
+import {
+  GetProductoById,
+  UpdateProductoAll,
+  UpdateLimpiaFotoProducto,
+} from "@/utils/authHelpers";
+import MainLayout from "../../../layouts/MainLayout";
+import NavAdmin from "@/components/shared/NavAdmin";
+import Link from "next/link";
+import axios from "axios";
 import Image from "next/image";
+import { Title } from "@/components/title/Title";
+import LabelComponent from "@/components/label-component/label-component";
+import { InputComponent } from "@/components/input/InputComponent";
+import TextareaComponent from "@/components/textarea-component/textarea-component";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import { FaTrashAlt } from "react-icons/fa";
+import ConfirmationModal from "@/components/ConfirmationModal";
 
-interface EditPageProps { 
+interface EditPageProps {
   params: {
     id: string;
   };
@@ -24,15 +35,14 @@ const EditarProducto = ({ params }: EditPageProps) => {
   const [imageBase64, setImageBase64] = useState<string | null>(null); // Estado para almacenar el base64
   const [fileName, setFileName] = useState<string>(""); // Estado para el nombre del archivo
   const [fileType, setFileType] = useState<string>(""); // Estado para el tipo de archivo
-  const productId = parseInt(params.id); 
-  const hasFetched = useRef(false); 
+  const productId = parseInt(params.id);
+  const hasFetched = useRef(false);
   // Estado para manejar la visibilidad del modal
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
-
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -51,7 +61,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
       }
     };
 
-    if (!isNaN(productId) && !hasFetched.current) { 
+    if (!isNaN(productId) && !hasFetched.current) {
       hasFetched.current = true;
       fetchProducto();
     } else if (isNaN(productId)) {
@@ -59,19 +69,26 @@ const EditarProducto = ({ params }: EditPageProps) => {
     }
   }, [productId]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
-    setProducto((prev) => (prev ? {
-      ...prev,
-      [name]: name === 'precio' || name === 'stock' || name === 'stockReservado'
-        ? Number(value)
-        : value,
-    } : null));
+    setProducto((prev) =>
+      prev
+        ? {
+            ...prev,
+            [name]:
+              name === "precio" || name === "stock" || name === "stockReservado"
+                ? Number(value)
+                : value,
+          }
+        : null
+    );
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; // Obtener el archivo seleccionado
-    if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
       setSelectedFile(file); // Asegurarse de que es un archivo png o jpg
       setFileName(file.name); // Almacenar el nombre del archivo
       setFileType(file.type); // Almacenar el tipo del archivo
@@ -98,7 +115,10 @@ const EditarProducto = ({ params }: EditPageProps) => {
     if (producto) {
       try {
         // Agregar la imagen base64 al producto antes de actualizar
-        const updatedProduct = { ...producto, foto: imageBase64 ? getBase64String(imageBase64) : "" };
+        const updatedProduct = {
+          ...producto,
+          foto: imageBase64 ? getBase64String(imageBase64) : "",
+        };
 
         await UpdateProductoAll(updatedProduct);
 
@@ -117,7 +137,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
     }
   };
 
-  const handleUpdateLimpiarFoto= async () => {
+  const handleUpdateLimpiarFoto = async () => {
     if (productId) {
       try {
         await UpdateLimpiaFotoProducto(productId);
@@ -161,7 +181,10 @@ const EditarProducto = ({ params }: EditPageProps) => {
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
   const closeErrorModal = () => setIsErrorModalOpen(false);
 
-  const openConfirmationModal = (action: () => void, message: string = "¿Estás seguro de que quieres realizar esta acción?") => {
+  const openConfirmationModal = (
+    action: () => void,
+    message: string = "¿Estás seguro de que quieres realizar esta acción?"
+  ) => {
     setConfirmAction(() => action);
     setModalMessage(message);
     setIsModalOpen(true);
@@ -177,68 +200,92 @@ const EditarProducto = ({ params }: EditPageProps) => {
 
   return (
     <MainLayout>
-      <div className="relative mt-20 mb-20">
-        <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
-        <section className="pt-8 p-4">
-          <h1 className="font-semibold text-4xl mb-4">Editar Producto</h1>
-          <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
-            <div className="mb-4">
-              <label className="block mb-1">Nombre:</label>
-              <input
-                type="text"
+      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
+        <section className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          <NavAdmin />
+          <div>
+            <Title className="text-left" text="Editar Producto" />
+            <p className="text-gray-500">Edita los productos de tu cuenta</p>
+          </div>
+
+          <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-2">
+              <LabelComponent text="Nombre" className="pl-1" />
+              <InputComponent
                 name="nombre"
+                placeholder="Ingresa tu nombre"
                 value={producto.nombre}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
               />
             </div>
-            <div className="mb-4">
-              <label className="block mb-1">Descripción:</label>
-              <textarea
-                name="descripcion"
+            <div className="flex flex-col gap-2">
+              <LabelComponent text="Descripción" className="pl-1" />
+              <TextareaComponent
+                name="Descripción"
                 value={producto.descripcion}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
               />
             </div>
-            <div className="mb-4">
-              <label className="block mb-1">Precio:</label>
-              <input
+            <div className="flex flex-col gap-2">
+              <LabelComponent text="Precio" className="pl-1" />
+              <InputComponent
                 type="number"
                 name="precio"
                 value={producto.precio}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
               />
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Stock:</label>
-              <input
+              <LabelComponent text="Stock" className="pl-1" />
+              <InputComponent
                 type="number"
                 name="stock"
                 value={producto.stock}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
               />
-              <label className="block mb-1"> Stock Reservado: {producto.stockReservado || '0'}</label>
+              <p className="text-sm block mb-1">
+                {" "}
+                Stock Reservado: {producto.stockReservado || "0"}
+              </p>
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Foto (selecciona archivo):</label>
               {imageBase64 ? (
-                <div className="flex items-center mb-4">
-                  <Image src={`data:image/${fileType};base64,${imageBase64}`} alt="Imagen cargada" width={60} height={60} className="h-60 w-60 object-cover mr-4" priority />
+                <div className="flex items-center">
+                  <Image
+                    src={`data:image/${fileType};base64,${imageBase64}`}
+                    alt="Imagen cargada"
+                    width={50}
+                    height={50}
+                    className="h-60 w-60 object-cover mr-4"
+                    priority
+                  />
 
-                  <div>
-                    <p>Archivo: {fileName} <br />
-                      Extension: {fileType}</p>
-                    <button type="button"onClick={() => openConfirmationModal(() => handleUpdateLimpiarFoto(), "¿Estás seguro de que quieres eliminar la foto?")}
-                     className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700">
-                      Eliminar Imagen
-                    </button>
+                  <div className="flex flex-col gap-4">
+                    <p className="text-sm">
+                      Archivo: {fileName} <br />
+                      Extension: {fileType}
+                    </p>
+
+                    <FaTrashAlt
+                    className="text-red-500 hover:text-red-700 text-2xl"
+                      onClick={() =>
+                        openConfirmationModal(
+                          () => handleUpdateLimpiarFoto(),
+                          "¿Estás seguro de que quieres eliminar la foto?"
+                        )
+                      }
+                    />
+
+                    {/* <ButtonCtaComponent
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700"
+                      text="Eliminar Imagen"
+                      onClick={() =>
+                        openConfirmationModal(
+                          () => handleUpdateLimpiarFoto(),
+                          "¿Estás seguro de que quieres eliminar la foto?"
+                        )
+                      }
+                    /> */}
                   </div>
                 </div>
               ) : (
@@ -251,79 +298,75 @@ const EditarProducto = ({ params }: EditPageProps) => {
               )}
             </div>
             <div className="flex space-x-4">
-              <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
-                Actualizar Producto
-              </button>
+              <ButtonCtaComponent text="Actualizar Producto" />
               <Link href="/admin/products">
-                <button type="button" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
-                  Cancelar
-                </button>
+                <ButtonCtaComponent
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                  text="Cancelar"
+                />
               </Link>
             </div>
           </form>
         </section>
-      </div>
+      </section>
 
       {/* Modal de Confirmación */}
       {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end gap-4">
-                <button
-                  onClick={confirmActionHandler}
-                  className="bg-blue-500 text-white p-2 rounded"
-                >
-                  Confirmar
-                </button>
-                <button
-                  onClick={closeConfirmationModal}
-                  className="bg-gray-500 text-white p-2 rounded"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-  
-        {/* Modal de Éxito */}
-        {isSuccessModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-green-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Éxito</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={closeSuccessModal}
-                  className="bg-green-500 text-white p-2 rounded"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-  
-        {/* Modal de Error */}
-        {isErrorModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-red-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Error</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={closeErrorModal}
-                  className="bg-red-500 text-white p-2 rounded"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
+            <p>{modalMessage}</p>
+            <div className="mt-4 flex justify-end gap-4">
+              <ButtonCtaComponent
+                onClick={confirmActionHandler}
+                text="Confirmar"
+              />
 
+              <ButtonCtaComponent
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                text="Cancelar"
+                onClick={closeConfirmationModal}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Éxito */}
+      {isSuccessModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-green-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Éxito</h2>
+            <p>{modalMessage}</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={closeSuccessModal}
+                className="bg-green-500 text-white p-2 rounded"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Error */}
+      {isErrorModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-red-800 bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Error</h2>
+            <p>{modalMessage}</p>
+            <div className="mt-4 flex justify-end">
+              <button
+                onClick={closeErrorModal}
+                className="bg-red-500 text-white p-2 rounded"
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </MainLayout>
   );
 };

@@ -19,6 +19,14 @@ export interface InputProps {
   name: string;
 }
 
+export interface TextareaProps {
+  type?: string;
+  placeholder?: string;
+  value: any;
+  onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  name: string;
+}
+
 
 export interface DetallePedido {
   // foto: string;
