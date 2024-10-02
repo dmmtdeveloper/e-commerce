@@ -7,17 +7,20 @@ export const NavSetting = () => {
   return (
     <section>
       <div className="flex gap-10">
-        <div className="flex flex-col items-center justify-center">
-          <Link href={"/orders"} className="cursor-pointer text-2xl">
-            <CiDeliveryTruck />
+        <div className="flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer">
+          <Link href="/orders" className="flex flex-col items-center">
+            <CiDeliveryTruck className="text-2xl" />
+            Ordenes
           </Link>
-          <p>Ordenes</p>
         </div>
-        <div className="flex flex-col items-center justify-center">
-          <Link href={"/settings"} className="cursor-pointer text-2xl">
-            <AiOutlineSetting />
+        <div className="flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer">
+          <Link
+            href="/settings"
+            className="cursor-pointer flex flex-col items-center"
+          >
+            <AiOutlineSetting className="text-2xl" />
+            Configuración
           </Link>
-          <p>Configuración</p>
         </div>
       </div>
     </section>

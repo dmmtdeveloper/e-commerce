@@ -1,5 +1,5 @@
 "use client";
-import { AuthButton } from "@/components/buttons/AuthButton";
+import { AuthButton } from "@/components/buttons-components/AuthButton";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Input } from "@/components/input/InputPassword";
 import { InputComponent } from "@/components/input/InputComponent";
@@ -66,7 +66,7 @@ export default function LoginPage() {
 
             {/* Formulario */}
             <div className="flex flex-col gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
-              <Title text="Iniciar Sesión" />
+              <Title className="text-center" text="Iniciar Sesión" />
 
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
                 <InputComponent

@@ -5,11 +5,13 @@ import { Product } from "@/types/product";
 import { notFound } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
+import Image from "next/image";
 
 import fetchProductDetails from "@/services/fetchProductDetails";
 
 import useCartStore from "@/store/cartStore";
-import ModalProductId from "@/components/ModalProductId"; // Importar el modal
+import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
+import Link from "next/link";
 
 interface ProductPageProps {
   params: {
@@ -112,10 +114,17 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         <div>
           <h1 className="text-3xl font-bold">{product.nombre}</h1>
           <p className="text-lg text-gray-600">{product.descripcion}</p>
+          <p>
+          {product.foto && product.foto !== "" ? (
+            <Image src={`data:image/${product.extension};base64,${product.foto}`} alt={product.nombre} className="w-32 h-32 object-cover rounded" height={80} width={80} priority />
+          ) : (
+            <div className="h-32 w-32 bg-gray-200 mr-4"></div>
+          )}
+          </p>
           <p className="text-xl font-semibold mt-4">
             Precio: ${product.precio}
           </p>
-          <p className="text-xl font-semibold mt-4">Stock: {product.stock}</p>
+          <p className="text-xl font-semibold mt-4">Stock: {product.stock - product.stockReservado}</p>
 
           {/* Controles de cantidad o botón de agregar al carrito */}
           <div className="flex items-center mt-4">
@@ -128,6 +137,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
               </button>
             ) : (
               <>
+              <div>
                 <button
                   onClick={handleDecreaseQuantity}
                   className="p-2 bg-gray-200 rounded"
@@ -143,8 +153,20 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 >
                   <FaPlus />
                 </button>
-                <span className="mx-4 text-lg">Precio Unitario: {product.precio}</span>
-                <span className="mx-4 text-lg">Precio Total: {product.precio * quantity}</span>
+                <p><div className="mx-4 text-lg">Total: {product.precio * quantity}</div></p>
+                </div>
+                <div className="flex space-x-4">
+                  <Link href="/cart">
+                    <button type="button" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+                      Ir al Carrito
+                    </button>
+                  </Link>
+                  <Link href="/">
+                    <button type="button" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+                      Seguir Comprando
+                    </button>
+                  </Link>
+                </div>
               </>
             )}
           </div>

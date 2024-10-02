@@ -113,8 +113,8 @@ const CrearProducto = () => {
 
   return (
     <MainLayout>
-      <div className="relative mt-20 mb-20">
-        <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
+      <div className="relative mt-20 mb-20 2xl:pt-8 2xl:px-16">
+        <NavAdmin/>
         <section className="pt-8 p-4">
           <h1 className="font-semibold text-4xl mb-4">Crear Producto</h1>
           <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">

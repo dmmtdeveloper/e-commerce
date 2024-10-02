@@ -308,7 +308,7 @@ export const UpdateNombreUsuario = async (
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/name/${usuarioId}/${nombre}`
     );
-
+    
     // Verificamos el código de estado HTTP
     if (response.status === 204) {
       // Actualización exitosa
@@ -322,6 +322,33 @@ export const UpdateNombreUsuario = async (
   }
 };
 
+
+//metodo put para actualizar correo
+export const UpdateCorreoUsuario = async (
+  usuarioId: number,
+  correo: string
+): Promise<void> => {
+  try {
+    // Enviamos la solicitud PUT
+    const response = await axiosInstance.put<void>(
+      `/api/Usuario/update/correo/${usuarioId}/${correo}`
+    );
+    
+    // Verificamos el código de estado HTTP
+    if (response.status === 204) {
+      // Actualización exitosa
+      console.log("Correo actualizado con éxito.");
+    } else {
+      // Código de estado inesperado
+      throw new Error("Respuesta inesperada del servidor.");
+    }
+  } catch (error) {
+    handleError(error);
+  }
+};
+
+
+//metodo put para actualizar clave
 export const UpdateClaveUsuario = async (
   usuarioId: number,
   clave: string

@@ -9,14 +9,15 @@ const Avatar: React.FC<AvatarProps> = ({ avatar }) => {
   const isValidAvatar = avatar !== null && avatar !== "" && avatar !== undefined;
 
   return (
-    <Image
-      src={isValidAvatar ? avatar : userImage}
-      alt="Avatar"
-      style={{ borderRadius: "50%", objectFit: "cover" }}
-      width={50}
-      height={50}
-      priority
-    />
+    <div style={{ position: 'relative', width: '50px', height: '50px', borderRadius: '50%', overflow: 'hidden' }}>
+      <Image
+        src={isValidAvatar ? avatar : userImage}
+        alt="Avatar"
+        layout="fill"
+        objectFit="cover"
+        priority
+      />
+    </div>
   );
 };
 
