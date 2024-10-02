@@ -2,7 +2,6 @@ import React from "react";
 import { TextareaProps } from "@/types/types";
 
 const TextareaComponent: React.FC<TextareaProps> = ({
-  type = "text",
   placeholder = "",
   value,
   onChange,
