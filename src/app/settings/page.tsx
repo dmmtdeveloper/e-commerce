@@ -1,67 +1,57 @@
 "use client";
 import { useState, useEffect } from "react";
 import MainLayout from "../layouts/MainLayout";
-import { NavSetting } from "@/components/shared/NavSetting";
-import { GetUsuarioByToken, UpdateNombreUsuario, UpdateClaveUsuario, UpdateLimpiaFotoUsuario, UpdateFotoUsuario } from "@/utils/authHelpers"; // Ajusta el path correctamente
+import {
+  GetUsuarioByToken,
+  UpdateNombreUsuario,
+  UpdateClaveUsuario,
+  UpdateLimpiaFotoUsuario,
+  UpdateFotoUsuario,
+  UpdateCorreoUsuario,
+} from "@/utils/authHelpers"; // Asegúrate de ajustar el path correctamente
 import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
-import { uploadImage, deleteImage} from "@/utils/firebase"; // Función para subir imágenes
+import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
+import { InputComponent } from "@/components/input/InputComponent";
+import { Title } from "@/components/title/Title";
+
 import Image from "next/image";
-
-// export default function UserProfile() {
-//   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
-
-//   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-//     const file = e.target.files?.[0];
-//     if (!file) return;
-
-//     try {
-//       const filePath = `avatars/${file.name}`; // Definir una ruta en Firebase Storage
-//       const imageUrl = await uploadImage(file, filePath);
-//       console.log(imageUrl)
-//       setProfileImageUrl(imageUrl); // Establecemos la URL de la imagen
-//     } catch (error) {
-//       console.error("Error uploading image:", error);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <input type="file" onChange={handleFileChange} />
-//       {profileImageUrl && <img src={profileImageUrl} alt="User Avatar" />}
-//     </div>
-//   );
-// }
-
+import ConfirmationModal from "@/components/ConfirmationModal";
+import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
+import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
+import ButtonSettingComponent from "@/components/buttons-components/button-setting-component/button-setting-component";
+import LabelComponent from "@/components/label-component/label-component";
+import { NavSetting } from "@/components/shared/NavSetting";
+import NavAdmin from "@/components/shared/NavAdmin";
 
 export default function SettingsPage() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [nuevaPassword, setNuevaPassword] = useState<string>("");
-
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [nombre, setNombre] = useState<string>("");
   const [correo, setCorreo] = useState<string>("");
   const [clave, setClave] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
 
-
   const [habilitado, setHabilitado] = useState<boolean>(false);
   const [eliminado, setEliminado] = useState<boolean>(false);
   const [esAdmin, setEsAdmin] = useState<boolean>(false);
 
-  const { logout } = useAuthStore();
+  const { logout, isAdmin } = useAuthStore();
+
   const router = useRouter();
 
-  // Estado para manejar la visibilidad del modal
+  const [isClient, setIsClient] = useState(false);
+
+  // Estado para manejar la visibilidad de los modales
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
   const [modalMessage, setModalMessage] = useState<string>("");
+
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente
     const token = sessionStorage.getItem("token");
     if (token) {
       GetUsuarioByToken(token)
@@ -81,7 +71,7 @@ export default function SettingsPage() {
     } else {
       console.warn("Token no encontrado en sessionStorage");
     }
-  }, []); 
+  }, []);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,43 +82,42 @@ export default function SettingsPage() {
     console.log("User ID:", id); // Verifica que el ID es correcto
 
     try {
-        const filePath = `avatars/usuarioId${id}-${file.name}`; // Definir una ruta en Firebase Storage
-        const imageUrl = await uploadImage(file, filePath);
-        console.log("Uploaded image URL:", imageUrl);
-        setAvatar(imageUrl); // Establecemos la URL de la imagen
-        sessionStorage.setItem("avatar", imageUrl);
-        if (imageUrl && id) {
-            await UpdateFotoUsuario(id, imageUrl);
-            openSuccessModal("Avatar actualizado de forma correcta.");
-        } else {
-            console.warn("Avatar no existe");
-        }       
+      const filePath = `avatars/usuarioId${id}-${file.name}`; // Definir una ruta en Firebase Storage
+      const imageUrl = await uploadImage(file, filePath);
+      console.log("Uploaded image URL:", imageUrl);
+      setAvatar(imageUrl); // Establecemos la URL de la imagen
+      sessionStorage.setItem("avatar", imageUrl);
+      if (imageUrl && id) {
+        await UpdateFotoUsuario(id, imageUrl);
+        openSuccessModal("Avatar actualizado correctamente.");
+      } else {
+        console.warn("Error: Avatar no existe.");
+      }
     } catch (error) {
-        console.error("Error uploading image:", error);
+      console.error("Error uploading image:", error);
+      openErrorModal("Error subiendo la imagen.");
     }
-};
-
+  };
 
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
     if (token) {
       try {
-        // await axios.delete("/api/Usuario/eliminar", {
-        //   headers: {
-        //     Authorization: `Bearer ${token}`,
-        //   },
-        // });
         logout();
         router.push("/login");
       } catch (error) {
         console.error("Error eliminando la cuenta:", error);
+        openErrorModal("Error eliminando la cuenta.");
       }
     } else {
       console.warn("Token no encontrado en sessionStorage");
     }
   };
 
-  const openConfirmationModal = (action: () => void, message: string = "¿Estás seguro de que quieres realizar esta acción?") => {
+  const openConfirmationModal = (
+    action: () => void,
+    message: string = "¿Estás seguro de que quieres realizar esta acción?"
+  ) => {
     setConfirmAction(() => action);
     setModalMessage(message);
     setIsModalOpen(true);
@@ -136,7 +125,7 @@ export default function SettingsPage() {
 
   const closeConfirmationModal = () => {
     setIsModalOpen(false);
-    setConfirmAction(() => null); // Usa una función vacía para evitar el error de tipo
+    setConfirmAction(() => null);
     setModalMessage("");
   };
 
@@ -147,75 +136,61 @@ export default function SettingsPage() {
     }
   };
 
-  const handleUpdateName = async () => {
+  const handleSaveChanges = async () => {
     const id = usuario?.usuarioId;
-  
-    // Validar que el nombre no esté vacío
-    if (nombre.trim().length === 0) {
+
+    // Validación de nombre
+    if (!nombre.trim()) {
       openErrorModal("El nombre no puede estar vacío.");
-      return; // Termina la función si el nombre no es válido
+      return;
     }
-  
+
+    // Validación de clave
+    if (clave.length < 6) {
+      openErrorModal("La clave debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    // Validación de correo electrónico
+    if (!correo.trim()) {
+      openErrorModal("El correo no puede estar vacío.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(correo)) {
+      openErrorModal("Por favor ingresa un correo electrónico válido.");
+      return;
+    }
+
     if (id) {
       try {
         await UpdateNombreUsuario(id, nombre);
-        openSuccessModal("Nombre actualizado correctamente.");
-      } catch (error) {
-        console.error("Error actualizando el nombre:", error);
-        openErrorModal("Error actualizando el nombre.");
-      }
-    } else {
-      console.warn("Id no existe");
-    }
-  };
-  
-  
-  const handleUpdateClave = async () => {
-    const id = usuario?.usuarioId;
-  
-    // Validar que la clave tenga al menos 6 caracteres
-    if (clave.length < 6) {
-      openErrorModal("La clave debe tener al menos 6 caracteres.");
-      return; // Termina la función si la clave no es válida
-    }
-  
-    if (id) {
-      try {
         await UpdateClaveUsuario(id, clave);
-        openSuccessModal("Clave actualizada correctamente.");
+        await UpdateCorreoUsuario(id, correo);
+        openSuccessModal("Cambios guardados exitosamente.");
       } catch (error) {
-        console.error("Error actualizando la clave:", error);
-        openErrorModal("Error actualizando la clave.");
+        openErrorModal("Error actualizando los datos.");
       }
     } else {
-      console.warn("Id no existe");
+      console.warn("ID de usuario no existe.");
     }
   };
-  
-  const handleUpdateLimpiarFoto= async () => {
+
+  const handleUpdateLimpiarFoto = async () => {
     const id = usuario?.usuarioId;
-    if (id) {
-      if (avatar) {
-        try {
-          await UpdateLimpiaFotoUsuario(id);
-          try {
-            await deleteImage(avatar);
-            console.log("Imagen eliminada exitosamente");
-          } catch (error) {
-            console.error("Error al eliminar la imagen:", error);
-          }
-          openSuccessModal("Foto eliminada de forma correcta.");
-          setAvatar(null);
-        } catch (error) {
-          console.error("Error al eliminar la foto en catch:", error);
-          openErrorModal("Error al eliminar la foto.");
-        }
-      } else {
-        console.log("No se puede subir el avatar, valor es null");
+    if (id && avatar) {
+      try {
+        await UpdateLimpiaFotoUsuario(id);
+        await deleteImage(avatar);
+        setAvatar(null);
+        openSuccessModal("Foto eliminada correctamente.");
+      } catch (error) {
+        console.error("Error al eliminar la foto:", error);
+        openErrorModal("Error al eliminar la foto.");
       }
-      
     } else {
-      console.warn("productId no existe");
+      console.warn("No se puede eliminar el avatar, valor nulo.");
     }
   };
 
@@ -238,171 +213,125 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <section className="p-4 mt-16 gap-10 flex flex-col">
-        <NavSetting />
-  
-        <div>
-          <h1 className="font-semibold text-4xl">Tu Configuración</h1>
-          <p>Actualizar la configuración de tu cuenta</p>
-        </div>
-  
-        <table className="w-full border">
-          <tbody>
-          <tr>
-              <td className="p-2">Avatar:</td>
-              <td className="p-2">
-              {!avatar && <input type="file" onChange={handleFileChange} />}
-              
-              {avatar && <Image src={avatar} width={300} height={300} alt="User Avatar"/>}
-              </td>
-              <td className="p-2">
-                  {avatar && 
-                  <button
-                    type="button"
-                    onClick={() => openConfirmationModal(() => handleUpdateLimpiarFoto(), "¿Estás seguro de que quieres remover la imagen de tu avatar?")}
-                    className="bg-blue-500 text-white p-2"
-                  >
-                    Remover Avatar
-                  </button>}
-              </td>
-            </tr>
-            <tr>
-              <td className="p-2">Usuario ID:</td>
-              <td className="p-2">
-                <input
-                  type="text"
-                  value={usuario?.usuarioId}
-                  readOnly
-                  className="border p-2 bg-gray-200"
-                />
-              </td>
-              <td className="p-2"></td>
-            </tr>
-            <tr>
-              <td className="p-2">Correo:</td>
-              <td className="p-2">
-                <input
-                  type="text"
-                  value={correo}
-                  readOnly
-                  className="border p-2 bg-gray-200"
-                />
-              </td>
-              <td className="p-2"></td>
-            </tr>
-            <tr>
-              <td className="p-2">Nombre:</td>
-              <td className="p-2">
-                <input
-                  type="text"
+      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
+        <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          {!isAdmin ? <NavSetting /> : <NavAdmin />}
+
+          <div>
+            <Title className="text-left" text="Tu configuración" />
+            <p className="text-gray-500">
+              Actualizar la configuración de tu cuenta
+            </p>
+          </div>
+          <div>
+            <article className="flex flex-col gap-4">
+              <div className="flex gap-4 flex-col">
+                <LabelComponent text="Avatar" />
+                <div className="flex items-center gap-8">
+                  <div>
+                    {!avatar && (
+                      <input type="file" onChange={handleFileChange} />
+                    )}
+                    {avatar && (
+                      <Image
+                        src={avatar}
+                        alt="Avatar"
+                        className="h-28 w-28 object-cover"
+                        width={112}
+                        height={112}
+                      />
+                    )}
+                  </div>
+                  {avatar && (
+                    <ButtonSettingComponent
+                      text="Cambiar Avatar"
+                      onClick={() =>
+                        openConfirmationModal(
+                          handleUpdateLimpiarFoto,
+                          "¿Estás seguro de que quieres Cambiar tu avatar?"
+                        )
+                      }
+                    />
+                  )}
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Nombre" className="pl-1" />
+                <InputComponent
+                  name="nombre"
+                  placeholder="Ingresa tu nombre"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
-                  className="border p-2"
                 />
-              </td>
-              <td className="p-2">
-                <button
-                  type="button"
-                  onClick={() => openConfirmationModal(() => handleUpdateName(), "¿Estás seguro de que quieres actualizar el nombre?")}
-                  className="bg-blue-500 text-white p-2"
-                >
-                  Actualizar Nombre
-                </button>
-              </td>
-            </tr>
-            <tr>
-              <td className="p-2">Clave:</td>
-              <td className="p-2">
-                <input
-                  type="text"
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Correo electrónico" className="pl-1" />
+                <InputComponent
+                  name="email"
+                  type="email"
+                  placeholder="Ingresa tu correo electrónico"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Contraseña" className="pl-1" />
+                <InputComponent
+                  name="password"
+                  type="password"
+                  placeholder="Ingresa tu clave"
                   value={clave}
                   onChange={(e) => setClave(e.target.value)}
-                  className="border p-2"
                 />
-              </td>
-              <td className="p-2">
-                <button
-                  type="button"
-                  onClick={() => openConfirmationModal(() => handleUpdateClave(), "¿Estás seguro de que quieres actualizar la clave?")}
-                  className="bg-blue-500 text-white p-2"
-                >
-                  Actualizar Clave
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-  
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={() => openConfirmationModal(() => handleDeleteAccount(), "¿Estás seguro de que quieres eliminar tu cuenta?")}
-            className="bg-red-500 text-white p-2"
-          >
-            Eliminar Cuenta
-          </button>
+              </div>
+
+              <div className="flex gap-4">
+                <ButtonSettingComponent
+                  text="Guardar Cambios"
+                  onClick={handleSaveChanges}
+                />
+
+                <ButtonSettingComponent
+                  className="bg-red-500 hover:bg-red-600"
+                  text="Eliminar Cuenta"
+                  onClick={() =>
+                    openConfirmationModal(
+                      handleDeleteAccount,
+                      "¿Estás seguro de que quieres eliminar tu cuenta?"
+                    )
+                  }
+                />
+              </div>
+            </article>
+          </div>
         </div>
-  
-        {/* Modal de Confirmación */}
+
+        {/* Modales */}
         {isModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end gap-4">
-                <button
-                  onClick={confirmActionHandler}
-                  className="bg-blue-500 text-white p-2 rounded"
-                >
-                  Confirmar
-                </button>
-                <button
-                  onClick={closeConfirmationModal}
-                  className="bg-gray-500 text-white p-2 rounded"
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onCancel={closeConfirmationModal}
+            onConfirm={confirmActionHandler}
+            message={modalMessage}
+          />
         )}
-  
-        {/* Modal de Éxito */}
+
         {isSuccessModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-green-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Éxito</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={closeSuccessModal}
-                  className="bg-green-500 text-white p-2 rounded"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
+          <SuccessModal
+            isOpen={isSuccessModalOpen}
+            onClose={closeSuccessModal}
+            message={modalMessage}
+          />
         )}
-  
-        {/* Modal de Error */}
+
         {isErrorModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-red-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded shadow-lg">
-              <h2 className="text-xl font-semibold mb-4">Error</h2>
-              <p>{modalMessage}</p>
-              <div className="mt-4 flex justify-end">
-                <button
-                  onClick={closeErrorModal}
-                  className="bg-red-500 text-white p-2 rounded"
-                >
-                  Cerrar
-                </button>
-              </div>
-            </div>
-          </div>
+          <ErrorModal
+            isOpen={isErrorModalOpen}
+            onClose={closeErrorModal}
+            message={modalMessage}
+          />
         )}
       </section>
     </MainLayout>
-  );  
+  );
 }

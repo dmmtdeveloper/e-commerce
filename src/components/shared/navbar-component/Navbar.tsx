@@ -7,7 +7,7 @@ import AdminMenu from "./admin-menu-component/AdminMenu";
 import NavbarHeader from "./navbar-header-component/NavbarHeader";
 import TopBar from "./top-bar-component/TopBar";
 import UserMenu from "./user-menu-component/UserMenu";
-import ClouseMenuButton from "@/components/buttons/ClouseMenuButton";
+import ClouseMenuButton from "@/components/buttons-components/ClouseMenuButton";
 import clsx from "clsx";
 
 const Navbar: React.FC = () => {
@@ -52,7 +52,7 @@ const Navbar: React.FC = () => {
 
       <motion.nav
         variants={{
-          hidden: { opacity: 0, y: 75 },
+          hidden: { opacity: 0, y: 0 },
           visible: { opacity: 1, y: 0 },
         }}
         initial="hidden"
@@ -64,7 +64,7 @@ const Navbar: React.FC = () => {
           "justify-between",
           "items-center",
           "bg-slate-100",
-          "border-b-2 z-[99999]"
+          " z-[99999]"
         )}
       >
         {/* Barra superior */}
@@ -79,7 +79,7 @@ const Navbar: React.FC = () => {
                 <div className="relative" ref={menuRef}>
                   {/* Modal */}
                   <div
-                    className={`absolute mt-4 right-0 h-[37rem] w-[22.5rem] bg-slate-200 text-black p-4 rounded-3xl transition-all duration-300 ease-in-out z-[99999] ${
+                    className={`absolute mt-4 right-0 ${ isAdmin ? "h-[37rem]" : "h-[25rem]"} w-[22.5rem] bg-slate-200 text-black p-4 rounded-3xl transition-all duration-300 ease-in-out z-[99999] ${
                       menuOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
                     }`}
                   >
@@ -90,7 +90,7 @@ const Navbar: React.FC = () => {
                       {/* User */}
                       <UserMenu handleLogout={handleLogout} />
                       {/* Admin */}
-                      {isAdmin && (<AdminMenu />)}
+                      {isAdmin && <AdminMenu />}
                     </div>
                   </div>
                 </div>

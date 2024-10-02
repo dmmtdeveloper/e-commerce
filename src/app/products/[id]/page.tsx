@@ -9,7 +9,7 @@ import { FaPlus, FaMinus } from "react-icons/fa";
 import fetchProductDetails from "@/services/fetchProductDetails";
 
 import useCartStore from "@/store/cartStore";
-import ModalProductId from "@/components/ModalProductId"; // Importar el modal
+import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
 
 interface ProductPageProps {
   params: {

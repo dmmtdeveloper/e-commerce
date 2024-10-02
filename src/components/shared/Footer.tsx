@@ -27,7 +27,7 @@ export const Footer = () => {
         )}
       >
         <div className="flex-1 flex flex-col gap-2">
-          <Reveal>
+          
             <Image
               className="w-32 h-auto"
               height={100}
@@ -36,16 +36,16 @@ export const Footer = () => {
               alt="logo"
               priority
             />
-          </Reveal>
+          
 
-          <Reveal>
+          
             <small
               className={clsx("text-black", "text-black-100", "text-[11px]")}
             >
               Síguenos en nuestras redes sociales
             </small>
-          </Reveal>
-          <Reveal>
+          
+         
             <div className="flex gap-4 flex-row md:mt-0">
               {socialMedia.map((social, index) => (
                 <Link
@@ -69,7 +69,7 @@ export const Footer = () => {
                 </Link>
               ))}
             </div>
-          </Reveal>
+          
         </div>
 
         <div
@@ -82,12 +82,11 @@ export const Footer = () => {
         >
           {footerLinks.map((footerLink, index) => (
             <div key={index} className="flex flex-col my-4 min-w-[150px]">
-              <Reveal>
+              
                 <h4 className="text-black text-small font-semibold leading-[27px]">
                   {footerLink.title}
                 </h4>
-              </Reveal>
-              <Reveal>
+           
                 <ul>
                   {footerLink.links.map((link, linkIndex) => (
                     <li
@@ -112,13 +111,13 @@ export const Footer = () => {
                     </li>
                   ))}
                 </ul>
-              </Reveal>
+             
             </div>
           ))}
         </div>
       </div>
 
-      <Reveal>
+     
         <div className="w-full md:flex-col flex justify-between items-center  flex-col  border-t-[1px] border-t-black-200">
           <small className="text-black text-black-200 text-xs text-center mt-4">
             Copyright © 2024 pcstore.cl. Todos los derechos reservados.
@@ -128,7 +127,7 @@ export const Footer = () => {
             Framer Motion, Web3Forms.
           </p> */}
         </div>
-      </Reveal>
+ 
     </section>
   );
 };

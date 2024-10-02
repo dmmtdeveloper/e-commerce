@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Product } from "@/types/product";
 import useCartStore from "@/store/cartStore";
-import Modal from "@/components/Modal"; // Asegúrate de importar el componente Modal
+import Modal from "@/components/modals/Modal"; // Asegúrate de importar el componente Modal
 import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
 import { MdOutlineShoppingCart } from "react-icons/md";

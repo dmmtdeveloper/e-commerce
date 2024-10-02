@@ -12,13 +12,15 @@ import {
 } from "@/utils/authHelpers";
 import { Pedido } from "@/types/types";
 import { NavSetting } from "@/components/shared/NavSetting";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [filteredPedidos, setFilteredPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [isClient, setIsClient] = useState(false);
+  const {isAdmin } = useAuthStore();
   // Estados para los filtros
   const [filters, setFilters] = useState({
     search: "",
@@ -48,42 +50,10 @@ export default function OrdersPage() {
 
   useEffect(() => {
     const { search, admin, habilitado } = filters;
-    // const filtered = pedidos.filter((pedido) => {
-    //   const matchesSearch =
-    //     pedido.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    //     pedido.correo.toLowerCase().includes(search.toLowerCase());
-    //   const matchesAdmin = !admin || pedido.esAdmin;
-    //   const matchesHabilitado = !habilitado || pedido.habilitado;
-
-    //   return matchesSearch && matchesAdmin && matchesHabilitado;
-    // });
     const filtered = pedidos;
     setFilteredPedidos(filtered);
   }, [filters, pedidos]);
 
-  // const handleCheckboxChange = async (
-  //   usuarioId: number,
-  //   field: "habilitado" | "eliminado" | "esAdmin",
-  //   value: boolean
-  // ) => {
-  //   try {
-  //     if (field === "habilitado") {
-  //       await UpdateHabilitadoUsuario(usuarioId, value);
-  //     } else if (field === "eliminado") {
-  //       await UpdateEliminadoUsuario(usuarioId, value);
-  //     } else if (field === "esAdmin") {
-  //       await UpdateEsAdminUsuario(usuarioId, value);
-  //     }
-
-  //     setPedidos((prevPedidos) =>
-  //       prevPedidos.map((pedido) =>
-  //         pedido.pedidoId === pedidoId ? { ...pedido, [field]: value } : pedido
-  //       )
-  //     );
-  //   } catch (error) {
-  //     console.error(`Error actualizando ${field}:`, error);
-  //   }
-  // };
 
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -107,8 +77,7 @@ export default function OrdersPage() {
     <MainLayout>
       <div className="relative mt-20">
         {/* Navbar */}
-        {/* <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" /> */}
-        <NavSetting />
+        {!isAdmin ? <NavSetting/> : <NavAdmin/>}
 
         <section className="pt-8 p-4">
           {/* Panel de Filtros */}

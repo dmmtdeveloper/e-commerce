@@ -174,7 +174,7 @@ export default function UsersPage() {
     <MainLayout>
       <div className="relative mt-20">
         {/* Navbar */}
-        <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
+        <NavAdmin className="hidden md:block 2xl:block"/>
 
         <section className="pt-8 p-4">
           <h1 className="font-semibold text-4xl mb-4">Usuarios</h1>
