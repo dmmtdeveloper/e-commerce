@@ -45,7 +45,6 @@ export default function SettingsPage() {
 
   const [isClient, setIsClient] = useState(false);
 
-
   // Estado para manejar la visibilidad de los modales
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
@@ -54,16 +53,16 @@ export default function SettingsPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
-    // Mostrar contraseña al mantener presionado
-    const handleMouseDown = () => {
-      setShowPassword(true);
-    };
-  
-    // Ocultar contraseña al soltar el botón del mouse
-    const handleMouseUp = () => {
-      setShowPassword(false);
-    };
-  
+  // Mostrar contraseña al mantener presionado
+  const handleMouseDown = () => {
+    setShowPassword(true);
+  };
+
+  // Ocultar contraseña al soltar el botón del mouse
+  const handleMouseUp = () => {
+    setShowPassword(false);
+  };
+
   useEffect(() => {
     setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente
     const token = sessionStorage.getItem("token");

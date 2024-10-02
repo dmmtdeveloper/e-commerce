@@ -4,7 +4,7 @@ import { useState } from "react";
 import useCartStore from "@/store/cartStore"; // Importa el store del carrito
 import Link from "next/link";
 import MainLayout from "../layouts/MainLayout";
-import { FaPlus, FaMinus } from "react-icons/fa"; // Importar los íconos
+import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa"; // Importar los íconos
 import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
 import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
 import { addPedido } from "@/utils/authHelpers";
@@ -31,7 +31,7 @@ export default function CartPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { token } = useAuthStore(); // Obtener token de autenticación desde el store
-  
+
   const handlePedido = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -48,7 +48,6 @@ export default function CartPage() {
       cantidad: item.quantity,
       precio: item.price,
       precioTotal: item.quantity * item.price,
-
     }));
 
     try {
@@ -77,7 +76,6 @@ export default function CartPage() {
   const handleMouseUp = () => {
     setShowPassword(false);
   };
-
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,11 +139,11 @@ export default function CartPage() {
     setShowClearModal(false); // Cierra el modal
   };
 
-  const formatCurrency = new Intl.NumberFormat('es-ES', { 
-    minimumFractionDigits: 0, 
-    maximumFractionDigits: 0 
+  const formatCurrency = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
-  
+
   // Si no hay productos en el carrito
   if (items.length === 0) {
     return (
@@ -170,9 +168,11 @@ export default function CartPage() {
           <h1 className="text-2xl font-bold mb-4">Tu carrito de compras</h1>
           <ul>
             {items.map((item) => (
-              <li key={item.id} className="border p-4 mb-4 flex justify-between items-center">
+              <li
+                key={item.id}
+                className="border p-4 mb-4 flex justify-between items-center"
+              >
                 <div className="flex">
-                  
                   <div className="relative w-50 h-50 overflow-hidden flex items-center justify-center mb-8">
                     <Image
                       className="w-48 h-auto"
@@ -187,32 +187,49 @@ export default function CartPage() {
                       priority
                     />
                   </div>
-                    
+
                   <div>
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm">ID {item.id}</p>
-                    <p className="text-sm text-gray-500">Precio: ${item.price !== undefined && item.price !== null
-              ? `${formatCurrency.format(item.price)}`
-              : 'N/A'}</p>
+                    <p className="text-sm text-gray-500">
+                      Precio: $
+                      {item.price !== undefined && item.price !== null
+                        ? `${formatCurrency.format(item.price)}`
+                        : "N/A"}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <button onClick={() => handleDecreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
+                  <button
+                    onClick={() =>
+                      handleDecreaseQuantity(item.id, item.quantity)
+                    }
+                    className="p-2 bg-gray-200 rounded"
+                  >
                     <FaMinus />
                   </button>
                   <span className="mx-4 text-lg">{item.quantity}</span>
-                  <button onClick={() => handleIncreaseQuantity(item.id, item.quantity)} className="p-2 bg-gray-200 rounded">
+                  <button
+                    onClick={() =>
+                      handleIncreaseQuantity(item.id, item.quantity)
+                    }
+                    className="p-2 bg-gray-200 rounded"
+                  >
                     <FaPlus />
                   </button>
                   {/* <span className="mx-4 text-lg">Precio Unitario: {item.price}</span> */}
-                  <span className="mx-4 text-lg">Precio Total: ${item.totalPrice !== undefined && item.totalPrice !== null
-              ? `${formatCurrency.format(item.totalPrice)}`
-              : 'N/A'}</span>
+                  <span className="mx-4 text-lg">
+                    Precio Total: $
+                    {item.totalPrice !== undefined && item.totalPrice !== null
+                      ? `${formatCurrency.format(item.totalPrice)}`
+                      : "N/A"}
+                  </span>
                 </div>
-                <div>
-                  <button onClick={() => handleRemove(item.id)} className="bg-red-500 text-white py-2 px-4 rounded">
-                    Eliminar
-                  </button>
+                <div className="p-10">
+                  <FaTrashAlt
+                    className="text-red-500 hover:text-red-700 text-2xl"
+                    onClick={() => handleRemove(item.id)}
+                  />
                 </div>
               </li>
             ))}
@@ -224,7 +241,12 @@ export default function CartPage() {
           <h2 className="text-lg font-bold mb-4">Resumen de tu compra</h2>
           <div className="mb-2 flex justify-between">
             <span>Total transferencia</span>
-            <span className="font-bold">${formatCurrency.format(items.reduce((acc, item) => acc + item.price * item.quantity, 0))}</span>
+            <span className="font-bold">
+              $
+              {formatCurrency.format(
+                items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+              )}
+            </span>
           </div>
           <p className="text-sm text-gray-500 mb-4">
             El costo de envío se calculará al añadir la dirección.
@@ -234,12 +256,18 @@ export default function CartPage() {
               Agregar más productos
             </button>
           </Link>
-          <button onClick={handlePedido} className="bg-black text-white w-full py-2 rounded">
+          <button
+            onClick={handlePedido}
+            className="bg-black text-white w-full py-2 rounded"
+          >
             Crear Pedido
           </button>
         </div>
         {/* Botón para vaciar el carrito */}
-        <button onClick={handleClearCart} className="bg-red-500 text-white w-full py-2 rounded mb-2">
+        <button
+          onClick={handleClearCart}
+          className="bg-red-500 text-white w-full py-2 rounded mb-2"
+        >
           Vaciar Carrito
         </button>
       </section>
@@ -248,7 +276,9 @@ export default function CartPage() {
       {showLoginModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold text-center mb-4">Iniciar Sesión</h2>
+            <h2 className="text-xl font-bold text-center mb-4">
+              Iniciar Sesión
+            </h2>
             <form onSubmit={handleLogin}>
               <div className="mb-4">
                 <label className="block mb-1 text-sm font-medium">Email:</label>
@@ -273,13 +303,13 @@ export default function CartPage() {
                 />
               </div>
               <div className="flex justify-between mb-4">
-                <button 
-                  onClick={() => setShowLoginModal(false)} 
+                <button
+                  onClick={() => setShowLoginModal(false)}
                   className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
                 >
                   Cancelar
                 </button>
-                <button 
+                <button
                   type="submit"
                   className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none shadow-lg"
                 >
@@ -300,8 +330,6 @@ export default function CartPage() {
           </div>
         </div>
       )}
-
-
 
       {/* Modal de confirmación para eliminar producto */}
       <ConfirmationModal
