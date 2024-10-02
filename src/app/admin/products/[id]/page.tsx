@@ -226,28 +226,31 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 onChange={handleChange}
               />
             </div>
-            <div className="flex flex-col gap-2">
-              <LabelComponent text="Precio" className="pl-1" />
-              <InputComponent
-                type="number"
-                name="precio"
-                value={producto.precio}
-                onChange={handleChange}
-              />
+
+            <div className="flex items-center gap-8">
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Stock" className="pl-1" />
+                <InputComponent
+                  type="number"
+                  name="stock"
+                  value={producto.stock}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Precio" className="pl-1" />
+                <InputComponent
+                  type="number"
+                  name="precio"
+                  value={producto.precio}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
-            <div className="mb-4">
-              <LabelComponent text="Stock" className="pl-1" />
-              <InputComponent
-                type="number"
-                name="stock"
-                value={producto.stock}
-                onChange={handleChange}
-              />
               <p className="text-sm block mb-1">
                 {" "}
                 Stock Reservado: {producto.stockReservado || "0"}
               </p>
-            </div>
             <div className="mb-4">
               {imageBase64 ? (
                 <div className="flex items-center">
@@ -267,7 +270,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                     </p>
 
                     <FaTrashAlt
-                    className="text-red-500 hover:text-red-700 text-2xl"
+                      className="text-red-500 hover:text-red-700 text-2xl"
                       onClick={() =>
                         openConfirmationModal(
                           () => handleUpdateLimpiarFoto(),
