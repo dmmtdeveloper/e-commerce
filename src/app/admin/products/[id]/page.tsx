@@ -247,10 +247,10 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 />
               </div>
             </div>
-              <p className="text-sm block mb-1">
-                {" "}
-                Stock Reservado: {producto.stockReservado || "0"}
-              </p>
+            <p className="text-sm block mb-1">
+              {" "}
+              Stock Reservado: {producto.stockReservado || "0"}
+            </p>
             <div className="mb-4">
               {imageBase64 ? (
                 <div className="flex items-center">
@@ -301,7 +301,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
               )}
             </div>
             <div className="flex space-x-4">
-              <ButtonCtaComponent text="Actualizar Producto" />
+              <ButtonCtaComponent type="submit" text="Actualizar Producto" />
               <Link href="/admin/products">
                 <ButtonCtaComponent
                   className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
