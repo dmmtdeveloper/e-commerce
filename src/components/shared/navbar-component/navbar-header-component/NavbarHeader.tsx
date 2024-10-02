@@ -29,6 +29,14 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
 
       <section className="flex gap-8 items-center">
         <div className="flex gap-4">
+          <Link href="/cart" className="relative">
+              <MdOutlineShoppingCart className="text-2xl" />
+              {totalItemsInCart > 0 && (
+                <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
+                  {totalItemsInCart}
+                </span>
+              )}
+            </Link>
           {!isAuthenticated ? (
             <>
               <Link href="/register" className="hover:text-blue-600">
@@ -39,14 +47,7 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
               </Link>
             </>
           ) : (
-            <Link href="/cart" className="relative">
-              <MdOutlineShoppingCart className="text-2xl" />
-              {totalItemsInCart > 0 && (
-                <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
-                  {totalItemsInCart}
-                </span>
-              )}
-            </Link>
+            <span></span>
           )}
         </div>
         <NavbarToggle menuOpen={menuOpen} toggleMenu={toggleMenu} />
