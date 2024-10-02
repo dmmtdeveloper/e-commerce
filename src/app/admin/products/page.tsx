@@ -320,18 +320,23 @@ export default function ProductsPage() {
                     {/* Producto */}
                     <div className="flex items-center space-x-4">
                       <div className="w-32 h-32">
-                        {producto.foto && producto.foto !== "" ? (
-                          <Image
-                            src={`data:image/${producto.extension};base64,${producto.foto}`}
-                            alt={producto.nombre}
-                            className="w-32 h-32 object-cover rounded"
-                            height={80}
-                            width={80}
-                            priority
-                          />
-                        ) : (
-                          <div className="w-32 h-32 bg-gray-200"></div>
-                        )}
+                        <Link
+                          href={`/admin/products/${producto.productoId}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          {producto.foto && producto.foto !== "" ? (
+                            <Image
+                              src={`data:image/${producto.extension};base64,${producto.foto}`}
+                              alt={producto.nombre}
+                              className="w-32 h-32 object-cover rounded"
+                              height={80}
+                              width={80}
+                              priority
+                            />
+                          ) : (
+                            <div className="w-32 h-32 bg-gray-200"></div>
+                          )}
+                        </Link>
                       </div>
                       <div className="hidden 2xl:block md:block lg:block">
                         <p className="font-bold text-lg">{producto.nombre}</p>
