@@ -255,29 +255,36 @@ export default function SettingsPage() {
                   )}
                 </div>
               </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Nombre" className="pl-1" />
+                <InputComponent
+                  name="nombre"
+                  placeholder="Ingresa tu nombre"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Correo electrónico" className="pl-1" />
+                <InputComponent
+                  name="email"
+                  type="email"
+                  placeholder="Ingresa tu correo electrónico"
+                  value={correo}
+                  onChange={(e) => setCorreo(e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <LabelComponent text="Contraseña" className="pl-1" />
+                <InputComponent
+                  name="password"
+                  type="password"
+                  placeholder="Ingresa tu clave"
+                  value={clave}
+                  onChange={(e) => setClave(e.target.value)}
+                />
+              </div>
 
-              <InputComponent
-                name="nombre"
-                placeholder="Ingresa tu nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-              />
-
-              <InputComponent
-                name="email"
-                type="email"
-                placeholder="Ingresa tu correo electrónico"
-                value={correo}
-                onChange={(e) => setCorreo(e.target.value)}
-              />
-
-              <InputComponent
-                name="password"
-                type="password"
-                placeholder="Ingresa tu clave"
-                value={clave}
-                onChange={(e) => setClave(e.target.value)}
-              />
               <div className="flex gap-4">
                 <ButtonSettingComponent
                   text="Guardar Cambios"

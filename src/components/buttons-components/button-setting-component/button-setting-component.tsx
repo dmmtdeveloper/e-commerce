@@ -15,7 +15,7 @@ const ButtonSettingComponent: React.FC<ButtonSetting> = ({
     <button
       type="button"
       onClick={onClick}
-      className={`bg-blue-500 hover:bg-blue-600 text-gray-100 text-sm py-2 mt-4 rounded-lg px-4 ${className}`}
+      className={`bg-blue-500 hover:bg-blue-600 text-gray-100 text-sm py-2  rounded-lg px-4 ${className}`}
     >
       {text}
     </button>
