@@ -15,14 +15,14 @@ import { useRouter } from "next/navigation";
 import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
 import { InputComponent } from "@/components/input/InputComponent";
 import { Title } from "@/components/title/Title";
+import { NavSetting } from "@/components/shared/NavSetting";
 
 import Image from "next/image";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
-import ButtonSettingComponent from "@/components/buttons-components/button-setting-component/button-setting-component";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
-import { NavSetting } from "@/components/shared/NavSetting";
 import NavAdmin from "@/components/shared/NavAdmin";
 
 export default function SettingsPage() {
@@ -243,7 +243,7 @@ export default function SettingsPage() {
                     )}
                   </div>
                   {avatar && (
-                    <ButtonSettingComponent
+                    <ButtonCtaComponent
                       text="Cambiar Avatar"
                       onClick={() =>
                         openConfirmationModal(

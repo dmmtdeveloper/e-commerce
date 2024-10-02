@@ -2,14 +2,24 @@
 import { useState, useEffect } from "react";
 import MainLayout from "../../layouts/MainLayout";
 import NavAdmin from "@/components/shared/NavAdmin";
-import { GetProductos, UpdateHabilitadoProducto, UpdateEliminadoProducto } from "@/utils/authHelpers"; //
+import {
+  GetProductos,
+  UpdateHabilitadoProducto,
+  UpdateEliminadoProducto,
+} from "@/utils/authHelpers"; //
 import { Product } from "@/types/product";
 import Link from "next/link";
 import Image from "next/image";
-import Slider from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import useAdmin from '@/hooks/useAdmin';
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import useAdmin from "@/hooks/useAdmin";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Title } from "@/components/title/Title";
+import { GoChevronDown, GoChevronUp } from "react-icons/go";
+import { InputComponent } from "@/components/input/InputComponent";
+import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import LabelComponent from "@/components/label-component/label-component";
 
 export default function ProductsPage() {
   useAdmin();
@@ -37,7 +47,7 @@ export default function ProductsPage() {
   });
 
   // Estado para manejar el colapso del panel
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(true);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(false);
 
   // Estados para la paginación
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -57,15 +67,33 @@ export default function ProductsPage() {
   }, []);
 
   useEffect(() => {
-    const { nombre, descripcion, habilitado, noEliminado, precioMinimo, precioMaximo } = filters;
+    const {
+      nombre,
+      descripcion,
+      habilitado,
+      noEliminado,
+      precioMinimo,
+      precioMaximo,
+    } = filters;
     const filtered = productos.filter((producto) => {
-      const matchesNombre = producto.nombre.toLowerCase().includes(nombre.toLowerCase());
-      const matchesDescripcion = producto.descripcion.toLowerCase().includes(descripcion.toLowerCase());
+      const matchesNombre = producto.nombre
+        .toLowerCase()
+        .includes(nombre.toLowerCase());
+      const matchesDescripcion = producto.descripcion
+        .toLowerCase()
+        .includes(descripcion.toLowerCase());
       const matchesHabilitado = habilitado ? producto.habilitado : true; // Si habilitado está desmarcado, no filtra por habilitado
       const matchesNoEliminado = noEliminado ? !producto.eliminado : true; // Si no eliminado está desmarcado, no filtra por eliminado
-      const matchesPrecio = producto.precio >= precioMinimo && producto.precio <= precioMaximo;
+      const matchesPrecio =
+        producto.precio >= precioMinimo && producto.precio <= precioMaximo;
 
-      return matchesNombre && matchesDescripcion && matchesHabilitado && matchesNoEliminado && matchesPrecio;
+      return (
+        matchesNombre &&
+        matchesDescripcion &&
+        matchesHabilitado &&
+        matchesNoEliminado &&
+        matchesPrecio
+      );
     });
     setFilteredProductos(filtered);
   }, [filters, productos]);
@@ -80,7 +108,11 @@ export default function ProductsPage() {
     }));
   };
 
-  const handleCheckboxChange = (productoId: number, field: "habilitado" | "eliminado", value: boolean) => {
+  const handleCheckboxChange = (
+    productoId: number,
+    field: "habilitado" | "eliminado",
+    value: boolean
+  ) => {
     setCurrentAction({ productoId, field, value });
     setIsModalOpen(true);
   };
@@ -125,10 +157,16 @@ export default function ProductsPage() {
           <h2 className="text-lg font-semibold">Confirmación</h2>
           <p>¿Estás seguro de que deseas cambiar este valor?</p>
           <div className="mt-4">
-            <button onClick={handleConfirm} className="bg-blue-500 text-white py-2 px-4 rounded mr-2">
+            <button
+              onClick={handleConfirm}
+              className="bg-blue-500 text-white py-2 px-4 rounded mr-2"
+            >
               Confirmar
             </button>
-            <button onClick={handleCancel} className="bg-gray-300 py-2 px-4 rounded">
+            <button
+              onClick={handleCancel}
+              className="bg-gray-300 py-2 px-4 rounded"
+            >
               Cancelar
             </button>
           </div>
@@ -144,7 +182,10 @@ export default function ProductsPage() {
   // Calcular los elementos a mostrar según la página y los filtros aplicados
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentProductos = filteredProductos.slice(indexOfFirstItem, indexOfLastItem);
+  const currentProductos = filteredProductos.slice(
+    indexOfFirstItem,
+    indexOfLastItem
+  );
 
   const totalPages = Math.ceil(filteredProductos.length / itemsPerPage);
 
@@ -158,186 +199,234 @@ export default function ProductsPage() {
 
   return (
     <>
-    {isAdmin && (
-    <MainLayout>
-      <div className="relative mt-20 mb-20">
-        {/* Navbar */}
-        <NavAdmin/>
+      {isAdmin && (
+        <MainLayout>
+          <div className="relative mt-20 mb-20">
+            <section className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+              <NavAdmin />
+              <Title text="Productos" />
+              <div className="bg-gray-100   border-gray-200">
+                <FilterButtonComponent
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
+                  onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+                  className="my-custom-class"
+                  isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
+                />
 
-        <section className="pt-8 p-4">
-          <h1 className="font-semibold text-4xl mb-4">Productos</h1>
+                <div
+                  className={`transition-opacity duration-300 ${
+                    isPanelCollapsed
+                      ? "opacity-0 h-0 overflow-hidden"
+                      : "opacity-100"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center gap-10">
+                    <div className="flex-1 min-w-[200px]">
+                      <InputComponent
+                        type="text"
+                        name="nombre"
+                        placeholder="Nombre"
+                        value={filters.nombre}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-[200px]">
+                      <InputComponent
+                        type="text"
+                        name="descripcion"
+                        placeholder="Descripción"
+                        value={filters.descripcion}
+                        onChange={handleFilterChange}
+                      />
+                    </div>
 
+                    <div className="flex">
+                      <input
+                        type="checkbox"
+                        name="habilitado"
+                        checked={filters.habilitado}
+                        onChange={handleFilterChange}
+                        className="mr-2"
+                      />
+                      <LabelComponent text="Habilitado" />
+                    </div>
 
-          <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-            <button
-              className="text-blue-500 mb-4 block"
-              onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-            >
-              {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
-            </button>
-            <div
-              className={`transition-opacity duration-300 ${
-                isPanelCollapsed ? "opacity-0 h-0 overflow-hidden" : "opacity-100"
-              }`}
-            >
-              {/* Fila de filtros en una sola fila */}
-              <div className="mb-4 flex flex-wrap items-center space-x-4">
-                <div className="flex-1 min-w-[200px]">
-                  <input
-                    type="text"
-                    name="nombre"
-                    placeholder="Buscar por Nombre"
-                    value={filters.nombre}
-                    onChange={handleFilterChange}
-                    className="border p-2 rounded w-full"
-                  />
-                </div>
-                <div className="flex-1 min-w-[200px]">
-                  <input
-                    type="text"
-                    name="descripcion"
-                    placeholder="Buscar por Descripción"
-                    value={filters.descripcion}
-                    onChange={handleFilterChange}
-                    className="border p-2 rounded w-full"
-                  />
-                </div>
-                <div className="flex-1 min-w-[150px]">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="habilitado"
-                      checked={filters.habilitado}
-                      onChange={handleFilterChange}
-                      className="mr-2"
-                    />
-                    Habilitado
-                  </label>
-                </div>
-                <div className="flex-1 min-w-[150px]">
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      name="noEliminado"
-                      checked={filters.noEliminado}
-                      onChange={handleFilterChange}
-                      className="mr-2"
-                    />
-                    No Eliminado
-                  </label>
-                </div>
-                <div className="flex-1 min-w-[300px]">
-                  <label className="block mb-2">Rango de Precio</label>
-                  <Slider
-                    range
-                    min={0}
-                    max={1000000}
-                    value={[filters.precioMinimo, filters.precioMaximo]}
-                    onChange={(value) => {
-                      const [min, max] = value as number[];
-                      setFilters((prevFilters) => ({
-                        ...prevFilters,
-                        precioMinimo: min,
-                        precioMaximo: max,
-                      }));
-                    }}
-                  />
-                  <div className="flex justify-between mt-2">
-                    <span>Precio Mínimo: {filters.precioMinimo}</span>
-                    <span>Precio Máximo: {filters.precioMaximo}</span>
+                    <div className="flex">
+                      <input
+                        type="checkbox"
+                        name="noEliminado"
+                        checked={filters.noEliminado}
+                        onChange={handleFilterChange}
+                        className="mr-2"
+                      />
+                      <LabelComponent text="No eliminado" />
+                    </div>
+
+                    <div className="flex-1 min-w-[300px]">
+                      <label className="block mb-2 text-sm">
+                        Rango de Precio
+                      </label>
+                      <Slider
+                        range
+                        min={0}
+                        max={1000000}
+                        value={[filters.precioMinimo, filters.precioMaximo]}
+                        onChange={(value) => {
+                          const [min, max] = value as number[];
+                          setFilters((prevFilters) => ({
+                            ...prevFilters,
+                            precioMinimo: min,
+                            precioMaximo: max,
+                          }));
+                        }}
+                      />
+                      <div className="flex justify-between">
+                        <span className="text-sm">
+                          Precio Mínimo: {filters.precioMinimo}
+                        </span>
+                        <span className="text-sm">
+                          Precio Máximo: {filters.precioMaximo}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* Botón para Crear Producto */}
-          <div className="mb-4 relative">
-            <Link
-              href="/admin/products/create"
-              className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 z-10"
-            >
-              Crear Producto
-            </Link>
-          </div>
+              {/* Botón para Crear Producto */}
+              <div className="mb-4 relative">
+                <Link href={"/admin/products/create"}>
+                  <ButtonCtaComponent text="Crear Producto" />
+                </Link>
+              </div>
 
-
-          {/* Tabla de Productos */}
-          <div className="overflow-x-auto">
-            <table className="min-w-full border">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">Producto</th>
-                  <th className="border px-4 py-2">Habilitado</th>
-                  <th className="border px-4 py-2">Eliminado</th>
-                  <th className="border px-4 py-2">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
+              <div className="overflow-x-center">
+                <div className="grid grid-cols-4 bg-blue-400 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
+                  <div>Producto</div>
+                  <div>Habilitado</div>
+                  <div>Eliminado</div>
+                  <div>Acciones</div>
+                </div>
                 {currentProductos.map((producto) => (
-                  <tr key={producto.productoId}>
-                    <td className="border px-4 py-2">
-                      <div className="flex items-center space-x-4">
+                  <div
+                    key={producto.productoId}
+                    className="grid grid-cols-4 items-center border-b py-2 px-4"
+                  >
+                    {/* Producto */}
+                    <div className="flex items-center space-x-4">
+                      <div className="w-32 h-32">
                         {producto.foto && producto.foto !== "" ? (
-                          <Image src={`data:image/${producto.extension};base64,${producto.foto}`} alt={producto.nombre} className="w-32 h-32 object-cover rounded" height={80} width={80} priority />
+                          <Image
+                            src={`data:image/${producto.extension};base64,${producto.foto}`}
+                            alt={producto.nombre}
+                            className="w-32 h-32 object-cover rounded"
+                            height={80}
+                            width={80}
+                            priority
+                          />
                         ) : (
-                          <div className="h-32 w-32 bg-gray-200 mr-4"></div>
+                          <div className="w-32 h-32 bg-gray-200"></div>
                         )}
-                        
-                        <div>
-                          <p className="font-bold text-lg">{producto.nombre}</p>
-                          <p className="text-sm text-gray-600">{producto.descripcion}</p>
-                          <p className="text-sm font-bold text-gray-800">Precio: ${producto.precio}</p>
-                        </div>
-                        <div>
-                        <p className="text-sm text-gray-600">Stock: {producto.stock}</p>
-                        <p className="text-sm text-gray-600">Stock Reservado: {producto.stockReservado}</p>
-                        <p className="font-bold text-md text-gray-600">Stock Disponible: {producto.stock - producto.stockReservado}</p>
-                        </div>
                       </div>
-                    </td>
-                    <td className="border px-4 py-2">
+                      <div>
+                        <p className="font-bold text-lg">{producto.nombre}</p>
+                        <p className="text-sm text-gray-600">
+                          {producto.descripcion}
+                        </p>
+                        <p className="text-sm font-bold text-gray-800">
+                          Precio: ${producto.precio}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Stock: {producto.stock}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Stock Reservado: {producto.stockReservado}
+                        </p>
+                        <p className="font-bold text-md text-gray-600">
+                          Stock Disponible:{" "}
+                          {producto.stock - producto.stockReservado}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Habilitado */}
+                    <div className="flex justify-center">
                       <label>
                         <input
                           type="checkbox"
                           checked={producto.habilitado}
-                          onChange={() => handleCheckboxChange(producto.productoId, "habilitado", !producto.habilitado)}
+                          onChange={() =>
+                            handleCheckboxChange(
+                              producto.productoId,
+                              "habilitado",
+                              !producto.habilitado
+                            )
+                          }
                           disabled={producto.eliminado}
                         />
                       </label>
-                    </td>
-                    <td className="border px-4 py-2">
+                    </div>
+
+                    {/* Eliminado */}
+                    <div className="flex justify-center">
                       <label>
                         <input
                           type="checkbox"
                           checked={producto.eliminado}
-                          onChange={() => handleCheckboxChange(producto.productoId, "eliminado", !producto.eliminado)}
+                          onChange={() =>
+                            handleCheckboxChange(
+                              producto.productoId,
+                              "eliminado",
+                              !producto.eliminado
+                            )
+                          }
                           disabled={producto.eliminado}
                         />
                       </label>
-                    </td>
-                    <td className="border px-4 py-2">
-                      <Link href={`/admin/products/${producto.productoId}`} className="text-blue-500 hover:underline">Editar</Link>
-                    </td>
-                  </tr>
+                    </div>
+
+                    {/* Acciones */}
+                    <div className="flex justify-center">
+                      <Link
+                        href={`/admin/products/${producto.productoId}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        Editar
+                      </Link>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
 
-          {/* Paginación */}
-          <div className="mt-4">
-            <button onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1} className="bg-gray-300 px-4 py-2 rounded mr-2">Anterior</button>
-            <button onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages} className="bg-gray-300 px-4 py-2 rounded">Siguiente</button>
-            <p className="mt-2">Página {currentPage} de {totalPages}</p>
-          </div>
-        </section>
+              {/* Paginación */}
+              <div className="mt-4">
+                <button
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="bg-gray-300 px-4 py-2 rounded mr-2"
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="bg-gray-300 px-4 py-2 rounded"
+                >
+                  Siguiente
+                </button>
+                <p className="mt-2">
+                  Página {currentPage} de {totalPages}
+                </p>
+              </div>
+            </section>
 
-        {/* Modal de Confirmación */}
-        {isModalOpen && <ConfirmationModal />}
-      </div>
-    </MainLayout>
-    )}
+            {/* Modal de Confirmación */}
+            {isModalOpen && <ConfirmationModal />}
+          </div>
+        </MainLayout>
+      )}
     </>
   );
 }

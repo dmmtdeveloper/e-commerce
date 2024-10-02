@@ -1,12 +1,12 @@
 import React from "react";
 
 interface ButtonSetting {
-  onClick: () => void;
+  onClick?: () => void;
   text: string;
   className?: string;
 }
 
-const ButtonSettingComponent: React.FC<ButtonSetting> = ({
+const ButtonCtaComponent: React.FC<ButtonSetting> = ({
   onClick,
   text,
   className,
@@ -22,4 +22,4 @@ const ButtonSettingComponent: React.FC<ButtonSetting> = ({
   );
 };
 
-export default ButtonSettingComponent;
+export default ButtonCtaComponent;
