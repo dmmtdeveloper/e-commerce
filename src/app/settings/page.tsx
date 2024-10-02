@@ -224,7 +224,7 @@ export default function SettingsPage() {
             </p>
           </div>
           <div>
-            <article className="flex flex-col gap-8">
+            <article className="flex flex-col gap-4">
               <div className="flex gap-4 flex-col">
                 <LabelComponent text="Avatar" />
                 <div className="flex items-center gap-8">
