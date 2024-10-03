@@ -20,6 +20,8 @@ import FilterButtonComponent from "@/components/buttons-components/button-produc
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
 import Pagination from "@/components/pagination-component/pagination-component";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function ProductsPage() {
   useAdmin();
@@ -201,10 +203,15 @@ export default function ProductsPage() {
     <>
       {isAdmin && (
         <MainLayout>
-          <section className="relative mt-20 mb-20">
-            <article className="2xl:px-24 px-4 flex flex-col gap-4 bg-slate-100 w-full">
+          <LayoutSectionComponent>
+            <LayoutDivComponent>
               <NavAdmin />
-              <Title text="Productos" />
+              <div>
+                <Title className="text-left" text="Productos" />
+                <p className="text-gray-500">
+                  Explora los productos disponibles
+                </p>
+              </div>
               <div className="bg-gray-100   border-gray-200">
                 <FilterButtonComponent
                   text={
@@ -267,14 +274,14 @@ export default function ProductsPage() {
                     </div>
 
                     <div className="flex-1 min-w-[300px]">
-                        <div className="flex justify-between">
-                          <span className="text-sm">
-                            Precio Mínimo: {filters.precioMinimo}
-                          </span>
-                          <span className="text-sm">
-                            Precio Máximo: {filters.precioMaximo}
-                          </span>
-                        </div>
+                      <div className="flex justify-between">
+                        <span className="text-sm">
+                          Precio Mínimo: {filters.precioMinimo}
+                        </span>
+                        <span className="text-sm">
+                          Precio Máximo: {filters.precioMaximo}
+                        </span>
+                      </div>
                       <Slider
                         range
                         min={0}
@@ -295,21 +302,20 @@ export default function ProductsPage() {
               </div>
 
               {/* Botón para Crear Producto */}
-             
-                <Link href={"/admin/products/create"}>
-                  <ButtonCtaComponent
-                    className="bg-green-500 hover:bg-green-600 translate-all duration-300"
-                    text="Crear Producto"
-                  />
-                </Link>
-            
+
+              <Link href={"/admin/products/create"}>
+                <ButtonCtaComponent
+                  className="bg-green-500 hover:bg-green-600 translate-all duration-300"
+                  text="Crear Producto"
+                />
+              </Link>
 
               <div className="overflow-x-center">
                 <div className="grid grid-cols-4 bg-slate-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
-                  <LabelComponent text="Producto"/>
-                  <LabelComponent text="Habilitado"/>
-                  <LabelComponent text="Eliminado"/>
-                  <LabelComponent text="Acciones"/>
+                  <LabelComponent text="Producto" />
+                  <LabelComponent text="Habilitado" />
+                  <LabelComponent text="Eliminado" />
+                  <LabelComponent text="Acciones" />
                 </div>
                 {currentProductos.map((producto) => (
                   <div
@@ -415,11 +421,11 @@ export default function ProductsPage() {
                   setCurrentPage={setCurrentPage}
                 />
               </div>
-            </article>
+            </LayoutDivComponent>
 
             {/* Modal de Confirmación */}
             {isModalOpen && <ConfirmationModal />}
-          </section>
+          </LayoutSectionComponent>
         </MainLayout>
       )}
     </>

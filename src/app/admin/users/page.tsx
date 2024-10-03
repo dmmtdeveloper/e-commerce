@@ -12,6 +12,9 @@ import {
   UpdateEsAdminUsuario,
 } from "@/utils/authHelpers";
 import { Title } from "@/components/title/Title";
+import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function UsersPage() {
   useAdmin();
@@ -177,8 +180,8 @@ export default function UsersPage() {
     <>
       {isAdmin && (
         <MainLayout>
-          <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
-            <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          <LayoutSectionComponent>
+            <LayoutDivComponent>
               <NavAdmin />
               <div>
                 <Title className="text-left" text="Usuarios" />
@@ -186,12 +189,14 @@ export default function UsersPage() {
               </div>
               {/* Panel de Filtros */}
               <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-                <button
-                  className="text-blue-500 mb-4 block"
-                  onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-                >
-                  {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
-                </button>
+                <FilterButtonComponent
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
+                  onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+                  className="my-custom-class"
+                  isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
+                />
                 <div
                   className={`transition-opacity duration-300 ${
                     isPanelCollapsed
@@ -322,11 +327,11 @@ export default function UsersPage() {
                   </button>
                 ))}
               </div>
-            </div>
+            </LayoutDivComponent>
 
             {/* Modal de confirmación */}
             {isModalOpen && <ConfirmationModal />}
-          </section>
+          </LayoutSectionComponent>
         </MainLayout>
       )}
     </>

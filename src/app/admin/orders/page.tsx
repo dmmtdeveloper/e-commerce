@@ -11,6 +11,8 @@ import { VmPedido } from "@/types/types";
 import useAdmin from "@/hooks/useAdmin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function OrdersPage() {
   useAdmin();
@@ -118,10 +120,8 @@ export default function OrdersPage() {
     <>
       {isAdmin && (
         <MainLayout>
-          <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
-            {/* Navbar */}
-
-            <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          <LayoutSectionComponent>
+            <LayoutDivComponent>
               <NavAdmin />
               <div>
                 <Title className="text-left" text="Pedidos" />
@@ -271,8 +271,8 @@ export default function OrdersPage() {
 
               {/* Padding final */}
               <div className="mt-8" style={{ paddingBottom: "30px" }}></div>
-            </div>
-          </section>
+            </LayoutDivComponent>
+          </LayoutSectionComponent>
         </MainLayout>
       )}
     </>

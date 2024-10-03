@@ -13,6 +13,9 @@ import {
 import { Pedido } from "@/types/types";
 import { NavSetting } from "@/components/shared/NavSetting";
 import { useAuthStore } from "@/store/useAuthStore";
+import { Title } from "@/components/title/Title";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -79,15 +82,15 @@ export default function OrdersPage() {
 
   return (
     <MainLayout>
-      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
-        {/* Navbar */}
-
-        <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+      <LayoutSectionComponent>
+        <LayoutDivComponent>
           {!isAdmin ? <NavSetting /> : <NavAdmin />}
+          <div>
+            <Title className="text-left" text="Ordenes" />
+            <p className="text-gray-500">Panel de pedidos históricos</p>
+          </div>
           {/* Panel de Filtros */}
           <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-
-            
             <button
               className="text-blue-500 mb-4 block"
               onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
@@ -163,8 +166,8 @@ export default function OrdersPage() {
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
+        </LayoutDivComponent>
+      </LayoutSectionComponent>
     </MainLayout>
   );
 }
