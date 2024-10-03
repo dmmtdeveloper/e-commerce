@@ -2,7 +2,7 @@
 import MainLayout from "../layouts/MainLayout"; // Asegúrate de tener esta ruta correcta
 import { Title } from "@/components/title/Title"; // Importa el componente Title si lo necesitas
 import Link from "next/link";
-import { Reveal } from "@/animation/Reveal"; // Si usas animaciones, asegúrate de que esta ruta sea correcta
+
 
 const Custom403 = () => {
     return (

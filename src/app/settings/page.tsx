@@ -23,7 +23,7 @@ import SuccessModal from "@/components/modals/setting-modal-component/sucess-mod
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { Input } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 

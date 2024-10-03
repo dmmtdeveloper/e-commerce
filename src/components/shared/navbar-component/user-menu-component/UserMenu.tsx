@@ -2,7 +2,7 @@ import { BiArrowToRight } from "react-icons/bi";
 import Avatar from '@/components/shared/navbar-component/avatar-component/Avatar';
 import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
-import { CiDeliveryTruck } from "react-icons/ci";
+import { TbTruckDelivery } from "react-icons/tb";
 import { AiOutlineSetting } from "react-icons/ai";
 
 interface UserMenuProps {
@@ -29,7 +29,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ handleLogout }) => {
       <h3 className="font-semibold mb-4 mt-4">Menú</h3>
       <ul className="flex flex-col gap-1">
         <li className="flex items-center gap-2 hover:text-blue-500 hover:bg-slate-50 p-2 rounded-xl">
-        <CiDeliveryTruck className="text-2xl" />
+        <TbTruckDelivery className="text-2xl" />
           <Link className="text-sm" href="/orders">Mis Pedidos</Link>
         </li>
         <li className="flex items-center gap-2 hover:text-blue-500 hover:bg-slate-50 p-2 rounded-xl">

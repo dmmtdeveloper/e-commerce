@@ -1,9 +1,9 @@
 import Link from "next/link";
 import React from "react";
 import { AiOutlineSetting } from "react-icons/ai";
-import { CiDeliveryTruck } from "react-icons/ci";
 import { FaBagShopping, FaUsers } from "react-icons/fa6";
 import { AiFillProduct} from "react-icons/ai";
+import { TbTruckDelivery } from "react-icons/tb";
 
 interface NavAdminProps {
   className?: string; // Aceptar la prop className
@@ -21,7 +21,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               className="cursor-pointer flex flex-col items-center"
             >
               <AiFillProduct className="text-2xl" />
-              Productos
+              <p className="text-sm">Productos</p>
             </Link>
           </div>
 
@@ -31,7 +31,8 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               className="flex flex-col items-center justify-center"
             >
               <FaUsers className="text-2xl" />
-              Usuarios
+              <p className="text-sm">Usuarios</p>
+
             </Link>
           </div>
           <div className="hover:text-blue-500 cursor-pointer">
@@ -40,14 +41,16 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               className="flex flex-col items-center justify-center"
             >
               <FaBagShopping className="text-2xl" />
-              Pedidos
+              <p className="text-sm">Pedidos</p>
+
             </Link>
           </div>
 
           <div className="flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer">
             <Link href={"/orders"} className="flex flex-col items-center">
-              <CiDeliveryTruck className="text-2xl" />
-              Ordenes
+              <TbTruckDelivery className="text-2xl" />
+              <p className="text-sm">Ordenes</p>
+
             </Link>
           </div>
 
@@ -57,7 +60,8 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               className="cursor-pointer flex flex-col items-center"
             >
               <AiOutlineSetting className="text-2xl" />
-              Configuración
+              <p className="text-sm">Configuración</p>
+
             </Link>
           </div>
         </div>

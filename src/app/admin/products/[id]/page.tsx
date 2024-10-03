@@ -9,7 +9,7 @@ import {
   UpdateLimpiaFotoProducto,
 } from "@/utils/authHelpers";
 import MainLayout from "../../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import Link from "next/link";
 import axios from "axios";
 import Image from "next/image";
@@ -279,16 +279,6 @@ const EditarProducto = ({ params }: EditPageProps) => {
                       }
                     />
 
-                    {/* <ButtonCtaComponent
-                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700"
-                      text="Eliminar Imagen"
-                      onClick={() =>
-                        openConfirmationModal(
-                          () => handleUpdateLimpiarFoto(),
-                          "¿Estás seguro de que quieres eliminar la foto?"
-                        )
-                      }
-                    /> */}
                   </div>
                 </div>
               ) : (

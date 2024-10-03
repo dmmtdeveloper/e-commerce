@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MainLayout from "@/app/layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetPedidosByToken, GetUsuarios } from "@/utils/authHelpers";
 import { Usuario } from "@/utils/authHelpers";
 import Link from "next/link";
@@ -20,7 +20,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const {isAdmin } = useAuthStore();
+  const { isAdmin } = useAuthStore();
   // Estados para los filtros
   const [filters, setFilters] = useState({
     search: "",
@@ -54,7 +54,6 @@ export default function OrdersPage() {
     setFilteredPedidos(filtered);
   }, [filters, pedidos]);
 
-
   const handleFilterChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -65,11 +64,11 @@ export default function OrdersPage() {
     }));
   };
 
-  const formatCurrency = new Intl.NumberFormat('es-ES', { 
-    minimumFractionDigits: 0, 
-    maximumFractionDigits: 0 
+  const formatCurrency = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
-  
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -80,13 +79,15 @@ export default function OrdersPage() {
 
   return (
     <MainLayout>
-      <div className="relative mt-20">
+      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
         {/* Navbar */}
-        {!isAdmin ? <NavSetting/> : <NavAdmin/>}
 
-        <section className="pt-8 p-4">
+        <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+          {!isAdmin ? <NavSetting /> : <NavAdmin />}
           {/* Panel de Filtros */}
           <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
+
+            
             <button
               className="text-blue-500 mb-4 block"
               onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
@@ -127,11 +128,11 @@ export default function OrdersPage() {
             <table className="table-auto w-full border">
               <thead>
                 <tr>
-                <th className="border p-2">Fecha</th>
-                <th className="border p-2">Estado</th>
-                <th className="border p-2">Cantidad Producto</th>
-                <th className="border p-2">Valor Total</th>
-                <th className="border p-2">Acciones</th>
+                  <th className="border p-2">Fecha</th>
+                  <th className="border p-2">Estado</th>
+                  <th className="border p-2">Cantidad Producto</th>
+                  <th className="border p-2">Valor Total</th>
+                  <th className="border p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
@@ -139,14 +140,21 @@ export default function OrdersPage() {
                   <tr key={pedido.pedidoId}>
                     <td className="border p-2">
                       {new Date(pedido.fecha).toLocaleDateString()}
-                    </td>                    
+                    </td>
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidad}</td>
-                    <td className="border p-2">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
-              ? `${formatCurrency.format(pedido.valorTotal)}`
-              : 'N/A'}</td>
                     <td className="border p-2">
-                      <Link href={`/orders/ordersDetails/${pedido.pedidoId}`} className="text-blue-500 hover:underline">
+                      $
+                      {pedido.valorTotal !== undefined &&
+                      pedido.valorTotal !== null
+                        ? `${formatCurrency.format(pedido.valorTotal)}`
+                        : "N/A"}
+                    </td>
+                    <td className="border p-2">
+                      <Link
+                        href={`/orders/ordersDetails/${pedido.pedidoId}`}
+                        className="text-blue-500 hover:underline"
+                      >
                         Ver Detalle
                       </Link>
                     </td>
@@ -155,8 +163,8 @@ export default function OrdersPage() {
               </tbody>
             </table>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </MainLayout>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router"; // Usar useRouter en lugar de router.query
 import MainLayout from "../../../layouts/MainLayout";
 import { GetPedidoById, GetPedidoDetallesByPedidoId } from "@/utils/orderHelpers";
 import { PedidoDetalleDTO, PedidoDto } from "@/types/types";

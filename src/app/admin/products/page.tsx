@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import {
   GetProductos,
   UpdateHabilitadoProducto,
@@ -15,7 +15,6 @@ import "rc-slider/assets/index.css";
 import useAdmin from "@/hooks/useAdmin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
-import { GoChevronDown, GoChevronUp } from "react-icons/go";
 import { InputComponent } from "@/components/input/InputComponent";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
@@ -203,7 +202,7 @@ export default function ProductsPage() {
       {isAdmin && (
         <MainLayout>
           <section className="relative mt-20 mb-20">
-            <article className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+            <article className="2xl:px-24 px-4 flex flex-col gap-4 bg-slate-100 w-full">
               <NavAdmin />
               <Title text="Productos" />
               <div className="bg-gray-100   border-gray-200">
