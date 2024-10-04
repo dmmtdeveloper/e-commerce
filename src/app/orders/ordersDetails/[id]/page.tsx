@@ -9,6 +9,8 @@ import {
 import { PedidoDetalleDTO, PedidoDto } from "@/types/types";
 import Link from "next/link";
 import Image from "next/image";
+import { UpdateEstadoPedidoCancelado } from "@/utils/authHelpers";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 interface PedidoDetallePageProps {
   params: {
@@ -21,6 +23,7 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
   const [detalles, setDetalles] = useState<PedidoDetalleDTO[]>([]); // Agregar estado para detalles
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
 
   const pedidoId = Number(params.id); // Convertir el ID a número
 
@@ -36,6 +39,20 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
       setError(error.message || "Error obteniendo el pedido");
     } finally {
       setLoading(false);
+    }
+  };
+
+  
+  const handleConfirmCancelarPedido = () => {
+    if (pedido) {
+      UpdateEstadoPedidoCancelado(pedido.pedidoId, 4) // Cambia a "Cancelado"
+        .then(() => {
+          setPedido({ ...pedido, estadoId: 4, estadoNombre: "Anular" }); // Asumiendo que 3 es el ID del estado "Cancelado"
+          setShowModalCancelar(false);
+        })
+        .catch((error) => {
+          console.error("Error anulando el pedido:", error);
+        });
     }
   };
 
@@ -88,6 +105,15 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
                 <p>
                   <strong>Estado:</strong> {pedido?.estadoNombre}
                 </p>
+                {pedido.estadoId === 1 && (
+                  <>
+                    <ButtonCtaComponent
+                      onClick={() => setShowModalCancelar(true)}
+                      text="Anular Pedido"
+                      className="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                    />
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -161,6 +187,33 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
           </div>
         </section>
       </div>
+
+      {/* Modal de confirmación para cancelar pedido */}
+      {showModalCancelar && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg">
+            <h2 className="text-xl font-semibold mb-4">
+              Confirmar cancelación del pedido
+            </h2>
+            <p>¿Estás seguro de que deseas Anular este pedido?</p>
+            <div className="mt-6 flex justify-end space-x-4">
+              <button
+                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-700"
+                onClick={() => setShowModalCancelar(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                onClick={handleConfirmCancelarPedido}
+              >
+                Confirmar Anulación
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </MainLayout>
   );
 };
