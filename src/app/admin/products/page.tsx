@@ -354,7 +354,8 @@ export default function ProductsPage() {
                           {producto.descripcion}
                         </p>
                         <p className="text-sm font-bold text-gray-800">
-                          Precio: ${producto.precio !== undefined &&
+                          Precio: $
+                          {producto.precio !== undefined &&
                           producto.precio !== null
                             ? `${formatCurrency.format(producto.precio)}`
                             : "N/A"}
