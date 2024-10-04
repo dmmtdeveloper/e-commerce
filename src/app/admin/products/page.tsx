@@ -191,6 +191,11 @@ export default function ProductsPage() {
 
   const totalPages = Math.ceil(filteredProductos.length / itemsPerPage);
 
+  const formatCurrency = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -349,7 +354,10 @@ export default function ProductsPage() {
                           {producto.descripcion}
                         </p>
                         <p className="text-sm font-bold text-gray-800">
-                          Precio: ${producto.precio}
+                          Precio: ${producto.precio !== undefined &&
+                          producto.precio !== null
+                            ? `${formatCurrency.format(producto.precio)}`
+                            : "N/A"}
                         </p>
                         <p className="text-sm text-gray-600">
                           Stock: {producto.stock}
