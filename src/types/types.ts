@@ -9,6 +9,7 @@ export interface InputPasswordProps {
   onIconClick?: () => void; // Evento opcional para manejar clics en el ícono
   onMouseDown?: () => void; // Evento para detectar cuando se presiona el ícono
   onMouseUp?: () => void; // Evento para detectar cuando se suelta el ícono
+  id?: string;
 }
 
 export interface InputProps {
@@ -19,6 +20,7 @@ export interface InputProps {
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
   name: string;
   id?: string;
+  
 }
 export interface TextareaProps {
   type?: string;
