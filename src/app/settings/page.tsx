@@ -250,9 +250,10 @@ export default function SettingsPage() {
                       <Image
                         src={avatar}
                         alt="Avatar"
-                        className="h-28 w-28 object-cover"
+                        className="h-28 w-28 rounded-full object-cover"
                         width={112}
                         height={112}
+                        
                       />
                     )}
                   </div>

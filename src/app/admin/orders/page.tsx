@@ -13,6 +13,9 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
+import LabelComponent from "@/components/label-component/label-component";
+import { InputComponent } from "@/components/input/InputComponent";
 
 export default function OrdersPage() {
   useAdmin();
@@ -128,13 +131,15 @@ export default function OrdersPage() {
                 <p className="text-gray-500">Revisa el historial de pedidos</p>
               </div>
               {/* Panel de Filtros */}
-              <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-                <button
-                  className="text-blue-500 mb-4 block"
-                  onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-                >
-                  {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
-                </button>
+              <div>
+                <FilterButtonComponent
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
+                  onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+                  className="my-custom-class"
+                  isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
+                />
                 <div
                   className={`transition-opacity duration-300 ${
                     isPanelCollapsed
@@ -144,13 +149,13 @@ export default function OrdersPage() {
                 >
                   <div className="flex flex-wrap gap-4">
                     <div className="flex flex-col flex-grow">
-                      <label htmlFor="estadoId">Estado:</label>
+                      <LabelComponent text="Estado" />
                       <select
                         id="estadoId"
                         name="estadoId"
                         value={filters.estadoId}
                         onChange={handleFilterChange}
-                        className="border p-2 rounded"
+                        className="border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-blue-400"
                       >
                         <option value="">Todos</option>
                         <option value="1">Pendiente</option>
@@ -160,27 +165,25 @@ export default function OrdersPage() {
                       </select>
                     </div>
                     <div className="flex flex-col flex-grow">
-                      <label htmlFor="fechaDesde">Fecha Desde:</label>
-                      <input
+                      <LabelComponent text="Fecha Desde" />
+                      <InputComponent
                         id="fechaDesde"
                         name="fechaDesde"
                         type="date"
                         value={fechaDesde}
                         onChange={handleDateChange}
-                        className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
-                        onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
+                        onClick={(e) => e.currentTarget.showPicker()}
                       />
                     </div>
                     <div className="flex flex-col flex-grow">
-                      <label htmlFor="fechaHasta">Fecha Hasta:</label>
-                      <input
+                      <LabelComponent text="Fecha Hasta" />
+                      <InputComponent
                         id="fechaHasta"
                         name="fechaHasta"
                         type="date"
                         value={fechaHasta}
                         onChange={handleDateChange}
-                        className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
-                        onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
+                        onClick={(e) => e.currentTarget.showPicker()}
                       />
                     </div>
                   </div>

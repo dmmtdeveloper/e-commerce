@@ -6,7 +6,9 @@ export const InputComponent: React.FC<InputProps> = ({
   placeholder = "",
   value,
   onChange,
+  onClick,
   name,
+  id,
 }) => {
   return (
     <div className="relative w-full">
@@ -15,9 +17,11 @@ export const InputComponent: React.FC<InputProps> = ({
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        onClick={onClick} 
         autoComplete="true"
         className="border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-blue-400"
         name={name}
+        id={id}
       />
     </div>
   );

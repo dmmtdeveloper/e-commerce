@@ -11,7 +11,7 @@ export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]); // Estado para almacenar productos
   const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
   const [currentPage, setCurrentPage] = useState(1); // Estado para la página actual
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Estado para la cantidad de productos por página
+  const [itemsPerPage, setItemsPerPage] = useState(20); // Estado para la cantidad de productos por página
 
   // Consumir la API al cargar el componente
   useEffect(() => {
@@ -45,7 +45,7 @@ export default function ProductsPage() {
   // Calcular los productos a mostrar en la página actual
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-  
+
   const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
@@ -69,15 +69,17 @@ export default function ProductsPage() {
           </div>
         </Reveal>
 
-        <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
-          {currentProducts.length > 0 ? (
-            currentProducts.map((product) => (
-              <ProductCard key={product.productoId} product={product} />
-            ))
-          ) : (
-            <p>No se encontraron productos.</p>
-          )}
-        </div>
+          <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
+        
+            {currentProducts.length > 0 ? (
+              currentProducts.map((product) => (
+                <ProductCard key={product.productoId} product={product} />
+              ))
+            ) : (
+              <p>No se encontraron productos.</p>
+            )}
+        
+          </div>
 
         {/* Controles de paginación */}
         <div className="flex items-center justify-center gap-5 mt-4">

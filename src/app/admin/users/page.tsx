@@ -18,6 +18,11 @@ import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import { InputComponent } from "@/components/input/InputComponent";
 import LabelComponent from "@/components/label-component/label-component";
 import Pagination from "@/components/pagination-component/pagination-component";
+import { MdEmail } from "react-icons/md";
+import { FaUserSlash } from "react-icons/fa";
+import { FaUserCheck } from "react-icons/fa";
+import { FaUserTag } from "react-icons/fa";
+import { GoPasskeyFill } from "react-icons/go";
 
 export default function UsersPage() {
   useAdmin();
@@ -215,7 +220,7 @@ export default function UsersPage() {
                       : "opacity-100"
                   }`}
                 >
-                  <div className="2xl:flex md:flex lg:flex flex flex-col gap-20 2xl:gap-8 md:flex-row">
+                  <div className="2xl:flex md:flex lg:flex flex flex-col gap-4 2xl:gap-8 md:flex-row">
                     <InputComponent
                       type="text"
                       name="search"
@@ -258,22 +263,27 @@ export default function UsersPage() {
               </div>
 
               {/* Tabla de Usuarios */}
-              <table className="min-w-full bg-white border border-gray-300 text-sm">
-                <thead>
-                  <tr>
-                    <th className="border-b p-2">Nombre</th>
-                    <th className="border-b p-2">Correo</th>
-                    <th className="border-b p-2">Es Administrador</th>
-                    <th className="border-b p-2">Habilitado</th>
-                    <th className="border-b p-2">Eliminado</th>
-                  </tr>
-                </thead>
-                <tbody>
+              {/* Sección de Usuarios */}
+              <section className="bg-white  border-gray-300">
+                {/* Encabezados */}
+                <div className="grid grid-cols-5 gap-4 font-semibold bg-blue-500 text-slate-50 p-2">
+                  <FaUserTag className="text-2xl" />
+                  <MdEmail className="text-2xl" />
+                  <GoPasskeyFill className="text-2xl" />
+                  <FaUserCheck className="text-2xl" />
+                  <FaUserSlash className="text-2xl" />
+                </div>
+
+                {/* Cuerpo de la tabla */}
+                <div className="divide-y divide-gray-300">
                   {currentUsuarios.map((usuario) => (
-                    <tr key={usuario.usuarioId}>
-                      <td className="border-b p-2">{usuario.nombre}</td>
-                      <td className="border-b p-2">{usuario.correo}</td>
-                      <td className="border-b p-2">
+                    <div
+                      key={usuario.usuarioId}
+                      className="grid grid-cols-5 gap-4 p-2"
+                    >
+                      <div>{usuario.nombre}</div>
+                      <div>{usuario.correo}</div>
+                      <div>
                         <input
                           type="checkbox"
                           checked={usuario.esAdmin}
@@ -287,8 +297,8 @@ export default function UsersPage() {
                             )
                           }
                         />
-                      </td>
-                      <td className="border-b p-2">
+                      </div>
+                      <div>
                         <input
                           type="checkbox"
                           checked={usuario.habilitado}
@@ -302,8 +312,8 @@ export default function UsersPage() {
                             )
                           }
                         />
-                      </td>
-                      <td className="border-b p-2">
+                      </div>
+                      <div>
                         <input
                           type="checkbox"
                           checked={usuario.eliminado}
@@ -316,11 +326,11 @@ export default function UsersPage() {
                             )
                           }
                         />
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   ))}
-                </tbody>
-              </table>
+                </div>
+              </section>
 
               {/* Paginación */}
               <Pagination

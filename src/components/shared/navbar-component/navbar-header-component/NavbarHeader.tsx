@@ -30,44 +30,44 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
       </Link>
 
       <section className="flex gap-4 items-center">
-        <div className="flex gap-4">
+        <div className="flex gap-8">
           <Link href="/cart" className="relative">
             <MdOutlineShoppingCart
               className={`hover:text-blue-500 cursor-pointer text-2xl ${
-                pathname === "/cart" ? "active text-blue-500 font-semibold" : ""
+                pathname === "/cart" ? "active text-blue-500 font-medium" : ""
               }`}
             />
             {totalItemsInCart > 0 && (
-              <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
+              <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.60rem] py-[0.3rem]">
                 {totalItemsInCart}
               </span>
             )}
           </Link>
           {!isAuthenticated ? (
-            <>
-              <div
+            <section className="flex gap-4">
+              <article
                 className={`hover:text-blue-500 cursor-pointer ${
                   pathname === "/register"
-                    ? "active text-blue-500 font-semibold"
+                    ? "active text-blue-500 font-medium"
                     : ""
                 }`}
               >
                 <Link href="/register" className="hover:text-blue-600">
                   Registro
                 </Link>
-              </div>
-              <div
+              </article>
+              <article
                 className={`hover:text-blue-500 cursor-pointer ${
                   pathname === "/login"
-                    ? "active text-blue-500 font-semibold"
+                    ? "active text-blue-500 font-medium"
                     : ""
                 }`}
               >
                 <Link href="/login" className="hover:text-blue-600">
                   Login
                 </Link>
-              </div>
-            </>
+              </article>
+            </section>
           ) : (
             <span></span>
           )}

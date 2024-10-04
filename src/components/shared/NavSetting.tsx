@@ -13,7 +13,7 @@ export const NavSetting = () => {
         <div className="flex gap-10">
           <div
             className={`flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer ${
-              pathname === "/orders" ? "active text-blue-500 font-semibold" : ""
+              pathname === "/orders" ? "active text-blue-500 font-medium" : ""
             }`}
           >
             <Link href="/orders" className="flex flex-col items-center">
@@ -25,7 +25,7 @@ export const NavSetting = () => {
           <div
             className={`flex flex-col items-center  justify-center hover:text-blue-500 cursor-pointer ${
               pathname === "/settings"
-                ? "active text-blue-500 font-semibold"
+                ? "active text-blue-500 font-medium"
                 : ""
             }`}
           >

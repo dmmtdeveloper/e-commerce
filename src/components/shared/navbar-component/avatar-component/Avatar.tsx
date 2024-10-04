@@ -16,6 +16,7 @@ const Avatar: React.FC<AvatarProps> = ({ avatar }) => {
         layout="fill"
         objectFit="cover"
         priority
+        className='rounded-full'
       />
     </div>
   );

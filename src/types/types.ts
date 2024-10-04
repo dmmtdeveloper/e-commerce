@@ -16,9 +16,10 @@ export interface InputProps {
   placeholder?: string;
   value: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
   name: string;
+  id?: string;
 }
-
 export interface TextareaProps {
   type?: string;
   placeholder?: string;
@@ -26,7 +27,6 @@ export interface TextareaProps {
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   name: string;
 }
-
 
 export interface DetallePedido {
   // foto: string;
@@ -50,7 +50,7 @@ export interface Pedido {
   detalles: DetallePedido[];
 }
 
-export interface VmPedido{
+export interface VmPedido {
   pedidoId: number;
   token: string;
   estadoId: number;
@@ -102,10 +102,7 @@ export interface PedidoDetalleDTO {
   extension: string;
 }
 
-
-
-
-export interface VmPedido{
+export interface VmPedido {
   pedidoId: number;
   token: string;
   estadoId: number;
@@ -156,9 +153,6 @@ export interface PedidoDetalleDTO {
   nombreFoto: string;
   extension: string;
 }
-
-
-
 
 export interface PedidoDto {
   pedidoId: number;

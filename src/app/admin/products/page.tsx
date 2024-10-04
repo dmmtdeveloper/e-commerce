@@ -316,7 +316,7 @@ export default function ProductsPage() {
               </Link>
 
               <div className="overflow-x-center">
-                <div className="grid grid-cols-4 bg-slate-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
+                <div className="grid grid-cols-4 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
                   <LabelComponent text="Producto" />
                   <LabelComponent text="Habilitado" />
                   <LabelComponent text="Eliminado" />
