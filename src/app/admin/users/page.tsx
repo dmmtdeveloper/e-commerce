@@ -264,14 +264,24 @@ export default function UsersPage() {
 
               {/* Tabla de Usuarios */}
               {/* Sección de Usuarios */}
-              <section className="bg-white  border-gray-300">
+              <section className="bg-white border-gray-300">
                 {/* Encabezados */}
-                <div className="grid grid-cols-5 gap-4 font-semibold bg-blue-500 text-slate-50 p-2">
-                  <FaUserTag className="text-2xl" />
-                  <MdEmail className="text-2xl" />
-                  <GoPasskeyFill className="text-2xl" />
-                  <FaUserCheck className="text-2xl" />
-                  <FaUserSlash className="text-2xl" />
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4 font-semibold bg-blue-500 text-slate-50 p-2">
+                  <div className="flex justify-center items-center">
+                    <FaUserTag className="text-2xl" />
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <MdEmail className="text-2xl" />
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <GoPasskeyFill className="text-2xl" />
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <FaUserCheck className="text-2xl" />
+                  </div>
+                  <div className="flex justify-center items-center">
+                    <FaUserSlash className="text-2xl" />
+                  </div>
                 </div>
 
                 {/* Cuerpo de la tabla */}
@@ -279,11 +289,15 @@ export default function UsersPage() {
                   {currentUsuarios.map((usuario) => (
                     <div
                       key={usuario.usuarioId}
-                      className="grid grid-cols-5 gap-4 p-2"
+                      className="grid grid-cols-2 md:grid-cols-5 gap-4 p-2"
                     >
-                      <div>{usuario.nombre}</div>
-                      <div>{usuario.correo}</div>
-                      <div>
+                      <p className="flex text-sm justify-center items-center">
+                        {usuario.nombre}
+                      </p>
+                      <p className="flex text-sm justify-center items-center">
+                        {usuario.correo}
+                      </p>
+                      <div className="flex justify-center items-center">
                         <input
                           type="checkbox"
                           checked={usuario.esAdmin}
@@ -298,7 +312,7 @@ export default function UsersPage() {
                           }
                         />
                       </div>
-                      <div>
+                      <div className="flex justify-center items-center">
                         <input
                           type="checkbox"
                           checked={usuario.habilitado}
@@ -313,7 +327,7 @@ export default function UsersPage() {
                           }
                         />
                       </div>
-                      <div>
+                      <div className="flex justify-center items-center">
                         <input
                           type="checkbox"
                           checked={usuario.eliminado}
