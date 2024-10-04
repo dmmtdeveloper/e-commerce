@@ -190,7 +190,6 @@ export default function CartPage() {
 
                   <div>
                     <h2 className="text-lg font-bold">{item.name}</h2>
-                    <p className="text-sm">ID {item.id}</p>
                     <p className="text-sm text-gray-500">
                       Precio: $
                       {item.price !== undefined && item.price !== null
