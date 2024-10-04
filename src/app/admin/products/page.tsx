@@ -49,7 +49,7 @@ export default function ProductsPage() {
   });
 
   // Estado para manejar el colapso del panel
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(false);
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(true);
 
   // Estados para la paginación
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -217,7 +217,7 @@ export default function ProductsPage() {
                   Explora los productos disponibles
                 </p>
               </div>
-              <div className="bg-gray-100   border-gray-200">
+              <div>
                 <FilterButtonComponent
                   text={
                     isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
@@ -274,7 +274,7 @@ export default function ProductsPage() {
                           onChange={handleFilterChange}
                           className="mr-2"
                         />
-                        <LabelComponent text="No eliminado" />
+                        <LabelComponent text="Existentes" />
                       </div>
                     </div>
 

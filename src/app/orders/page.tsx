@@ -86,7 +86,7 @@ export default function OrdersPage() {
         <LayoutDivComponent>
           {!isAdmin ? <NavSetting /> : <NavAdmin />}
           <div>
-            <Title className="text-left" text="Ordenes" />
+            <Title className="text-left" text="Mis Compras" />
             <p className="text-gray-500">Panel de pedidos históricos</p>
           </div>
           {/* Panel de Filtros */}
@@ -123,7 +123,7 @@ export default function OrdersPage() {
 
           {/* Tabla de Pedidos */}
           <div>
-            <h1 className="font-semibold text-4xl mb-4">Mis pedidos</h1>
+            <h1 className="font-semibold text-4xl mb-4">Mis compras</h1>
             <p className="mb-4">
               A continuación se muestra la lista de pedidos históricos:
             </p>

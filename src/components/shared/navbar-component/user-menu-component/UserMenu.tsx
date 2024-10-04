@@ -30,7 +30,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ handleLogout }) => {
       <ul className="flex flex-col gap-1">
         <li className="flex items-center gap-2 hover:text-blue-500 hover:bg-slate-50 p-2 rounded-xl">
         <TbTruckDelivery className="text-2xl" />
-          <Link className="text-sm" href="/orders">Mis Pedidos</Link>
+          <Link className="text-sm" href="/orders">Mis Compras</Link>
         </li>
         <li className="flex items-center gap-2 hover:text-blue-500 hover:bg-slate-50 p-2 rounded-xl">
         <AiOutlineSetting className="text-2xl" />

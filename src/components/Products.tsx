@@ -45,6 +45,7 @@ export default function ProductsPage() {
   // Calcular los productos a mostrar en la página actual
   const indexOfLastProduct = currentPage * itemsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
+  
   const currentProducts = filteredProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct
@@ -80,7 +81,11 @@ export default function ProductsPage() {
 
         {/* Controles de paginación */}
         <div className="flex items-center justify-center gap-5 mt-4">
-        <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            setCurrentPage={setCurrentPage}
+          />
           <select
             className="border p-2 rounded focus:outline-none text-sm"
             value={itemsPerPage}

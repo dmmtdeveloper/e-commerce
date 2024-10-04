@@ -15,6 +15,9 @@ import { Title } from "@/components/title/Title";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import { InputComponent } from "@/components/input/InputComponent";
+import LabelComponent from "@/components/label-component/label-component";
+import Pagination from "@/components/pagination-component/pagination-component";
 
 export default function UsersPage() {
   useAdmin();
@@ -34,7 +37,7 @@ export default function UsersPage() {
   });
 
   // Estados para la paginación
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [usuariosPerPage] = useState<number>(10);
 
   // Estado para manejar el colapso del panel
@@ -161,6 +164,7 @@ export default function UsersPage() {
   // Lógica de paginación
   const indexOfLastUsuario = currentPage * usuariosPerPage;
   const indexOfFirstUsuario = indexOfLastUsuario - usuariosPerPage;
+
   const currentUsuarios = filteredUsuarios.slice(
     indexOfFirstUsuario,
     indexOfLastUsuario
@@ -176,6 +180,13 @@ export default function UsersPage() {
     return <div>{error}</div>;
   }
 
+  const filteredUsers = filteredUsuarios.slice(
+    indexOfFirstUsuario,
+    indexOfLastUsuario
+  );
+
+  // Calcular el número total de páginas
+  const totalPages = Math.ceil(filteredUsuarios.length / usuariosPerPage);
   return (
     <>
       {isAdmin && (
@@ -188,7 +199,7 @@ export default function UsersPage() {
                 <p className="text-gray-500">Panel de usuarios</p>
               </div>
               {/* Panel de Filtros */}
-              <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
+              <div>
                 <FilterButtonComponent
                   text={
                     isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
@@ -204,42 +215,44 @@ export default function UsersPage() {
                       : "opacity-100"
                   }`}
                 >
-                  <div className="flex flex-col space-y-4 md:flex-row md:space-x-10">
-                    <input
+                  <div className="2xl:flex md:flex lg:flex flex flex-col gap-20 2xl:gap-8 md:flex-row">
+                    <InputComponent
                       type="text"
                       name="search"
                       placeholder="Buscar"
                       value={filters.search}
                       onChange={handleFilterChange}
-                      className="border p-2 rounded w-full md:w-1/3"
                     />
-                    <label className="flex items-center space-x-2">
+
+                    <div className="flex gap-2 items-center">
                       <input
                         type="checkbox"
                         name="admin"
                         checked={filters.admin}
                         onChange={handleFilterChange}
                       />
-                      <span>Mostrar Administradores</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
+                      <LabelComponent text="Administradores" />
+                    </div>
+
+                    <div className="flex gap-2 items-center">
                       <input
                         type="checkbox"
                         name="habilitado"
                         checked={filters.habilitado}
                         onChange={handleFilterChange}
                       />
-                      <span>Mostrar Habilitados</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
+                      <LabelComponent text="Habilitados" />
+                    </div>
+
+                    <div className="flex gap-2 items-center">
                       <input
                         type="checkbox"
                         name="noEliminado"
                         checked={filters.noEliminado}
                         onChange={handleFilterChange}
                       />
-                      <span>Mostrar no Eliminados</span>
-                    </label>
+                      <LabelComponent text="Existentes" />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -310,23 +323,11 @@ export default function UsersPage() {
               </table>
 
               {/* Paginación */}
-              <div className="flex justify-center space-x-2 mt-4">
-                {Array.from({
-                  length: Math.ceil(filteredUsuarios.length / usuariosPerPage),
-                }).map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => paginate(index + 1)}
-                    className={`py-2 px-4 border ${
-                      currentPage === index + 1
-                        ? "bg-blue-500 text-white"
-                        : "bg-gray-200"
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={paginate}
+              />
             </LayoutDivComponent>
 
             {/* Modal de confirmación */}

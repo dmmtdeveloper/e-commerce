@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import useCartStore from "@/store/cartStore";
 import NavbarToggle from "../navbar-toogle-component/NavbarToggle";
 import { FC } from "react";
+import { usePathname } from "next/navigation"; // Importar el hook para obtener la ruta actual
 
 interface NavbarHeaderProps {
   menuOpen: boolean;
@@ -13,6 +14,7 @@ interface NavbarHeaderProps {
 }
 
 const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
+  const pathname = usePathname(); // Obtener la ruta actual
   const { isAuthenticated } = useAuthStore();
   const { items } = useCartStore();
 
@@ -30,7 +32,11 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
       <section className="flex gap-4 items-center">
         <div className="flex gap-4">
           <Link href="/cart" className="relative">
-            <MdOutlineShoppingCart className="text-2xl" />
+            <MdOutlineShoppingCart
+              className={`hover:text-blue-500 cursor-pointer text-2xl ${
+                pathname === "/cart" ? "active text-blue-500 font-semibold" : ""
+              }`}
+            />
             {totalItemsInCart > 0 && (
               <span className="absolute bottom-2 left-4 bg-blue-500 text-white text-xs rounded-full px-[0.65rem] py-[0.3rem]">
                 {totalItemsInCart}
@@ -39,17 +45,34 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
           </Link>
           {!isAuthenticated ? (
             <>
-              <Link href="/register" className="hover:text-blue-600">
-                Registro
-              </Link>
-              <Link href="/login" className="hover:text-blue-600">
-                Login
-              </Link>
+              <div
+                className={`hover:text-blue-500 cursor-pointer ${
+                  pathname === "/register"
+                    ? "active text-blue-500 font-semibold"
+                    : ""
+                }`}
+              >
+                <Link href="/register" className="hover:text-blue-600">
+                  Registro
+                </Link>
+              </div>
+              <div
+                className={`hover:text-blue-500 cursor-pointer ${
+                  pathname === "/login"
+                    ? "active text-blue-500 font-semibold"
+                    : ""
+                }`}
+              >
+                <Link href="/login" className="hover:text-blue-600">
+                  Login
+                </Link>
+              </div>
             </>
           ) : (
             <span></span>
           )}
         </div>
+
         <NavbarToggle menuOpen={menuOpen} toggleMenu={toggleMenu} />
       </section>
     </div>

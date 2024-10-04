@@ -13,8 +13,8 @@ const CrearProducto = () => {
   const [producto, setProducto] = useState({
     nombre: "",
     descripcion: "",
-    precio: 0,
-    stock: 0,
+    precio: null, // Inicializar en null
+    stock: null, // Inicializar en null
     stockReservado: 0,
     habilitado: true,
     eliminado: false,
@@ -36,12 +36,17 @@ const CrearProducto = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+
     setProducto((prev) => ({
       ...prev,
-      [name]: name === "precio" || name === "stock" ? Number(value) : value,
+      [name]:
+        name === "precio" || name === "stock"
+          ? value === ""
+            ? null
+            : Number(value) // Si el campo está vacío, dejar como null
+          : value,
     }));
   };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
@@ -79,8 +84,8 @@ const CrearProducto = () => {
       await AddProducto(
         newProduct.nombre,
         newProduct.descripcion,
-        newProduct.precio,
-        newProduct.stock,
+        newProduct.precio!, // Asegúrate de validar que el precio no sea null antes de enviar
+        newProduct.stock!, // Lo mismo con el stock
         newProduct.stockReservado,
         newProduct.habilitado,
         newProduct.eliminado,
@@ -154,7 +159,7 @@ const CrearProducto = () => {
               <input
                 type="number"
                 name="precio"
-                value={producto.precio}
+                value={producto.precio !== null ? producto.precio : ""} // Mostrar cadena vacía si es null
                 onChange={handleChange}
                 required
                 className="border p-2 rounded w-full"
@@ -165,7 +170,7 @@ const CrearProducto = () => {
               <input
                 type="number"
                 name="stock"
-                value={producto.stock}
+                value={producto.stock !== null ? producto.stock : ""} // Mostrar cadena vacía si es null
                 onChange={handleChange}
                 required
                 className="border p-2 rounded w-full"
