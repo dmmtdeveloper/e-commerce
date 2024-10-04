@@ -221,7 +221,7 @@ export default function OrdersPage() {
                   Descargar Excel
                 </button>
               </div>
-              
+
               {/* Tabla de Pedidos */}
               <div>
                 <table className="table-auto w-full border mb-6">
@@ -241,10 +241,10 @@ export default function OrdersPage() {
                       <tr key={pedido.pedidoId}>
                         <td className="border px-4 py-2">
                           <Link
-                            href={`/pedidos/${pedido.pedidoId}`}
+                            href={`/admin/orders/${pedido.pedidoId}`}
                             className="text-blue-500 hover:underline"
                           >
-                            Ver
+                            #{pedido.pedidoId}
                           </Link>
                         </td>
                         <td className="border px-4 py-2">
@@ -260,7 +260,7 @@ export default function OrdersPage() {
                         </td>
                         <td className="border px-4 py-2">
                           <Link
-                            href={`/pedidos/${pedido.pedidoId}`}
+                            href={`/admin/orders/${pedido.pedidoId}`}
                             className="text-blue-500 hover:underline"
                           >
                             Ver
