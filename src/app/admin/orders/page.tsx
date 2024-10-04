@@ -16,6 +16,7 @@ import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import LabelComponent from "@/components/label-component/label-component";
 import { InputComponent } from "@/components/input/InputComponent";
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 
 export default function OrdersPage() {
   useAdmin();
@@ -111,6 +112,28 @@ export default function OrdersPage() {
     maximumFractionDigits: 0,
   });
 
+  // Función para descargar los pedidos como archivo Excel
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      filteredPedidos.map((pedido) => ({
+        "Pedido ID": pedido.pedidoId,
+        Fecha: new Date(pedido.fecha).toLocaleDateString(),
+        Usuario: pedido.nombreUsuario,
+        Estado: pedido.estadoNombre,
+        "Cantidad Productos": pedido.cantidadDetalles,
+        "Valor Total": pedido.valorTotal !== undefined && pedido.valorTotal !== null
+          ? formatCurrency.format(pedido.valorTotal)
+          : "N/A",
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "pedidos.xlsx");
+  };
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -130,12 +153,11 @@ export default function OrdersPage() {
                 <Title className="text-left" text="Pedidos" />
                 <p className="text-gray-500">Revisa el historial de pedidos</p>
               </div>
+
               {/* Panel de Filtros */}
               <div>
                 <FilterButtonComponent
-                  text={
-                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
-                  }
+                  text={isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"}
                   onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
                   className="my-custom-class"
                   isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
@@ -190,6 +212,16 @@ export default function OrdersPage() {
                 </div>
               </div>
 
+              {/* Botón de descarga */}
+              <div className="mb-4">
+                              <button
+                  onClick={downloadExcel}
+                  className="bg-blue-500 text-white py-2 px-4 rounded"
+                >
+                  Descargar Excel
+                </button>
+              </div>
+              
               {/* Tabla de Pedidos */}
               <div>
                 <table className="table-auto w-full border mb-6">
@@ -207,73 +239,48 @@ export default function OrdersPage() {
                   <tbody>
                     {currentPedidos.map((pedido) => (
                       <tr key={pedido.pedidoId}>
-                        <td className="border p-2">#{pedido.pedidoId}</td>
-                        <td className="border p-2">
-                          {new Date(pedido.fecha).toLocaleDateString()}
-                        </td>
-                        <td className="border p-2">{pedido.nombreUsuario}</td>
-                        <td className="border p-2">{pedido.estadoNombre}</td>
-                        <td className="border p-2">
-                          {pedido.cantidadDetalles}
-                        </td>
-                        <td className="border p-2">
-                          $
-                          {pedido.valorTotal !== undefined &&
-                          pedido.valorTotal !== null
-                            ? `${formatCurrency.format(pedido.valorTotal)}`
-                            : "N/A"}
-                        </td>
-                        <td className="border p-2">
+                        <td className="border px-4 py-2">
                           <Link
-                            href={`/admin/orders/${pedido.pedidoId}`}
+                            href={`/pedidos/${pedido.pedidoId}`}
                             className="text-blue-500 hover:underline"
                           >
-                            Ver Detalle
+                            Ver
+                          </Link>
+                        </td>
+                        <td className="border px-4 py-2">
+                          {new Date(pedido.fecha).toLocaleDateString()}
+                        </td>
+                        <td className="border px-4 py-2">{pedido.nombreUsuario}</td>
+                        <td className="border px-4 py-2">{pedido.estadoNombre}</td>
+                        <td className="border px-4 py-2">{pedido.cantidadDetalles}</td>
+                        <td className="border px-4 py-2">
+                          {pedido.valorTotal !== undefined && pedido.valorTotal !== null
+                            ? formatCurrency.format(pedido.valorTotal)
+                            : "N/A"}
+                        </td>
+                        <td className="border px-4 py-2">
+                          <Link
+                            href={`/pedidos/${pedido.pedidoId}`}
+                            className="text-blue-500 hover:underline"
+                          >
+                            Ver
                           </Link>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
-
-                {/* Paginación */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <span>Mostrar </span>
-                    <select
-                      value={itemsPerPage}
-                      onChange={handleItemsPerPageChange}
-                      className="border p-2 rounded"
-                    >
-                      <option value={10}>10</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
-                    <span> elementos por página</span>
-                  </div>
-                  <div>
-                    {Array.from(
-                      { length: totalPages },
-                      (_, index) => index + 1
-                    ).map((pageNumber) => (
-                      <button
-                        key={pageNumber}
-                        onClick={() => handlePageChange(pageNumber)}
-                        className={`px-4 py-2 mx-1 ${
-                          pageNumber === currentPage
-                            ? "bg-blue-500 text-white"
-                            : "bg-gray-200"
-                        } rounded`}
-                      >
-                        {pageNumber}
-                      </button>
-                    ))}
-                  </div>
-                </div>
               </div>
 
-              {/* Padding final */}
-              <div className="mt-8" style={{ paddingBottom: "30px" }}></div>
+              {/* Paginación */}
+              <div>
+                <p>
+                  Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, filteredPedidos.length)} de {filteredPedidos.length} pedidos
+                </p>
+                <div>
+                  {/* Aquí puedes implementar tus controles de paginación */}
+                </div>
+              </div>
             </LayoutDivComponent>
           </LayoutSectionComponent>
         </MainLayout>
