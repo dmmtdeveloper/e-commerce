@@ -22,6 +22,12 @@ import LabelComponent from "@/components/label-component/label-component";
 import Pagination from "@/components/pagination-component/pagination-component";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import { RiEdit2Fill } from "react-icons/ri";
+import { FaTrashAlt } from "react-icons/fa";
+import { BsFillBagDashFill } from "react-icons/bs";
+import { ImFilePicture } from "react-icons/im";
+import { PiProhibitBold } from "react-icons/pi";
+import { CgCheck } from "react-icons/cg";
 
 export default function ProductsPage() {
   useAdmin();
@@ -219,12 +225,14 @@ export default function ProductsPage() {
               </div>
               <div>
                 <FilterButtonComponent
-                  text={isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"}
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
                   onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
                   className="my-custom-class"
-                  isPanelCollapsed={isPanelCollapsed}
+                  isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
                 />
-  
+
                 <div
                   className={`transition-opacity duration-300 ${
                     isPanelCollapsed
@@ -251,7 +259,7 @@ export default function ProductsPage() {
                         onChange={handleFilterChange}
                       />
                     </div>
-  
+
                     <div className="2xl:flex md:flex lg:flex flex flex-col gap-4 md:flex-row">
                       <div className="flex items-center">
                         <input
@@ -263,7 +271,7 @@ export default function ProductsPage() {
                         />
                         <LabelComponent text="Habilitado" />
                       </div>
-  
+
                       <div className="flex items-center">
                         <input
                           type="checkbox"
@@ -275,7 +283,7 @@ export default function ProductsPage() {
                         <LabelComponent text="Existentes" />
                       </div>
                     </div>
-  
+
                     <div className="flex-1 min-w-[300px]">
                       <div className="flex justify-between">
                         <span className="text-sm">
@@ -303,118 +311,80 @@ export default function ProductsPage() {
                   </div>
                 </div>
               </div>
-  
+
               {/* Botón para Crear Producto */}
+
               <Link href={"/admin/products/create"}>
                 <ButtonCtaComponent
                   className="bg-green-500 hover:bg-green-600 translate-all duration-300"
                   text="Crear Producto"
                 />
               </Link>
-  
+
               <div className="overflow-x-center">
-                <div className="grid grid-cols-2 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
-                  <LabelComponent text="Producto" />
-                  <LabelComponent text="Acciones" />
+                <div className="grid grid-cols-4 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
+                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Producto" />
+                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Deshabilitar" />
+                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Eliminar" />
+                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Editar" />
                 </div>
                 {currentProductos.map((producto) => (
                   <div
                     key={producto.productoId}
-                    className="grid grid-cols-2 items-center border-b py-2 px-4"
+                    className="grid grid-cols-4 items-center border-b py-2 px-4"
                   >
                     {/* Producto */}
                     <div className="flex items-center space-x-4">
-                      <div className="w-32 h-32">
+                      <div className="w-100 h-100 p-5 rounded-full bg-slate-200">
                         <Link
-                          href={!producto.eliminado ? `/admin/products/${producto.productoId}` : `#`}
-                          className="text-blue-500 hover:underline"
+                          href={`/admin/products/${producto.productoId}`}
+                          className="text-blue-500 w-200 h-auto hover:underline"
                         >
                           {producto.foto && producto.foto !== "" ? (
                             <Image
                               src={`data:image/${producto.extension};base64,${producto.foto}`}
                               alt={producto.nombre}
-                              className="w-32 h-32 object-cover rounded"
-                              height={80}
-                              width={80}
+                              className="w-200 h-auto"
+                              height={50}
+                              width={50}
                               priority
                             />
                           ) : (
-                            <div className="w-32 h-32 bg-gray-200"></div>
+                            <div className="w-50 p-4 h-auto  rounded-full">
+                              <ImFilePicture  />
+                            </div>
                           )}
                         </Link>
                       </div>
                       <div className="hidden 2xl:block md:block lg:block">
                         <p className="font-bold text-lg">{producto.nombre}</p>
-                        <p className="text-sm text-gray-600">{producto.descripcion}</p>
+                        <p className="text-sm text-gray-600">
+                          {producto.descripcion}
+                        </p>
                         <p className="text-sm font-bold text-gray-800">
                           Precio: $
-                          {producto.precio !== undefined && producto.precio !== null
+                          {producto.precio !== undefined &&
+                          producto.precio !== null
                             ? `${formatCurrency.format(producto.precio)}`
                             : "N/A"}
                         </p>
-                        <p className="text-sm text-gray-600">Stock: {producto.stock}</p>
+                        <p className="text-sm text-gray-600">
+                          Stock: {producto.stock}
+                        </p>
                         <p className="text-sm text-gray-600">
                           Stock Reservado: {producto.stockReservado}
                         </p>
                         <p className="font-bold text-md text-gray-600">
-                          Stock Disponible: {producto.stock - producto.stockReservado}
+                          Stock Disponible:{" "}
+                          {producto.stock - producto.stockReservado}
                         </p>
                       </div>
                     </div>
-  
-                    {/* Acciones */}
-                    <div className="flex justify-center space-x-4">
-                      {/* Editar (solo si no está eliminado) */}
-                      {!producto.eliminado && (
-                        <Link href={`/admin/products/edit/${producto.productoId}`}>
-                          <button title="Editar" className="text-blue-500 hover:underline">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M13 7h-2v-2h2v2zM7 13h10v2H7v-2zM7 17h10v2H7v-2z"
-                              />
-                            </svg>
-                            <span>Editar</span>
-                          </button>
-                        </Link>
-                      )}
-  
-                      {/* Eliminar (solo si no está eliminado) */}
-                      {!producto.eliminado && (
-                        <button
-                          onClick={() => handleCheckboxChange(producto.productoId, "eliminado", true)}
-                          title="Eliminar"
-                        >
-                          <span className="text-red-500 hover:underline">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M19 7h-.01M5 7h14m-4 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v2m12 0v12a2 2 0 01-2 2H7a2 2 0 01-2-2V7h12z"
-                              />
-                            </svg>
-                            <span>Eliminar</span>
-                          </span>
-                        </button>
-                      )}
-  
-                      {/* Habilitar/Deshabilitar (solo si no está eliminado) */}
-                      {!producto.eliminado && (
+
+                  {/* Habilitar/Deshabilitar (solo si no está eliminado) */}
+                  <div className="flex justify-center">
+
+                  {!producto.eliminado && (
                         <button
                           onClick={() =>
                             handleCheckboxChange(
@@ -427,39 +397,43 @@ export default function ProductsPage() {
                           className="text-green-500 hover:underline"
                         >
                           {producto.habilitado ? (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
+                            <PiProhibitBold className="text-red-500 text-3xl"  />
                           ) : (
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-6 w-6"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
+                            <CgCheck className="text-green-500 text-4xl"/>
                           )}
-                          <span>{producto.habilitado ? "Deshabilitar" : "Habilitar"}</span>
                         </button>
                       )}
+                    
+                  </div>
+                  
+                
+              
+                    {/* Eliminado */}
+                    <div className="flex justify-center">
+                      {!producto.eliminado && (
+                        <button
+                          onClick={() =>
+                            handleCheckboxChange(
+                              producto.productoId,
+                              "eliminado",
+                              true
+                            )
+                          }
+                          title="Eliminar"
+                        >
+                          <FaTrashAlt className="text-2xl hover:scale-110 duration-300 text-red-500" />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Acciones */}
+                    <div className="flex justify-center">
+                      <Link
+                        href={`/admin/products/${producto.productoId}`}
+                        className="text-blue-500 hover:underline"
+                      >
+                        <RiEdit2Fill className="text-3xl hover:scale-110 duration-300 transition-all" />
+                      </Link>
                     </div>
                   </div>
                 ))}
