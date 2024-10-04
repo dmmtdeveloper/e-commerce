@@ -268,19 +268,19 @@ export default function UsersPage() {
                 {/* Encabezados */}
                 <div className="grid grid-cols-2 md:grid-cols-5 gap-4 font-semibold bg-blue-500 text-slate-50 p-2">
                   <div className="flex justify-center items-center">
-                    <FaUserTag className="text-2xl" />
+                    <FaUserTag className="text-2xl" title="Nombre" />
                   </div>
                   <div className="flex justify-center items-center">
-                    <MdEmail className="text-2xl" />
+                    <MdEmail className="text-2xl" title="Correo"/>
                   </div>
                   <div className="flex justify-center items-center">
-                    <GoPasskeyFill className="text-2xl" />
+                    <GoPasskeyFill className="text-2xl" title="Administrador"/>
                   </div>
                   <div className="flex justify-center items-center">
-                    <FaUserCheck className="text-2xl" />
+                    <FaUserCheck className="text-2xl" title="Habilitado"/>
                   </div>
                   <div className="flex justify-center items-center">
-                    <FaUserSlash className="text-2xl" />
+                    <FaUserSlash className="text-2xl" title="Eliminado"/>
                   </div>
                 </div>
 
