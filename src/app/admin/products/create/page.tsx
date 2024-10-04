@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import MainLayout from "../../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { AddProducto } from '@/utils/authHelpers';
 import Link from 'next/link';
 import Image from "next/image";

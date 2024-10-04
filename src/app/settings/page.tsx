@@ -23,9 +23,11 @@ import SuccessModal from "@/components/modals/setting-modal-component/sucess-mod
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { Input } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -226,10 +228,9 @@ export default function SettingsPage() {
 
   return (
     <MainLayout>
-      <section className="bg-slate-100 w-full pt-20 2xl:pt-20 md:pt-10 lg:pt-10">
-        <div className="2xl:px-24 px-4 flex flex-col gap-8 bg-slate-100 w-full">
+      <LayoutSectionComponent>
+        <LayoutDivComponent>
           {!isAdmin ? <NavSetting /> : <NavAdmin />}
-
           <div>
             <Title className="text-left" text="Tu configuración" />
             <p className="text-gray-500">
@@ -320,7 +321,7 @@ export default function SettingsPage() {
               </div>
             </article>
           </div>
-        </div>
+        </LayoutDivComponent>
 
         {/* Modales */}
         {isModalOpen && (
@@ -347,7 +348,7 @@ export default function SettingsPage() {
             message={modalMessage}
           />
         )}
-      </section>
+      </LayoutSectionComponent>
     </MainLayout>
   );
 }

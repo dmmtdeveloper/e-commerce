@@ -1,21 +1,24 @@
 "use client";
 import { useState, useEffect } from "react";
 import MainLayout from "../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetUsuarios } from "@/utils/authHelpers";
 import { Usuario } from "@/utils/authHelpers";
-import Link from "next/link";
-import useAdmin from '@/hooks/useAdmin';
+import useAdmin from "@/hooks/useAdmin";
 import { useAuthStore } from "@/store/useAuthStore";
 import {
   UpdateHabilitadoUsuario,
   UpdateEliminadoUsuario,
   UpdateEsAdminUsuario,
 } from "@/utils/authHelpers";
+import { Title } from "@/components/title/Title";
+import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
+import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
+import LayoutDivComponent from "@/components/layout-component/layout-div-component";
 
 export default function UsersPage() {
   useAdmin();
-  
+
   const [usuarios, setUsuarios] = useState<Usuario[]>([]);
   const [filteredUsuarios, setFilteredUsuarios] = useState<Usuario[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
@@ -26,8 +29,8 @@ export default function UsersPage() {
   const [filters, setFilters] = useState({
     search: "",
     admin: false,
-    habilitado: true,    // Habilitado por defecto
-    noEliminado: true,   // Filtro No Eliminados por defecto
+    habilitado: true, // Habilitado por defecto
+    noEliminado: true, // Filtro No Eliminados por defecto
   });
 
   // Estados para la paginación
@@ -69,7 +72,9 @@ export default function UsersPage() {
       const matchesHabilitado = !habilitado || usuario.habilitado;
       const matchesNoEliminado = !noEliminado || !usuario.eliminado;
 
-      return matchesSearch && matchesAdmin && matchesHabilitado && matchesNoEliminado;
+      return (
+        matchesSearch && matchesAdmin && matchesHabilitado && matchesNoEliminado
+      );
     });
     setFilteredUsuarios(filtered);
   }, [filters, usuarios]);
@@ -156,7 +161,10 @@ export default function UsersPage() {
   // Lógica de paginación
   const indexOfLastUsuario = currentPage * usuariosPerPage;
   const indexOfFirstUsuario = indexOfLastUsuario - usuariosPerPage;
-  const currentUsuarios = filteredUsuarios.slice(indexOfFirstUsuario, indexOfLastUsuario);
+  const currentUsuarios = filteredUsuarios.slice(
+    indexOfFirstUsuario,
+    indexOfLastUsuario
+  );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -170,159 +178,162 @@ export default function UsersPage() {
 
   return (
     <>
-    {isAdmin && (
-    <MainLayout>
-      <div className="relative mt-20">
-        {/* Navbar */}
-        <NavAdmin className="hidden md:block 2xl:block"/>
-
-        <section className="pt-8 p-4">
-          <h1 className="font-semibold text-4xl mb-4">Usuarios</h1>
-          {/* Panel de Filtros */}
-          <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-            <button
-              className="text-blue-500 mb-4 block"
-              onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-            >
-              {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
-            </button>
-            <div
-              className={`transition-opacity duration-300 ${
-                isPanelCollapsed
-                  ? "opacity-0 h-0 overflow-hidden"
-                  : "opacity-100"
-              }`}
-            >
-              <div className="flex flex-col space-y-4 md:flex-row md:space-x-10">
-                <input
-                  type="text"
-                  name="search"
-                  placeholder="Buscar"
-                  value={filters.search}
-                  onChange={handleFilterChange}
-                  className="border p-2 rounded w-full md:w-1/3"
-                />
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    name="admin"
-                    checked={filters.admin}
-                    onChange={handleFilterChange}
-                  />
-                  <span>Mostrar Administradores</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    name="habilitado"
-                    checked={filters.habilitado}
-                    onChange={handleFilterChange}
-                  />
-                  <span>Mostrar Habilitados</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    name="noEliminado"
-                    checked={filters.noEliminado}
-                    onChange={handleFilterChange}
-                  />
-                  <span>Mostrar no Eliminados</span>
-                </label>
+      {isAdmin && (
+        <MainLayout>
+          <LayoutSectionComponent>
+            <LayoutDivComponent>
+              <NavAdmin />
+              <div>
+                <Title className="text-left" text="Usuarios" />
+                <p className="text-gray-500">Panel de usuarios</p>
               </div>
-            </div>
-          </div>
-
-          {/* Tabla de Usuarios */}
-          <table className="min-w-full bg-white border border-gray-300 text-sm">
-            <thead>
-              <tr>
-                <th className="border-b p-2">Nombre</th>
-                <th className="border-b p-2">Correo</th>
-                <th className="border-b p-2">Es Administrador</th>
-                <th className="border-b p-2">Habilitado</th>
-                <th className="border-b p-2">Eliminado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentUsuarios.map((usuario) => (
-                <tr key={usuario.usuarioId}>
-                  <td className="border-b p-2">{usuario.nombre}</td>
-                  <td className="border-b p-2">{usuario.correo}</td>
-                  <td className="border-b p-2">
+              {/* Panel de Filtros */}
+              <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
+                <FilterButtonComponent
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
+                  onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+                  className="my-custom-class"
+                  isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
+                />
+                <div
+                  className={`transition-opacity duration-300 ${
+                    isPanelCollapsed
+                      ? "opacity-0 h-0 overflow-hidden"
+                      : "opacity-100"
+                  }`}
+                >
+                  <div className="flex flex-col space-y-4 md:flex-row md:space-x-10">
                     <input
-                      type="checkbox"
-                      checked={usuario.esAdmin}
-                      disabled={usuario.eliminado}
-                      onChange={() =>
-                        !usuario.eliminado &&
-                        handleCheckboxChange(
-                          usuario.usuarioId,
-                          "esAdmin",
-                          !usuario.esAdmin
-                        )
-                      }
+                      type="text"
+                      name="search"
+                      placeholder="Buscar"
+                      value={filters.search}
+                      onChange={handleFilterChange}
+                      className="border p-2 rounded w-full md:w-1/3"
                     />
-                  </td>
-                  <td className="border-b p-2">
-                    <input
-                      type="checkbox"
-                      checked={usuario.habilitado}
-                      disabled={usuario.eliminado}
-                      onChange={() =>
-                        !usuario.eliminado &&
-                        handleCheckboxChange(
-                          usuario.usuarioId,
-                          "habilitado",
-                          !usuario.habilitado
-                        )
-                      }
-                    />
-                  </td>
-                  <td className="border-b p-2">
-                    <input
-                      type="checkbox"
-                      checked={usuario.eliminado}
-                      disabled={usuario.eliminado}
-                      onChange={() =>
-                        handleCheckboxChange(
-                          usuario.usuarioId,
-                          "eliminado",
-                          !usuario.eliminado
-                        )
-                      }
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name="admin"
+                        checked={filters.admin}
+                        onChange={handleFilterChange}
+                      />
+                      <span>Mostrar Administradores</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name="habilitado"
+                        checked={filters.habilitado}
+                        onChange={handleFilterChange}
+                      />
+                      <span>Mostrar Habilitados</span>
+                    </label>
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        name="noEliminado"
+                        checked={filters.noEliminado}
+                        onChange={handleFilterChange}
+                      />
+                      <span>Mostrar no Eliminados</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-          {/* Paginación */}
-          <div className="flex justify-center space-x-2 mt-4">
-            {Array.from({
-              length: Math.ceil(filteredUsuarios.length / usuariosPerPage),
-            }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => paginate(index + 1)}
-                className={`py-2 px-4 border ${
-                  currentPage === index + 1
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200"
-                }`}
-              >
-                {index + 1}
-              </button>
-            ))}
-          </div>
-        </section>
+              {/* Tabla de Usuarios */}
+              <table className="min-w-full bg-white border border-gray-300 text-sm">
+                <thead>
+                  <tr>
+                    <th className="border-b p-2">Nombre</th>
+                    <th className="border-b p-2">Correo</th>
+                    <th className="border-b p-2">Es Administrador</th>
+                    <th className="border-b p-2">Habilitado</th>
+                    <th className="border-b p-2">Eliminado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentUsuarios.map((usuario) => (
+                    <tr key={usuario.usuarioId}>
+                      <td className="border-b p-2">{usuario.nombre}</td>
+                      <td className="border-b p-2">{usuario.correo}</td>
+                      <td className="border-b p-2">
+                        <input
+                          type="checkbox"
+                          checked={usuario.esAdmin}
+                          disabled={usuario.eliminado}
+                          onChange={() =>
+                            !usuario.eliminado &&
+                            handleCheckboxChange(
+                              usuario.usuarioId,
+                              "esAdmin",
+                              !usuario.esAdmin
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border-b p-2">
+                        <input
+                          type="checkbox"
+                          checked={usuario.habilitado}
+                          disabled={usuario.eliminado}
+                          onChange={() =>
+                            !usuario.eliminado &&
+                            handleCheckboxChange(
+                              usuario.usuarioId,
+                              "habilitado",
+                              !usuario.habilitado
+                            )
+                          }
+                        />
+                      </td>
+                      <td className="border-b p-2">
+                        <input
+                          type="checkbox"
+                          checked={usuario.eliminado}
+                          disabled={usuario.eliminado}
+                          onChange={() =>
+                            handleCheckboxChange(
+                              usuario.usuarioId,
+                              "eliminado",
+                              !usuario.eliminado
+                            )
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-        {/* Modal de confirmación */}
-        {isModalOpen && <ConfirmationModal />}
-      </div>
-    </MainLayout>
-        )}
+              {/* Paginación */}
+              <div className="flex justify-center space-x-2 mt-4">
+                {Array.from({
+                  length: Math.ceil(filteredUsuarios.length / usuariosPerPage),
+                }).map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => paginate(index + 1)}
+                    className={`py-2 px-4 border ${
+                      currentPage === index + 1
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-200"
+                    }`}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            </LayoutDivComponent>
+
+            {/* Modal de confirmación */}
+            {isModalOpen && <ConfirmationModal />}
+          </LayoutSectionComponent>
+        </MainLayout>
+      )}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import { AiOutlineSetting } from "react-icons/ai";
-import { CiDeliveryTruck } from "react-icons/ci";
+import { TbTruckDelivery } from "react-icons/tb";
 
 export const NavSetting = () => {
   return (
@@ -9,7 +9,7 @@ export const NavSetting = () => {
       <div className="flex gap-10">
         <div className="flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer">
           <Link href="/orders" className="flex flex-col items-center">
-            <CiDeliveryTruck className="text-2xl" />
+            <TbTruckDelivery className="text-2xl" />
             Ordenes
           </Link>
         </div>

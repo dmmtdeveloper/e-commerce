@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import MainLayout from "../../../layouts/MainLayout";
-import NavAdmin from "@/components/shared/NavAdmin";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetPedidoAdminById, GetPedidoDetallesAdminByPedidoId, UpdateEstadoPedido, UpdateEstadoPedidoCancelado } from "@/utils/authHelpers";
 import { VmPedido, VmDetallePedido } from "@/types/types";
 import Link from 'next/link';
