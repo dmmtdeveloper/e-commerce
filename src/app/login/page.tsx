@@ -11,7 +11,7 @@ import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import loginImage from "@/public/assets/img/Banner_login.jpg";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../../components/layouts/MainLayout";
 import { Reveal } from "@/animation/Reveal";
 
 export default function LoginPage() {

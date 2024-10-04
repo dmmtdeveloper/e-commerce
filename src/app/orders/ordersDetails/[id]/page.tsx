@@ -1,20 +1,22 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import MainLayout from "../../../layouts/MainLayout";
-import { GetPedidoById, GetPedidoDetallesByPedidoId } from "@/utils/orderHelpers";
+import MainLayout from "../../../../components/layouts/MainLayout";
+import {
+  GetPedidoById,
+  GetPedidoDetallesByPedidoId,
+} from "@/utils/orderHelpers";
 import { PedidoDetalleDTO, PedidoDto } from "@/types/types";
 import Link from "next/link";
 import Image from "next/image";
 
+interface PedidoDetallePageProps {
+  params: {
+    id: string;
+  };
+}
 
-  interface PedidoDetallePageProps {
-    params: {
-      id: string;
-    };
-  }
-  
-  const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
+const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
   const [pedido, setPedido] = useState<PedidoDto | null>(null);
   const [detalles, setDetalles] = useState<PedidoDetalleDTO[]>([]); // Agregar estado para detalles
   const [loading, setLoading] = useState<boolean>(true);
@@ -37,9 +39,9 @@ import Image from "next/image";
     }
   };
 
-  const formatCurrency = new Intl.NumberFormat('es-ES', { 
-    minimumFractionDigits: 0, 
-    maximumFractionDigits: 0 
+  const formatCurrency = new Intl.NumberFormat("es-ES", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   });
 
   useEffect(() => {
@@ -57,17 +59,35 @@ import Image from "next/image";
       <div className="relative mt-20">
         <section className="pt-8 p-4">
           <div className="bg-white p-6 shadow-md rounded-lg mb-6">
-            <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">Pedido #{pedidoId}</h2>
-            
-            <div className="flex justify-between">              
+            <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">
+              Pedido #{pedidoId}
+            </h2>
+
+            <div className="flex justify-between">
               <div className="w-1/2 pl-4 bg-gray-100 p-4 rounded-md">
-                <h3 className="font-semibold text-lg mb-3 text-gray-700">Detalles del Pedido</h3>
-                <p><strong>Total Compra:</strong> <span className="text-xl font-bold">${pedido.valorTotal !== undefined && pedido.valorTotal !== null
-              ? `${formatCurrency.format(pedido.valorTotal)}`
-              : 'N/A'}</span></p>
-                <p><strong>Cantidad de Productos:</strong> {pedido.cantidad}</p>
-                <p><strong>Fecha Compra:</strong> {new Date(pedido.fecha).toLocaleDateString()}</p>
-                <p><strong>Estado:</strong> {pedido?.estadoNombre}</p>
+                <h3 className="font-semibold text-lg mb-3 text-gray-700">
+                  Detalles del Pedido
+                </h3>
+                <p>
+                  <strong>Total Compra:</strong>{" "}
+                  <span className="text-xl font-bold">
+                    $
+                    {pedido.valorTotal !== undefined &&
+                    pedido.valorTotal !== null
+                      ? `${formatCurrency.format(pedido.valorTotal)}`
+                      : "N/A"}
+                  </span>
+                </p>
+                <p>
+                  <strong>Cantidad de Productos:</strong> {pedido.cantidad}
+                </p>
+                <p>
+                  <strong>Fecha Compra:</strong>{" "}
+                  {new Date(pedido.fecha).toLocaleDateString()}
+                </p>
+                <p>
+                  <strong>Estado:</strong> {pedido?.estadoNombre}
+                </p>
               </div>
             </div>
           </div>
@@ -85,33 +105,41 @@ import Image from "next/image";
                     <td className="border p-4">
                       <div className="flex items-center">
                         {detalle.foto && detalle.foto !== "" ? (
-                          <Image 
-                            src={`data:image/${detalle.extension};base64,${detalle.foto}`} 
-                            alt={detalle.productoNombre} 
-                            width={60} 
-                            height={60} 
-                            className="h-40 w-40 object-cover mr-4" 
-                            priority 
+                          <Image
+                            src={`data:image/${detalle.extension};base64,${detalle.foto}`}
+                            alt={detalle.productoNombre}
+                            width={60}
+                            height={60}
+                            className="h-40 w-40 object-cover mr-4"
+                            priority
                           />
                         ) : (
                           <div className="h-40 w-40 bg-gray-200 mr-4"></div>
                         )}
 
                         <div className="flex-grow">
-                          <h3 className="font-semibold text-lg">{detalle.productoNombre}</h3>
-                          <p className="text-sm text-gray-600">Cantidad: {detalle.cantidad}</p>
+                          <h3 className="font-semibold text-lg">
+                            {detalle.productoNombre}
+                          </h3>
                           <p className="text-sm text-gray-600">
-                            Precio unitario: ${detalle.precio !== undefined && detalle.precio !== null
-              ? `${formatCurrency.format(detalle.precio)}`
-              : 'N/A'}
+                            Cantidad: {detalle.cantidad}
+                          </p>
+                          <p className="text-sm text-gray-600">
+                            Precio unitario: $
+                            {detalle.precio !== undefined &&
+                            detalle.precio !== null
+                              ? `${formatCurrency.format(detalle.precio)}`
+                              : "N/A"}
                           </p>
                         </div>
 
                         <div className="text-right">
                           <span className="text-lg font-semibold">
-                          ${detalle.precioTotal !== undefined && detalle.precioTotal !== null
-              ? `${formatCurrency.format(detalle.precioTotal)}`
-              : 'N/A'}
+                            $
+                            {detalle.precioTotal !== undefined &&
+                            detalle.precioTotal !== null
+                              ? `${formatCurrency.format(detalle.precioTotal)}`
+                              : "N/A"}
                           </span>
                         </div>
                       </div>
@@ -121,20 +149,20 @@ import Image from "next/image";
               </tbody>
             </table>
             <div className="mt-4">
-            <Link href="/orders" passHref>
-              <button type="button" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
-                Volver a Pedidos
-              </button>
-            </Link>
+              <Link href="/orders" passHref>
+                <button
+                  type="button"
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                >
+                  Volver a Pedidos
+                </button>
+              </Link>
+            </div>
           </div>
-          </div>
-          
-
-          
         </section>
       </div>
     </MainLayout>
   );
-}
+};
 
 export default OrdersDetails;

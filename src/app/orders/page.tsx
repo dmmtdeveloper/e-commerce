@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import MainLayout from "@/app/layouts/MainLayout";
+import MainLayout from "@/components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetPedidosByToken, GetUsuarios } from "@/utils/authHelpers";
 import { Usuario } from "@/utils/authHelpers";
@@ -14,8 +14,8 @@ import { Pedido } from "@/types/types";
 import { NavSetting } from "@/components/shared/NavSetting";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
-import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
-import LayoutDivComponent from "@/components/layout-component/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);

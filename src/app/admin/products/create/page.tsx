@@ -1,48 +1,50 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import MainLayout from "../../../layouts/MainLayout";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import MainLayout from "../../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { AddProducto } from '@/utils/authHelpers';
-import Link from 'next/link';
+import { AddProducto } from "@/utils/authHelpers";
+import Link from "next/link";
 import Image from "next/image";
 
 const CrearProducto = () => {
   const router = useRouter();
   const [producto, setProducto] = useState({
-    nombre: '',
-    descripcion: '',
+    nombre: "",
+    descripcion: "",
     precio: 0,
     stock: 0,
     stockReservado: 0,
     habilitado: true,
     eliminado: false,
-    foto: '',
-    nombreFoto: '',
-    extension: ''
+    foto: "",
+    nombreFoto: "",
+    extension: "",
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
-  const [fileName, setFileName] = useState<string>(""); 
-  const [fileType, setFileType] = useState<string>(""); 
+  const [fileName, setFileName] = useState<string>("");
+  const [fileType, setFileType] = useState<string>("");
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [confirmAction, setConfirmAction] = useState<(() => void) | null>(null);
   const [modalMessage, setModalMessage] = useState<string>("");
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setProducto((prev) => ({
       ...prev,
-      [name]: name === 'precio' || name === 'stock' ? Number(value) : value,
+      [name]: name === "precio" || name === "stock" ? Number(value) : value,
     }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file && (file.type === 'image/png' || file.type === 'image/jpeg')) {
+    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
       setSelectedFile(file);
       setFileName(file.name);
       setFileType(file.type);
@@ -71,10 +73,11 @@ const CrearProducto = () => {
         ...producto,
         foto: imageBase64 ? getBase64String(imageBase64) : "",
         nombreFoto: fileName ? fileName : "",
-        extension: fileType ? fileType : ""
+        extension: fileType ? fileType : "",
       };
 
-      await AddProducto(newProduct.nombre,
+      await AddProducto(
+        newProduct.nombre,
         newProduct.descripcion,
         newProduct.precio,
         newProduct.stock,
@@ -83,7 +86,8 @@ const CrearProducto = () => {
         newProduct.eliminado,
         newProduct.foto,
         newProduct.nombreFoto,
-        newProduct.extension);
+        newProduct.extension
+      );
       router.push("/admin/products");
     } catch (error) {
       console.error("Error al crear el producto:", error);
@@ -96,10 +100,13 @@ const CrearProducto = () => {
     setSelectedFile(null);
     setFileName("");
     setFileType("");
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
   };
 
-  const openConfirmationModal = (action: () => void, message: string = "¿Estás seguro de que quieres realizar esta acción?") => {
+  const openConfirmationModal = (
+    action: () => void,
+    message: string = "¿Estás seguro de que quieres realizar esta acción?"
+  ) => {
     setConfirmAction(() => action);
     setModalMessage(message);
     setIsModalOpen(true);
@@ -114,10 +121,13 @@ const CrearProducto = () => {
   return (
     <MainLayout>
       <div className="relative mt-20 mb-20 2xl:pt-8 2xl:px-16">
-        <NavAdmin/>
+        <NavAdmin />
         <section className="pt-8 p-4">
           <h1 className="font-semibold text-4xl mb-4">Crear Producto</h1>
-          <form onSubmit={handleSubmit} className="bg-white p-4 rounded shadow-md">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white p-4 rounded shadow-md"
+          >
             <div className="mb-4">
               <label className="block mb-1">Nombre:</label>
               <input
@@ -165,13 +175,30 @@ const CrearProducto = () => {
               <label className="block mb-1">Foto (selecciona archivo):</label>
               {imageBase64 ? (
                 <div className="flex items-center mb-4">
-                  <Image src={`data:image/${fileType};base64,${imageBase64}`} alt="Imagen cargada" width={60} height={60} className="h-60 w-60 object-cover mr-4" priority />
+                  <Image
+                    src={`data:image/${fileType};base64,${imageBase64}`}
+                    alt="Imagen cargada"
+                    width={60}
+                    height={60}
+                    className="h-60 w-60 object-cover mr-4"
+                    priority
+                  />
 
                   <div>
-                    <p>Archivo: {fileName} <br />
-                      Extension: {fileType}</p>
-                    <button type="button" onClick={() => openConfirmationModal(handleLimpiarFoto, "¿Estás seguro de que quieres eliminar la foto?")}
-                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700">
+                    <p>
+                      Archivo: {fileName} <br />
+                      Extension: {fileType}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        openConfirmationModal(
+                          handleLimpiarFoto,
+                          "¿Estás seguro de que quieres eliminar la foto?"
+                        )
+                      }
+                      className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-700"
+                    >
                       Eliminar Imagen
                     </button>
                   </div>
@@ -186,11 +213,17 @@ const CrearProducto = () => {
               )}
             </div>
             <div className="flex space-x-4">
-              <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
+              >
                 Crear Producto
               </button>
               <Link href="/admin/products">
-                <button type="button" className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700">
+                <button
+                  type="button"
+                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                >
                   Cancelar
                 </button>
               </Link>

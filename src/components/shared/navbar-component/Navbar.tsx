@@ -41,23 +41,16 @@ const Navbar: React.FC = () => {
   const toggleMenu = () => setMenuOpen(!menuOpen);
 
   return (
-    <>
+    <section>
       {/* Backdrop cuando el menú está abierto */}
       {menuOpen && (
-        <div
+        <section
           className="fixed inset-0 bg-black bg-opacity-50 z-[99998]"
           onClick={toggleMenu} // Permite cerrar el menú al hacer clic fuera
         />
       )}
 
-      <motion.nav
-        variants={{
-          hidden: { opacity: 0, y: 0 },
-          visible: { opacity: 1, y: 0 },
-        }}
-        initial="hidden"
-        animate="visible"
-        transition={{ duration: 0.5, delay: 0.25 }}
+      <nav
         className={clsx(
           "fixed w-full",
           "flex flex-col",
@@ -98,8 +91,8 @@ const Navbar: React.FC = () => {
             </div>
           </section>
         </div>
-      </motion.nav>
-    </>
+      </nav>
+    </section>
   );
 };
 

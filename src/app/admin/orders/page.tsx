@@ -4,15 +4,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Product } from "@/types/product";
 import { GetPedidos } from "@/utils/authHelpers";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import Link from "next/link";
 import { VmPedido } from "@/types/types";
 import useAdmin from "@/hooks/useAdmin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
-import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
-import LayoutDivComponent from "@/components/layout-component/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 export default function OrdersPage() {
   useAdmin();

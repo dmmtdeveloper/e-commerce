@@ -1,4 +1,4 @@
-import MainLayout from "./layouts/MainLayout";
+import MainLayout from "../components/layouts/MainLayout";
 import ProductsPage from "@/components/Products";
 
 export default function Home() {

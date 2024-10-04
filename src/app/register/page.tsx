@@ -11,7 +11,7 @@ import { useState } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../../components/layouts/MainLayout";
 import registerImage from "@/public/assets/img/register.jpg";
 import { Reveal } from "@/animation/Reveal";
 

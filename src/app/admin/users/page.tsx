@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import MainLayout from "../../layouts/MainLayout";
+import MainLayout from "../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetUsuarios } from "@/utils/authHelpers";
 import { Usuario } from "@/utils/authHelpers";
@@ -13,8 +13,8 @@ import {
 } from "@/utils/authHelpers";
 import { Title } from "@/components/title/Title";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
-import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
-import LayoutDivComponent from "@/components/layout-component/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 export default function UsersPage() {
   useAdmin();

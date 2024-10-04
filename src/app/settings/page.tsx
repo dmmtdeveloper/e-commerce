@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../../components/layouts/MainLayout";
 import {
   GetUsuarioByToken,
   UpdateNombreUsuario,
@@ -26,8 +26,8 @@ import LabelComponent from "@/components/label-component/label-component";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { Input } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import LayoutSectionComponent from "@/components/layout-component/layout-section-component";
-import LayoutDivComponent from "@/components/layout-component/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -262,7 +262,7 @@ export default function SettingsPage() {
                       onClick={() =>
                         openConfirmationModal(
                           handleUpdateLimpiarFoto,
-                          "¿Estás seguro de que quieres Cambiar tu avatar?"
+                          "¿Estás seguro de que quieres eliminar tu avatar?"
                         )
                       }
                     />

@@ -8,7 +8,7 @@ import {
   UpdateProductoAll,
   UpdateLimpiaFotoProducto,
 } from "@/utils/authHelpers";
-import MainLayout from "../../../layouts/MainLayout";
+import MainLayout from "../../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import Link from "next/link";
 import axios from "axios";
@@ -278,7 +278,6 @@ const EditarProducto = ({ params }: EditPageProps) => {
                         )
                       }
                     />
-
                   </div>
                 </div>
               ) : (

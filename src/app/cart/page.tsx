@@ -3,7 +3,7 @@
 import { useState } from "react";
 import useCartStore from "@/store/cartStore"; // Importa el store del carrito
 import Link from "next/link";
-import MainLayout from "../layouts/MainLayout";
+import MainLayout from "../../components/layouts/MainLayout";
 import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa"; // Importar los íconos
 import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
 import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
