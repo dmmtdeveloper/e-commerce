@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import {
   GetUsuarioByToken,
@@ -17,6 +17,8 @@ import { InputComponent } from "@/components/input/InputComponent";
 import { Title } from "@/components/title/Title";
 import { NavSetting } from "@/components/shared/NavSetting";
 
+import user from "@/public/assets/img/user.png";
+
 import Image from "next/image";
 import ConfirmationModal from "@/components/ConfirmationModal";
 import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
@@ -28,6 +30,8 @@ import { InputPassword } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+
+import { BsFillTrashFill } from "react-icons/bs";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -104,13 +108,20 @@ export default function SettingsPage() {
       sessionStorage.setItem("avatar", imageUrl);
       if (imageUrl && id) {
         await UpdateFotoUsuario(id, imageUrl);
-        openSuccessModal("Avatar actualizado correctamente.");
+        // openSuccessModal("Avatar actualizado correctamente.");
       } else {
         console.warn("Error: Avatar no existe.");
       }
     } catch (error) {
       console.error("Error uploading image:", error);
       openErrorModal("Error subiendo la imagen.");
+    }
+  };
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const handleChangeAvatarClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click(); // Simula un clic en el input de archivo
     }
   };
 
@@ -199,7 +210,7 @@ export default function SettingsPage() {
         await UpdateLimpiaFotoUsuario(id);
         await deleteImage(avatar);
         setAvatar(null);
-        openSuccessModal("Foto eliminada correctamente.");
+        // openSuccessModal("Foto eliminada correctamente.");
       } catch (error) {
         console.error("Error al eliminar la foto:", error);
         openErrorModal("Error al eliminar la foto.");
@@ -239,37 +250,51 @@ export default function SettingsPage() {
           </div>
           <div>
             <article className="flex flex-col gap-4">
-              <div className="flex gap-4 flex-col">
-                <LabelComponent text="Avatar" />
-                <div className="flex items-center gap-8">
-                  <div>
-                    {!avatar && (
-                      <input type="file" onChange={handleFileChange} />
-                    )}
-                    {avatar && (
-                      <Image
-                        src={avatar}
-                        alt="Avatar"
-                        className="h-28 w-28 rounded-full object-cover"
-                        width={112}
-                        height={112}
-                        
-                      />
-                    )}
-                  </div>
+              <div className="flex items-center gap-8">
+                <div>
+                  {/* Mostrar imagen de placeholder si no hay avatar cargado */}
+                  {!avatar && (
+                    <Image
+                      src={user}
+                      alt="Avatar Placeholder"
+                      className="h-28 w-28 rounded-full object-cover"
+                      width={112}
+                      height={112}
+                    />
+                  )}
+
+                  {/* Mostrar la imagen cargada si existe avatar */}
                   {avatar && (
-                    <ButtonCtaComponent
-                      text="Cambiar Avatar"
-                      onClick={() =>
-                        openConfirmationModal(
-                          handleUpdateLimpiarFoto,
-                          "¿Estás seguro de que quieres eliminar tu avatar?"
-                        )
-                      }
+                    <Image
+                      src={avatar}
+                      alt="Avatar"
+                      className="h-28 w-28 rounded-full object-cover"
+                      width={112}
+                      height={112}
                     />
                   )}
                 </div>
+
+                {/* Botón para cambiar el avatar */}
+                <ButtonCtaComponent
+                  onClick={handleChangeAvatarClick}
+                  text="Cambiar Avatar"
+                />
+
+                {/* Mostrar botón "Eliminar Avatar" solo si existe un avatar cargado */}
+                {avatar && (
+                  <BsFillTrashFill className="text-2xl text-red-500 hover:scale-110 transition-all" onClick={handleUpdateLimpiarFoto} />
+                )}
+
+                {/* Input de archivo oculto */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange} // Maneja el cambio de archivo
+                />
               </div>
+
               <div className="flex flex-col gap-2">
                 <LabelComponent text="Nombre" className="pl-1" />
                 <InputComponent
