@@ -163,19 +163,22 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
                     <option value={3}>Top 3</option>
                     <option value={5}>Top 5</option>
                     <option value={10}>Top 10</option>
+                    <option value={20}>Top 20</option>
+                    <option value={50}>Top 50</option>
+                    <option value={100}>Top 100</option>
                 </select>
             </div>
         </div>
 
         {/* Área de gráficos */}
-        <div className="flex-1 p-4"> {/* Flex-1 para que tome el resto del espacio */}
+        <div className="w-4/5 p-4"> {/* Flex-1 para que tome el resto del espacio */}
             {/* Gráfico de Stock Valorado */}
-            <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
+            <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
                 <Bar data={chartData} options={options1} />
             </div>
 
             {/* Gráfico de Stock Disponible */}
-            <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
+            <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
                 <Bar data={chartData2} options={options2} />
             </div>
         </div>

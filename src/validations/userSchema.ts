@@ -1,20 +1,42 @@
 import { z } from "zod";
 
-const userSchema = z.object({
-  name: z
+export const userRegisterSchema = z
+  .object({
+    // registro
+    nombre: z
+      .string()
+      .min(3, { message: "El nombre debe tener mínimo 3 caracteres." }),
+    correo: z.string().email({ message: "Por favor ingresa un correo válido" }),
+    clave: z
+      .string()
+      .min(6, { message: "La contraseña debe tener 6 caracteres" }),
+    confirmPassword: z
+      .string()
+      .min(6, { message: "Las contraseñas deben coincidir" }),
+  })
+  .refine((data) => data.clave === data.confirmPassword, {
+    message: "Las contraseñas deben coincidir",
+    path: ["confirmPassword"],
+  });
+
+export const userLoginSchema = z.object({
+  email: z.string().email({ message: "Por favor ingresa un correo válido" }),
+  password: z
     .string()
-    .min(3, {
-      message: "el nombre deberia ser de almenos 3 caracteres de largo",
-    })
-    .max(200, {
-      message: "Eel nombre deberia ser de menos 200 caracteres",
-    }),
-
-  email: z.string().email().min(3, {
-    message: "Porfavor ingresa un correo valido",
-  }),
-
-  password: z.string().email().min(3, {
-    message: "Porfavor ingresa un minimo de 6 caracteres",
-  }),
+    .min(6, { message: "La contraseña debe tener 6 caracteres" }),
 });
+
+export const userSaveSchema = z.object({
+  nombre: z
+    .string()
+    .min(3, { message: "El nombre debe tener mínimo 3 caracteres." }),
+
+  clave: z
+    .string()
+    .min(6, { message: "La contraseña debe tener 6 caracteres" }),
+  correo: z.string().email({ message: "Por favor ingresa un correo válido" }),
+});
+
+export type SignUpSchema = z.infer<typeof userRegisterSchema>;
+export type LoginUpSchema = z.infer<typeof userLoginSchema>;
+export type SaveUserSchema = z.infer<typeof userSaveSchema>;

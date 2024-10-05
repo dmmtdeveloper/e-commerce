@@ -1,63 +1,60 @@
 "use client";
-
-import { AuthButton } from "@/components/buttons-components/AuthButton";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Input } from "@/components/input/InputPassword";
-import { InputComponent } from "@/components/input/InputComponent";
-import { register } from "../../utils/authHelpers";
+import { registerUser } from "../../utils/authHelpers";
 import { Title } from "@/components/title/Title";
 import { useRouter } from "next/navigation"; // Correcto para la carpeta 'app'
-import { useState } from "react";
+
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
 import MainLayout from "../../components/layouts/MainLayout";
 import registerImage from "@/public/assets/img/register.jpg";
-import { Reveal } from "@/animation/Reveal";
+import { Reveal } from "@/components/animation/Reveal";
+
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUpSchema, userRegisterSchema } from "@/validations/userSchema";
+
+import InputComponentAuth from "@/components/input/inputComponenAuth";
+import SubmitButton from "@/components/buttons-components/AuthButton";
+import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
 
 export default function RegisterPage() {
-  const [formData, setFormData] = useState({
-    correo: "",
-    clave: "",
-    nombre: "",
-  });
+  const {
+    register, // Registrar los campos del formulario
+    handleSubmit, // Manejar el envío del formulario
+    formState: { errors, isSubmitting }, // Manejar los errores de validación
+    reset,
+  } = useForm<SignUpSchema>({ resolver: zodResolver(userRegisterSchema) });
 
-  const { register, handleSubmit } = useForm();
-  const { correo, clave, nombre } = formData;
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((data) => ({
-      ...data,
-      [name]: value,
-    }));
-  };
-
-  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  // Mostrar contraseña al mantener presionado
-  const handleMouseDown = () => {
-    setShowPassword(true);
-  };
-
-  // Ocultar contraseña al soltar el botón del mouse
-  const handleMouseUp = () => {
-    setShowPassword(false);
-  };
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleRegister = async (data: SignUpSchema) => {
     try {
-      await register(nombre, correo, clave);
-      alert("Usuario registrado con éxito");
+      await registerUser(data.nombre, data.correo, data.clave);
+      // alert("Usuario registrado con éxito");
+      reset();
+
       router.push("/login"); // Redirige a la página de login
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      alert("Error en el registro");
+    } catch (error: any) {
+      const errorResponse = error.response?.data?.errors;
+
+      if (errorResponse) {
+        if (errorResponse.Nombre) {
+          alert(`Error en el nombre: ${errorResponse.Nombre.join(", ")}`);
+        }
+        if (errorResponse.Correo) {
+          alert(`Error en el correo: ${errorResponse.Correo.join(", ")}`);
+        }
+        if (errorResponse.Clave) {
+          alert(`Error en la clave: ${errorResponse.Clave.join(", ")}`);
+        }
+      } else {
+        console.error("Error al registrar usuario:", error.message);
+        alert("Error en el registro");
+      }
     }
   };
+
   return (
     <MainLayout>
       <section
@@ -83,40 +80,58 @@ export default function RegisterPage() {
 
           {/* Formulario */}
           <Reveal>
-            <div className="flex flex-col  gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
+            <div className="flex flex-col  gap-10 bg-slate-100 2xl:pt-0 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
               <Title className="text-center" text="Registro" />
 
-              <form onSubmit={handleSubmit(data => {console.log(data)})} className="flex flex-col gap-4">
-                <InputComponent
+              <form
+                onSubmit={handleSubmit(handleRegister)}
+                className="flex flex-col gap-4"
+              >
+                {/* nombre */}
+
+                <InputComponentAuth
+                  name="nombre"
                   type="text"
-                  value={nombre}
-                  placeholder="Ingresa tu Nombre"
-                  // onChange={handleChange}
-                  
-                  {...register("name")}
-                  />
-                <InputComponent
+                  placeholder="Ingresa tu nombre"
+                  register={register("nombre")}
+                  error={errors.nombre}
+                />
+
+                {/* correo */}
+                <InputComponentAuth
+                  name="correo"
                   type="email"
-                  value={correo}
-                  placeholder="Ingresa tu correo electrónico"
-                  // onChange={handleChange}
-                  // name="correo"
-                  {...register("correo")}
-                  />
+                  placeholder="Ingresa tu correo"
+                  register={register("correo")}
+                  error={errors.correo}
+                />
 
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  // name="clave"
-                  placeholder="Ingrese contraseña"
-                  value={clave}
-                  // onChange={handleChange}
-                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                  {...register("clave")}
-                  />
+                {/* Input de contraseña */}
+                <PasswordInputAuth
+                  type="password"
+                  name="clave"
+                  placeholder="Ingresa tu contraseña"
+                  register={register("clave")}
+                  error={errors.clave}
+                />
 
-                <AuthButton text="Registrate" />
+                {/* Input para confirmar contraseña */}
+                <PasswordInputAuth
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirma tu contraseña"
+                  register={register("confirmPassword")}
+                  error={errors.confirmPassword}
+                />
+
+                <SubmitButton
+                  text="Regitrate"
+                  type="submit"
+                  isSubmitting={isSubmitting}
+                />
+                {/* <button disabled={isSubmitting} type="submit">
+                  registro
+                </button> */}
               </form>
               <div className="flex gap-4">
                 <p className="text-sm">¿Ya tienes una cuenta?</p>

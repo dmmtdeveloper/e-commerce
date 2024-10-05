@@ -1,23 +1,36 @@
 import clsx from "clsx";
 import React from "react";
 
-interface ButtonProps {
+interface SubmitButtonProps {
+  isSubmitting?: boolean;
   text: string;
+  type?: "button" | "submit" | "reset"; // Opciones para el tipo de botón, por defecto será "submit"
+  className?: string; // Para pasar clases de estilo adicionales si es necesario
 }
 
-export const AuthButton: React.FC<ButtonProps> = ({ text }) => {
+const SubmitButton: React.FC<SubmitButtonProps> = ({
+  isSubmitting,
+  text,
+  type = "submit",
+  className,
+}) => {
   return (
     <button
-      type="submit"
+      disabled={isSubmitting}
+      type={type}
       className={clsx(
+        className, // Aquí pasamos las clases adicionales si existen
         "bg-blue-500",
-        "text-white py-3",
-        "rounded-xl",
+        "text-white",
+        "py-3 rounded-xl",
         "hover:bg-blue-600",
-        "transition-all"
+        "transition-all",
+        { "opacity-50 cursor-not-allowed": isSubmitting } // Aplica estilos condicionales cuando está deshabilitado
       )}
     >
-      {text}
+      {isSubmitting ? "Cargando..." : text}
     </button>
   );
 };
+
+export default SubmitButton;
