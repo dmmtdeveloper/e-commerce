@@ -6,7 +6,7 @@ import Modal from "@/components/modals/Modal"; // Asegúrate de importar el comp
 import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { Reveal } from "@/animation/Reveal";
+import { Reveal } from "@/components/animation/Reveal";
 
 interface ProductCardProps {
   product: Product;

@@ -24,7 +24,7 @@ import ErrorModal from "@/components/modals/setting-modal-component/error-modal-
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import LabelComponent from "@/components/label-component/label-component";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { Input } from "@/components/input/InputPassword";
+import { InputPassword } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
@@ -291,7 +291,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <LabelComponent text="Contraseña" className="pl-1" />
-                <Input
+                <InputPassword
                   name="password"
                   type={showPassword ? "text" : "password"}
                   icon={showPassword ? <FaEye /> : <FaEyeSlash />}
