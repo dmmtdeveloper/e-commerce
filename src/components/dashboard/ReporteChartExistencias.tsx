@@ -136,7 +136,7 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
   return (
     <div className="flex">
         {/* Columna de filtros */}
-        <div className="w-1/3 p-4"> {/* Ajusta el ancho de la columna según necesites */}
+        <div className="w-1/5 p-4"> {/* Ajusta el ancho de la columna según necesites */}
           <h2 className="text-2xl font-semibold mb-4">Existencias</h2>
           <h3 className="text-lg font-semibold mb-4">Filtros</h3>
             {/* Filtro por texto */}
@@ -170,12 +170,12 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
         {/* Área de gráficos */}
         <div className="flex-1 p-4"> {/* Flex-1 para que tome el resto del espacio */}
             {/* Gráfico de Stock Valorado */}
-            <div style={{ width: '100%', marginBottom: '20px' }}>
+            <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
                 <Bar data={chartData} options={options1} />
             </div>
 
             {/* Gráfico de Stock Disponible */}
-            <div style={{ width: '100%', marginBottom: '20px' }}>
+            <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
                 <Bar data={chartData2} options={options2} />
             </div>
         </div>

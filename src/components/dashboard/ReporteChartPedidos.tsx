@@ -201,7 +201,7 @@ const ReporteChartPedidos: React.FC<ReporteChartPedidosProps> = ({ data }) => {
   return (
     <div className="flex">
       {/* Filtros */}
-      <div className="w-1/4 p-4 border-r"> {/* Aquí se establece el ancho para la columna de filtros */}
+      <div className="w-1/5 p-4 border-r"> {/* Aquí se establece el ancho para la columna de filtros */}
         <h2 className="text-2xl font-semibold mb-4">Gráfico de Pedidos</h2>
         <h3 className="text-lg font-semibold mb-4">Filtros</h3>
         <div className="mb-4 space-y-4">
@@ -232,19 +232,19 @@ const ReporteChartPedidos: React.FC<ReporteChartPedidosProps> = ({ data }) => {
       </div>
 
       {/* Contenedor de gráficos */}
-      <div className="w-3/4 p-4"> {/* Aquí se establece el ancho para la columna de gráficos */}
+      <div className="flex-1 p-4"> {/* Aquí se establece el ancho para la columna de gráficos */}
         {/* Primer gráfico de barras */}
-        <div style={{ width: '100%', height: '400px', marginBottom: '20px' }}>
+        <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
           <Bar data={chartData} options={options1} />
         </div>
 
         {/* Segundo gráfico de barras */}
-        <div style={{ width: '100%', height: '400px', marginBottom: '20px' }}>
+        <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
           <Bar data={chartData2} options={options2} />
         </div>
 
         {/* Tercer gráfico de líneas */}
-        <div style={{ width: '100%', height: '400px', marginBottom: '20px' }}>
+        <div style={{ width: '100%', height: '600px', marginBottom: '20px' }}>
           <Line data={lineChartData} options={lineChartOptions} />
         </div>
       </div>
