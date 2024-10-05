@@ -325,16 +325,16 @@ const ReporteChartPedidos: React.FC<ReporteChartPedidosProps> = ({ data }) => {
 
       {/* Gráficos */}
       <div className="w-4/5 p-4"> {/* Aquí se establece el ancho para la columna de gráficos */}
-        <div className="mb-8">
+        <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
           <Bar data={chartData} options={options1} />
         </div>
-        <div className="mb-8">
+        <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
           <Bar data={chartData2} options={options2} />
         </div>
-        <div className="mb-8">
+        <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
           <Line data={lineChartData} options={lineChartOptions} />
         </div>
-        <div>
+        <div style={{ width: '100%', height: '500px', marginBottom: '20px' }}>
           <Line data={quantityLineChartData} options={quantityLineChartOptions} />
         </div>
       </div>
