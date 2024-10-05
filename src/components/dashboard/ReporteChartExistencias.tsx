@@ -163,6 +163,9 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
                     <option value={3}>Top 3</option>
                     <option value={5}>Top 5</option>
                     <option value={10}>Top 10</option>
+                    <option value={20}>Top 20</option>
+                    <option value={50}>Top 50</option>
+                    <option value={100}>Top 100</option>
                 </select>
             </div>
         </div>
