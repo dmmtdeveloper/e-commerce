@@ -30,7 +30,7 @@ export default function RegisterPage() {
   const handleRegister = async (data: SignUpSchema) => {
     try {
       await registerUser(data.nombre, data.correo, data.clave);
-      alert("Usuario registrado con éxito");
+      // alert("Usuario registrado con éxito");
       reset();
 
       router.push("/login"); // Redirige a la página de login

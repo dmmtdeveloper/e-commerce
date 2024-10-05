@@ -19,6 +19,8 @@ export const userRegisterSchema = z
     path: ["confirmPassword"],
   });
 
+
+  
 export const userLoginSchema = z.object({
 
   email: z.string().email({ message: "Por favor ingresa un correo válido" }),

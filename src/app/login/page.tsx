@@ -35,7 +35,7 @@ export default function LoginPage() {
         password: data.password,
       });
       reset();
-      alert("Login exitoso");
+      // alert("Login exitoso");
       router.push("/");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
