@@ -312,7 +312,7 @@ export default function SettingsPage() {
               </div>
 
               <form onSubmit={handleSubmit(handleSaveChanges)}>
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 w-[30rem]">
                   <InputComponentAuth
                     name="nombre"
                     type="text"
