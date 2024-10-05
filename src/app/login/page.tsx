@@ -13,6 +13,7 @@ import Link from "next/link";
 import loginImage from "@/public/assets/img/Banner_login.jpg";
 import MainLayout from "../../components/layouts/MainLayout";
 import { Reveal } from "@/animation/Reveal";
+import {useForm} from "react-hook-form"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");

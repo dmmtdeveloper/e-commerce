@@ -14,6 +14,7 @@ import Link from "next/link";
 import MainLayout from "../../components/layouts/MainLayout";
 import registerImage from "@/public/assets/img/register.jpg";
 import { Reveal } from "@/animation/Reveal";
+import { useForm } from "react-hook-form";
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -22,6 +23,7 @@ export default function RegisterPage() {
     nombre: "",
   });
 
+  const { register, handleSubmit } = useForm();
   const { correo, clave, nombre } = formData;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +58,6 @@ export default function RegisterPage() {
       alert("Error en el registro");
     }
   };
-
   return (
     <MainLayout>
       <section
@@ -85,32 +86,35 @@ export default function RegisterPage() {
             <div className="flex flex-col  gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
               <Title className="text-center" text="Registro" />
 
-              <form onSubmit={handleRegister} className="flex flex-col gap-4">
+              <form onSubmit={handleSubmit(data => {console.log(data)})} className="flex flex-col gap-4">
                 <InputComponent
                   type="text"
                   value={nombre}
                   placeholder="Ingresa tu Nombre"
-                  onChange={handleChange}
-                  name="nombre"
-                />
+                  // onChange={handleChange}
+                  
+                  {...register("name")}
+                  />
                 <InputComponent
                   type="email"
                   value={correo}
                   placeholder="Ingresa tu correo electrónico"
-                  onChange={handleChange}
-                  name="correo"
-                />
+                  // onChange={handleChange}
+                  // name="correo"
+                  {...register("correo")}
+                  />
 
                 <Input
                   type={showPassword ? "text" : "password"}
-                  name="clave"
+                  // name="clave"
                   placeholder="Ingrese contraseña"
                   value={clave}
-                  onChange={handleChange}
+                  // onChange={handleChange}
                   icon={showPassword ? <FaEye /> : <FaEyeSlash />}
                   onMouseDown={handleMouseDown}
                   onMouseUp={handleMouseUp}
-                />
+                  {...register("clave")}
+                  />
 
                 <AuthButton text="Registrate" />
               </form>
