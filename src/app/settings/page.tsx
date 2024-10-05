@@ -31,8 +31,6 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
-import { BsFillTrashFill } from "react-icons/bs";
-
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [nombre, setNombre] = useState<string>("");
@@ -95,6 +93,7 @@ export default function SettingsPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const id = usuario?.usuarioId;
+
     if (!file) return;
 
     console.log("Selected file:", file);
@@ -104,11 +103,14 @@ export default function SettingsPage() {
       const filePath = `avatars/usuarioId${id}-${file.name}`; // Definir una ruta en Firebase Storage
       const imageUrl = await uploadImage(file, filePath);
       console.log("Uploaded image URL:", imageUrl);
-      setAvatar(imageUrl); // Establecemos la URL de la imagen
+
+      // Establecer el avatar
+      setAvatar(imageUrl);
       sessionStorage.setItem("avatar", imageUrl);
+
       if (imageUrl && id) {
         await UpdateFotoUsuario(id, imageUrl);
-        // openSuccessModal("Avatar actualizado correctamente.");
+        // Avatar actualizado con éxito
       } else {
         console.warn("Error: Avatar no existe.");
       }
@@ -119,6 +121,37 @@ export default function SettingsPage() {
   };
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const handleUpdateLimpiarYCambiarFoto = async () => {
+    const id = usuario?.usuarioId;
+
+    // Si hay un avatar, elimina la foto primero
+    if (id && avatar) {
+      try {
+        // Eliminar la foto actual de la base de datos y del almacenamiento
+        await UpdateLimpiaFotoUsuario(id);
+        await deleteImage(avatar); // Eliminar la imagen del almacenamiento
+        setAvatar(null); // Quitar el avatar de la UI
+        sessionStorage.removeItem("avatar"); // Remover avatar de sessionStorage
+
+        // Redirigir automáticamente al input de archivo para seleccionar una nueva imagen
+        if (fileInputRef.current) {
+          fileInputRef.current.click(); // Abre el selector de archivos
+        }
+
+        // openSuccessModal("Foto eliminada correctamente."); // Opcional: mostrar mensaje de éxito
+      } catch (error) {
+        console.error("Error al eliminar la foto:", error);
+        openErrorModal("Error al eliminar la foto.");
+      }
+    } else {
+      // Si no hay avatar, simplemente abrir el selector de archivos
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+      console.warn("No se puede eliminar el avatar, valor nulo.");
+    }
+  };
+
   const handleChangeAvatarClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click(); // Simula un clic en el input de archivo
@@ -255,7 +288,7 @@ export default function SettingsPage() {
                   {/* Mostrar imagen de placeholder si no hay avatar cargado */}
                   {!avatar && (
                     <Image
-                      src={user}
+                      src={user} // Imagen de placeholder
                       alt="Avatar Placeholder"
                       className="h-28 w-28 rounded-full object-cover"
                       width={112}
@@ -275,20 +308,15 @@ export default function SettingsPage() {
                   )}
                 </div>
 
-                {/* Botón para cambiar el avatar */}
+                {/* Botón para cambiar el avatar y también eliminar el existente si lo hay */}
                 <ButtonCtaComponent
-                  onClick={handleChangeAvatarClick}
+                  onClick={handleUpdateLimpiarYCambiarFoto} // Maneja ambas acciones
                   text="Cambiar Avatar"
                 />
 
-                {/* Mostrar botón "Eliminar Avatar" solo si existe un avatar cargado */}
-                {avatar && (
-                  <BsFillTrashFill className="text-2xl text-red-500 hover:scale-110 transition-all" onClick={handleUpdateLimpiarFoto} />
-                )}
-
                 {/* Input de archivo oculto */}
                 <input
-                  ref={fileInputRef}
+                  ref={fileInputRef} // Referencia para abrir el diálogo del archivo
                   type="file"
                   className="hidden"
                   onChange={handleFileChange} // Maneja el cambio de archivo
