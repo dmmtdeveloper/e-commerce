@@ -30,6 +30,14 @@ import { InputPassword } from "@/components/input/InputPassword";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
+import InputComponentAuth from "@/components/input/inputComponenAuth";
+import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
+
+import { useForm, type } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUpSchema, userRegisterSchema } from "@/validations/userSchema";
+import SubmitButton from "@/components/buttons-components/AuthButton";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -57,15 +65,12 @@ export default function SettingsPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
-  // Mostrar contraseña al mantener presionado
-  const handleMouseDown = () => {
-    setShowPassword(true);
-  };
-
-  // Ocultar contraseña al soltar el botón del mouse
-  const handleMouseUp = () => {
-    setShowPassword(false);
-  };
+  const {
+    register, // Registrar los campos del formulario
+    handleSubmit, // Manejar el envío del formulario
+    formState: { errors, isSubmitting }, // Manejar los errores de validación
+    reset,
+  } = useForm<SaveUserSchema>({ resolver: zodResolver(userSaveSchema) });
 
   useEffect(() => {
     setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente
@@ -152,11 +157,11 @@ export default function SettingsPage() {
     }
   };
 
-  const handleChangeAvatarClick = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click(); // Simula un clic en el input de archivo
-    }
-  };
+  // const handleChangeAvatarClick = () => {
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.click(); // Simula un clic en el input de archivo
+  //   }
+  // };
 
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
@@ -195,7 +200,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (data: SaveUserSchema) => {
     const id = usuario?.usuarioId;
 
     // Validación de nombre
@@ -224,32 +229,15 @@ export default function SettingsPage() {
 
     if (id) {
       try {
-        await UpdateNombreUsuario(id, nombre);
-        await UpdateClaveUsuario(id, clave);
-        await UpdateCorreoUsuario(id, correo);
+        await UpdateNombreUsuario(id, data.nombre);
+        await UpdateClaveUsuario(id, data.clave);
+        await UpdateCorreoUsuario(id, data.correo);
         openSuccessModal("Cambios guardados exitosamente.");
       } catch (error) {
         openErrorModal("Error actualizando los datos.");
       }
     } else {
       console.warn("ID de usuario no existe.");
-    }
-  };
-
-  const handleUpdateLimpiarFoto = async () => {
-    const id = usuario?.usuarioId;
-    if (id && avatar) {
-      try {
-        await UpdateLimpiaFotoUsuario(id);
-        await deleteImage(avatar);
-        setAvatar(null);
-        // openSuccessModal("Foto eliminada correctamente.");
-      } catch (error) {
-        console.error("Error al eliminar la foto:", error);
-        openErrorModal("Error al eliminar la foto.");
-      }
-    } else {
-      console.warn("No se puede eliminar el avatar, valor nulo.");
     }
   };
 
@@ -323,56 +311,53 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Nombre" className="pl-1" />
-                <InputComponent
-                  name="nombre"
-                  placeholder="Ingresa tu nombre"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Correo electrónico" className="pl-1" />
-                <InputComponent
-                  name="email"
-                  type="email"
-                  placeholder="Ingresa tu correo electrónico"
-                  value={correo}
-                  onChange={(e) => setCorreo(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Contraseña" className="pl-1" />
-                <InputPassword
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                  placeholder="Ingresa tu contraseña"
-                  value={clave}
-                  onChange={(e) => setClave(e.target.value)}
-                />
-              </div>
+              <form onSubmit={handleSubmit(handleSaveChanges)}>
+                <div className="flex flex-col gap-4">
+                  <InputComponentAuth
+                    name="nombre"
+                    type="text"
+                    placeholder="Ingresa tu nombre"
+                    register={register("nombre")}
+                    error={errors.nombre}
+                  />
 
-              <div className="flex gap-4">
-                <ButtonCtaComponent
-                  text="Guardar Cambios"
-                  onClick={handleSaveChanges}
-                />
+                  {/* correo */}
+                  <InputComponentAuth
+                    name="correo"
+                    type="email"
+                    placeholder="Ingresa tu correo"
+                    register={register("correo")}
+                    error={errors.correo}
+                  />
 
-                <ButtonCtaComponent
-                  className="bg-red-500 hover:bg-red-600"
-                  text="Eliminar Cuenta"
-                  onClick={() =>
-                    openConfirmationModal(
-                      handleDeleteAccount,
-                      "¿Estás seguro de que quieres eliminar tu cuenta?"
-                    )
-                  }
-                />
-              </div>
+                  {/* Input de contraseña */}
+                  <PasswordInputAuth
+                    type="password"
+                    name="clave"
+                    placeholder="Ingresa tu contraseña"
+                    register={register("clave")}
+                    error={errors.clave}
+                  />
+                  <div className="flex gap-4">
+                    <ButtonCtaComponent
+                      text="Guardar los cambios"
+                      type="submit"
+                      isSubmitting={isSubmitting}
+                    />
+
+                    <ButtonCtaComponent
+                      className="bg-red-500 hover:bg-red-600"
+                      text="Eliminar Cuenta"
+                      onClick={() =>
+                        openConfirmationModal(
+                          handleDeleteAccount,
+                          "¿Estás seguro de que quieres eliminar tu cuenta?"
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </form>
             </article>
           </div>
         </LayoutDivComponent>

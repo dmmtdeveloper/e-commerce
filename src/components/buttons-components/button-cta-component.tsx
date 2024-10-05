@@ -4,10 +4,12 @@ interface ButtonSetting {
   onClick?: () => void;
   text: string;
   className?: string;
-  type?: any 
+  type?: "button" | "submit" | "reset"; // Opciones para el tipo de botón, por defecto será "submit"
+  isSubmitting?: boolean;
 }
 
 const ButtonCtaComponent: React.FC<ButtonSetting> = ({
+  isSubmitting,
   onClick,
   text,
   className,
@@ -15,6 +17,7 @@ const ButtonCtaComponent: React.FC<ButtonSetting> = ({
 }) => {
   return (
     <button
+    disabled={isSubmitting}
       type={type}
       onClick={onClick}
       className={`bg-blue-500 hover:bg-blue-600 text-gray-100 text-sm py-2  rounded-lg px-4 ${className}`}

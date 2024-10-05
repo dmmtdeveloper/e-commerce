@@ -13,6 +13,7 @@ import { Reveal } from "@/components/animation/Reveal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema, userRegisterSchema } from "@/validations/userSchema";
+
 import InputComponentAuth from "@/components/input/inputComponenAuth";
 import SubmitButton from "@/components/buttons-components/AuthButton";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
