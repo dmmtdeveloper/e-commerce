@@ -1,41 +1,40 @@
 "use client";
-import { AuthButton } from "@/components/buttons-components/AuthButton";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Input } from "@/components/input/InputPassword";
-import { InputComponent } from "@/components/input/InputComponent";
+
 import { login } from "../../utils/authHelpers";
+import { LoginUpSchema, userLoginSchema } from "@/validations/userSchema";
+import { Reveal } from "@/components/animation/Reveal";
 import { Title } from "@/components/title/Title";
+import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import clsx from "clsx";
 import Image from "next/image";
+import InputComponentAuth from "@/components/input/inputComponenAuth";
 import Link from "next/link";
 import loginImage from "@/public/assets/img/Banner_login.jpg";
 import MainLayout from "../../components/layouts/MainLayout";
-import { Reveal } from "@/animation/Reveal";
-import {useForm} from "react-hook-form"
+import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
+import SubmitButton from "@/components/buttons-components/AuthButton";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
-  // Mostrar contraseña al mantener presionado
-  const handleMouseDown = () => {
-    setShowPassword(true);
-  };
-
-  // Ocultar contraseña al soltar el botón del mouse
-  const handleMouseUp = () => {
-    setShowPassword(false);
-  };
+  const {
+    register, // Registrar los campos del formulario
+    handleSubmit, // Manejar el envío del formulario
+    formState: { errors, isSubmitting }, // Manejar los errores de validación
+    reset,
+  } = useForm<LoginUpSchema>({ resolver: zodResolver(userLoginSchema) });
 
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (data: LoginUpSchema) => {
     try {
-      await login({ email, password });
+      // Cambiar la llamada a `login` para pasar un solo argumento
+      await login({
+        email: data.email,
+        password: data.password,
+      });
+      reset();
       alert("Login exitoso");
       router.push("/");
     } catch (error) {
@@ -69,27 +68,33 @@ export default function LoginPage() {
             <div className="flex flex-col gap-10 bg-slate-100 2xl:px-20 2xl:py-10 p-4 w-full mt-8 2xl:mb-0">
               <Title className="text-center" text="Iniciar Sesión" />
 
-              <form onSubmit={handleLogin} className="flex flex-col gap-4">
-                <InputComponent
-                  type="email"
-                  value={email}
-                  placeholder="Ingresa tu correo electrónico"
-                  onChange={(e) => setEmail(e.target.value)}
+              <form
+                onSubmit={handleSubmit(handleLogin)}
+                className="flex flex-col gap-4"
+              >
+                {/* correo */}
+                <InputComponentAuth
                   name="email"
+                  type="email"
+                  placeholder="Ingresa tu correo"
+                  register={register("email")}
+                  error={errors.email}
                 />
 
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Ingrese contraseña"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
+                {/* Input de contraseña */}
+                <PasswordInputAuth
+                  type="password"
                   name="password"
+                  placeholder="Ingresa tu contraseña"
+                  register={register("password")}
+                  error={errors.password}
                 />
 
-                <AuthButton text="Iniciar Sesión" />
+                <SubmitButton
+                  text="Iniciar sesión"
+                  type="submit"
+                  isSubmitting={isSubmitting}
+                />
               </form>
               <div className="flex gap-4">
                 <p className="text-sm">¿Eres nuevo?</p>
@@ -107,3 +112,4 @@ export default function LoginPage() {
     </MainLayout>
   );
 }
+

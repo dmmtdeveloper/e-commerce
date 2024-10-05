@@ -1,7 +1,7 @@
 import { InputPasswordProps } from "@/types/types";
 import React from "react";
 
-export const Input: React.FC<InputPasswordProps> = ({
+export const InputPassword: React.FC<InputPasswordProps> = ({
   type = "text",
   name,
   placeholder = "",
@@ -11,12 +11,10 @@ export const Input: React.FC<InputPasswordProps> = ({
   onIconClick,
   onMouseDown,
   onMouseUp,
-  id,
 }) => {
   return (
     <div className="relative w-full">
       <input
-        id={id}
         type={type}
         name={name}
         placeholder={placeholder}

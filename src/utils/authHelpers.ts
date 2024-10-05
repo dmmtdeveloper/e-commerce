@@ -46,7 +46,7 @@ export const addPedido = async (
 
 
 
-export const register = async (
+export const registerUser = async (
   nombre: string,
   correo: string,
   clave: string

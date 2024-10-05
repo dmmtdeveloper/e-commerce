@@ -4,7 +4,7 @@ import ProductCard from "@/components/shared/ProductCard";
 import { Product } from "@/types/product"; // Importar el tipo Product
 import axiosInstance from "@/utils/axiosInstance";
 import { InputComponent } from "./input/InputComponent";
-import { Reveal } from "@/animation/Reveal";
+import { Reveal } from "@/components/animation/Reveal";
 import Pagination from "./pagination-component/pagination-component";
 
 export default function ProductsPage() {
@@ -69,17 +69,15 @@ export default function ProductsPage() {
           </div>
         </Reveal>
 
-          <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
-        
-            {currentProducts.length > 0 ? (
-              currentProducts.map((product) => (
-                <ProductCard key={product.productoId} product={product} />
-              ))
-            ) : (
-              <p>No se encontraron productos.</p>
-            )}
-        
-          </div>
+        <div className="grid grid-cols-1 xl:grid-cols-5 md:grid-cols-4 gap-4 p-4">
+          {currentProducts.length > 0 ? (
+            currentProducts.map((product) => (
+              <ProductCard key={product.productoId} product={product} />
+            ))
+          ) : (
+            <p>No se encontraron productos.</p>
+          )}
+        </div>
 
         {/* Controles de paginación */}
         <div className="flex items-center justify-center gap-5 mt-4">

@@ -1,3 +1,5 @@
+import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+
 export interface InputPasswordProps {
   type?: string;
   name: string;
@@ -9,19 +11,21 @@ export interface InputPasswordProps {
   onIconClick?: () => void; // Evento opcional para manejar clics en el ícono
   onMouseDown?: () => void; // Evento para detectar cuando se presiona el ícono
   onMouseUp?: () => void; // Evento para detectar cuando se suelta el ícono
-  id?: string;
 }
 
 export interface InputProps {
+  label?: string;
+  name?: string;
   type?: string;
   placeholder?: string;
-  value: any;
+  id?: string;
+  value?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
-  name: string;
-  id?: string;
-  
+  register: UseFormRegisterReturn;
+  error?: FieldError;
 }
+
 export interface TextareaProps {
   type?: string;
   placeholder?: string;
