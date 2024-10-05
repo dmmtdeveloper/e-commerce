@@ -68,6 +68,22 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
           </div>
 
           <div
+            className={`hover:text-blue-500 cursor-pointer ${
+              pathname === "/admin/orders"
+                ? "active text-blue-500 font-medium"
+                : ""
+            }`}
+          >
+            <Link
+              href="/admin/dashboards"
+              className="flex flex-col items-center justify-center"
+            >
+              <FaBagShopping className="text-2xl" />
+              <p className="text-sm">Dashboards</p>
+            </Link>
+          </div>
+
+          <div
             className={`flex flex-col items-center justify-center hover:text-blue-500 cursor-pointer ${
               pathname === "/orders" ? "active text-blue-500 font-medium" : ""
             }`}
