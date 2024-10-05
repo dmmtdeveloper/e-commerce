@@ -16,6 +16,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -40,17 +41,24 @@ export default function OrdersPage() {
     if (token) {
       GetPedidosByToken(token)
         .then((pedidos) => {
-          setPedidos(pedidos);
+          if (pedidos.length === 0) {
+            setPedidos([]); // Asegúrate de que se establece como un array vacío.
+          } else {
+            setPedidos(pedidos);
+          }
           setLoading(false);
-          setFilteredPedidos(pedidos);
         })
         .catch((error) => {
-          setError("Error obteniendo los usuarios");
-          console.error("Error obteniendo los usuarios:", error);
+          setError("Error obteniendo los pedidos. Por favor, intente de nuevo.");
+          console.error("Error obteniendo los pedidos:", error);
           setLoading(false);
         });
+    } else {
+      setError("No se encontró un token válido.");
+      setLoading(false);
     }
   }, []);
+  
 
   useEffect(() => {
     const { estadoId } = filters;
@@ -93,10 +101,46 @@ export default function OrdersPage() {
   if (loading) {
     return <div>Cargando...</div>;
   }
+  
+  // Renderizado
+  if (loading) {
+    return <div>Cargando...</div>;
+  }
 
+  // Mostrar mensaje si no hay pedidos
+  if (pedidos.length === 0) {
+    return (
+      <MainLayout>
+      <LayoutSectionComponent>
+        <LayoutDivComponent>      
+          {!isAdmin ? <NavSetting /> : <NavAdmin />}
+          <div>
+            <Title className="text-left" text="Mis Compras" />
+            <p className="text-gray-500">Panel de pedidos históricos</p>
+          </div>
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold mb-4">Aún no tienes pedidos</h2>
+            <p className="text-gray-600 mb-6">
+              Parece que no has realizado ninguna compra todavía. Explora nuestros productos y realiza tu primer pedido.
+            </p>
+            <ButtonCtaComponent 
+              onClick={() => window.location.href = '/'} 
+              text="Ver Productos" 
+              className="hover:bg-blue-600" 
+              type="button" 
+            />
+          </div>
+      </LayoutDivComponent>
+      </LayoutSectionComponent>
+    </MainLayout>
+    );
+  }
+
+  // Manejo de errores
   if (error) {
     return <div>{error}</div>;
   }
+  
 
   return (
     <MainLayout>
