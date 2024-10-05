@@ -180,3 +180,30 @@ export interface PedidoDetalleDTO {
   nombreFoto: string;
   extension: string;
 }
+
+
+export interface VmReporteExistencias {
+  productoId: number;
+  nombre: string;
+  precio: number;
+  stock: number;
+  stockReservado: number;
+  stockDisponible: number;
+  stockValorado: number;
+  habilitado: boolean;
+  eliminado: boolean;
+}
+
+export interface VmReportePedidos {
+  pedidoId: number;
+  estadoId: number;
+  estadoPedido: string;
+  valorTotal: number;
+  fecha: Date;
+  pedidoDetalleId: number;
+  productoId: number;
+  nombreProducto: string;
+  cantidad: number;
+  precio: number;
+  precioTotal: number;
+}
