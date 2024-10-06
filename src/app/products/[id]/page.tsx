@@ -1,19 +1,17 @@
 "use client";
-
-import MainLayout from "@/components/layouts/MainLayout";
-import { Product } from "@/types/product";
-import { notFound } from "next/navigation";
-import { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
-import Image from "next/image";
+import { notFound } from "next/navigation";
+import { Product } from "@/types/product";
+import { useState, useEffect } from "react";
 
-import fetchProductDetails from "@/services/fetchProductDetails";
-
-import useCartStore from "@/store/cartStore";
-import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
-import Link from "next/link";
+import banco from "@/public/assets/icons/logo-bancoestado-pdp-modyo.svg";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-import { Title } from "chart.js";
+import fetchProductDetails from "@/services/fetchProductDetails";
+import Image from "next/image";
+import Link from "next/link";
+import MainLayout from "@/components/layouts/MainLayout";
+import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
+import useCartStore from "@/store/cartStore";
 
 interface ProductPageProps {
   params: {
@@ -115,7 +113,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
 
   return (
     <MainLayout>
-      <section className="mt-32 p-4 grid grid-cols-2 2xl:px-64 items-center">
+      <section className="mt-32 p-4 grid 2xl:grid-cols-2 2xl:px-80 items-center">
         <div>
           {product.foto && product.foto !== "" ? (
             <Image
@@ -140,16 +138,19 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 ? `${formatCurrency.format(product.precio)}`
                 : "N/A"}
             </p>
-            <p className="text-md font-semibold mt-4">
-              Stock Disponible: {product.stock - product.stockReservado}
-            </p>
+            <div className="flex gap-1 items-center mt-2">
+              <p>Stock disponible:</p>
+              <p className="text-md font-semibold">
+                {product.stock - product.stockReservado}
+              </p>
+              <p>ud.</p>
+            </div>
           </div>
 
           {/* Controles de cantidad o botón de agregar al carrito */}
 
           <div className="flex mt-4">
             {product.stock - product.stockReservado === 0 ? (
-
               <div className="px-4 py-2  bg-gray-200 text-slate-400 rounded-xl">
                 No Disponible
               </div>
@@ -159,25 +160,24 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 text="Agregar al carrito"
               />
             ) : (
-              < div className="flex flex-col">
+              <div className="flex flex-col">
                 <div>
-                  <div className="mx-4 text-lg">
-                    Total: {product.precio * quantity}
-                  </div>
-
                   <div>
+                    <div className="text-lg">
+                      Total: {product.precio * quantity}
+                    </div>
                     <button
                       onClick={handleDecreaseQuantity}
-                      className="p-2 bg-gray-200 rounded"
+                      className="p-2 bg-gray-200 rounded-md hover:bg-gray-300"
                       aria-label="Decrease quantity"
                     >
                       <FaMinus />
                     </button>
-                      <span className="mx-4 text-lg">{quantity}</span>
+                    <span className="mx-4 text-lg">{quantity}</span>
 
                     <button
                       onClick={handleIncreaseQuantity}
-                      className="p-2 bg-gray-200 rounded"
+                      className="p-2 bg-gray-200 rounded  hover:bg-gray-300"
                       aria-label="Increase quantity"
                     >
                       <FaPlus />
@@ -189,11 +189,22 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                     <ButtonCtaComponent text="Ir al carro" />
                   </Link>
                   <Link href="/">
-                    <ButtonCtaComponent className="bg-green-400 hover:bg-green-500" text="Seguir comprando" />
+                    <ButtonCtaComponent
+                      className="bg-green-400 hover:bg-green-500"
+                      text="Seguir comprando"
+                    />
                   </Link>
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="mt-5 flex  flex-col">
+            <p>Aprocha las cuotas sin interes</p>
+            <div className="flex gap-2">
+              <p className="text-sm">Hasta 24 cuotas</p>
+              <Image width={90} height={90} src={banco} alt="banco" priority />
+            </div>
           </div>
 
           {/* Mostrar modal cuando se agrega un producto */}
