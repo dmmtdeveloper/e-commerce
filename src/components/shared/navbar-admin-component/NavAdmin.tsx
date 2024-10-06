@@ -16,7 +16,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
 
   return (
     <section
-      className={`hidden md:block md:pt-10 2xl:pt-0 lg:pt-10 2xl:block ${className}`}
+      className={`hidden md:block md:pt-10 2xl:mt-0 lg:pt-10 2xl:block ${className}`}
     >
       <div className="flex flex-col gap-10">
         <div className="flex gap-10">

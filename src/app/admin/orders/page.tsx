@@ -1,22 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Product } from "@/types/product";
 import { GetPedidos } from "@/utils/authHelpers";
-import MainLayout from "../../../components/layouts/MainLayout";
-import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import Link from "next/link";
-import { VmPedido } from "@/types/types";
-import useAdmin from "@/hooks/useAdmin";
-import { useAuthStore } from "@/store/useAuthStore";
+import { InputComponent } from "@/components/input/InputComponent";
 import { Title } from "@/components/title/Title";
-import LayoutSectionComponent from "@/components/layouts/layout-section-component";
-import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useEffect, useState } from "react";
+import { VmPedido } from "@/types/types";
+
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import LabelComponent from "@/components/label-component/label-component";
-import { InputComponent } from "@/components/input/InputComponent";
-import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import Link from "next/link";
+import MainLayout from "../../../components/layouts/MainLayout";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
+import useAdmin from "@/hooks/useAdmin";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 export default function OrdersPage() {
   useAdmin();
@@ -121,9 +121,10 @@ export default function OrdersPage() {
         Usuario: pedido.nombreUsuario,
         Estado: pedido.estadoNombre,
         "Cantidad Productos": pedido.cantidadDetalles,
-        "Valor Total": pedido.valorTotal !== undefined && pedido.valorTotal !== null
-          ? formatCurrency.format(pedido.valorTotal)
-          : "N/A",
+        "Valor Total":
+          pedido.valorTotal !== undefined && pedido.valorTotal !== null
+            ? formatCurrency.format(pedido.valorTotal)
+            : "N/A",
       }))
     );
 
@@ -157,7 +158,9 @@ export default function OrdersPage() {
               {/* Panel de Filtros */}
               <div>
                 <FilterButtonComponent
-                  text={isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"}
+                  text={
+                    isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"
+                  }
                   onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
                   className="my-custom-class"
                   isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
@@ -213,13 +216,11 @@ export default function OrdersPage() {
               </div>
 
               {/* Botón de descarga */}
-              <div className="mb-4">
-                              <button
+              <div className="w-[20rem]">
+                <ButtonCtaComponent
+                  text="Descarga Excel"
                   onClick={downloadExcel}
-                  className="bg-blue-500 text-white py-2 px-4 rounded"
-                >
-                  Descargar Excel
-                </button>
+                />
               </div>
 
               {/* Tabla de Pedidos */}
@@ -250,11 +251,18 @@ export default function OrdersPage() {
                         <td className="border px-4 py-2">
                           {new Date(pedido.fecha).toLocaleDateString()}
                         </td>
-                        <td className="border px-4 py-2">{pedido.nombreUsuario}</td>
-                        <td className="border px-4 py-2">{pedido.estadoNombre}</td>
-                        <td className="border px-4 py-2">{pedido.cantidadDetalles}</td>
                         <td className="border px-4 py-2">
-                          {pedido.valorTotal !== undefined && pedido.valorTotal !== null
+                          {pedido.nombreUsuario}
+                        </td>
+                        <td className="border px-4 py-2">
+                          {pedido.estadoNombre}
+                        </td>
+                        <td className="border px-4 py-2">
+                          {pedido.cantidadDetalles}
+                        </td>
+                        <td className="border px-4 py-2">
+                          {pedido.valorTotal !== undefined &&
+                          pedido.valorTotal !== null
                             ? formatCurrency.format(pedido.valorTotal)
                             : "N/A"}
                         </td>
@@ -275,7 +283,9 @@ export default function OrdersPage() {
               {/* Paginación */}
               <div>
                 <p>
-                  Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, filteredPedidos.length)} de {filteredPedidos.length} pedidos
+                  Mostrando {indexOfFirstItem + 1} a{" "}
+                  {Math.min(indexOfLastItem, filteredPedidos.length)} de{" "}
+                  {filteredPedidos.length} pedidos
                 </p>
                 <div>
                   {/* Aquí puedes implementar tus controles de paginación */}
