@@ -9,35 +9,29 @@ import {
   UpdateFotoUsuario,
   UpdateCorreoUsuario,
 } from "@/utils/authHelpers"; // Asegúrate de ajustar el path correctamente
-import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
-import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
-import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
-import { InputComponent } from "@/components/input/InputComponent";
-import { Title } from "@/components/title/Title";
-import { NavSetting } from "@/components/shared/NavSetting";
 
+import { NavSetting } from "@/components/shared/NavSetting";
+import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
+import { Title } from "@/components/title/Title";
+import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
+import { useAuthStore } from "@/store/useAuthStore";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
+import Image from "next/image";
+import InputComponentAuth from "@/components/input/inputComponenAuth";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
+import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
+import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 import user from "@/public/assets/img/user.png";
 
-import Image from "next/image";
-import ConfirmationModal from "@/components/ConfirmationModal";
-import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
-import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
-import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-import LabelComponent from "@/components/label-component/label-component";
-import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { InputPassword } from "@/components/input/InputPassword";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import LayoutSectionComponent from "@/components/layouts/layout-section-component";
-import LayoutDivComponent from "@/components/layouts/layout-div-component";
-import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
-import InputComponentAuth from "@/components/input/inputComponenAuth";
-import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
-
-import { useForm, type } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SignUpSchema, userRegisterSchema } from "@/validations/userSchema";
-import SubmitButton from "@/components/buttons-components/AuthButton";
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -45,7 +39,7 @@ export default function SettingsPage() {
   const [correo, setCorreo] = useState<string>("");
   const [clave, setClave] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+ 
 
   const [habilitado, setHabilitado] = useState<boolean>(false);
   const [eliminado, setEliminado] = useState<boolean>(false);
@@ -71,6 +65,8 @@ export default function SettingsPage() {
     formState: { errors, isSubmitting }, // Manejar los errores de validación
     reset,
   } = useForm<SaveUserSchema>({ resolver: zodResolver(userSaveSchema) });
+
+
 
   useEffect(() => {
     setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente

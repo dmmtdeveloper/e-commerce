@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import axios from "axios";
 import { DetallePedido, Pedido, VmDetallePedido, VmPedido } from "@/types/types";
 import { Product} from "@/types/product";
+import { LoginUpSchema } from "@/validations/userSchema";
 
 export const addPedido = async (
   // pedidoId: number,
@@ -606,7 +607,7 @@ interface LoginData {
   password: string;
 }
 
-export const login = async (data: LoginData) => {
+export const login = async (data: LoginUpSchema) => {
   try {
     const response = await axiosInstance.get(
       `/api/Login/${data.email}/${data.password}`
@@ -636,8 +637,24 @@ export const login = async (data: LoginData) => {
     }
 
     return response.data;
-  } catch (error) {
-    console.error("Error durante el login:", error);
+  } catch (error: any) {
+    // Verificar si el error es de respuesta del servidor
+    if (error.response) {
+      const { status, data } = error.response;
+
+      if (status === 401) {
+        console.error("Error: Correo o contraseña incorrecta.");
+        alert("Correo o contraseña incorrecta.");
+      } else {
+        console.error(`Error del servidor: ${data.message || "Error desconocido"}`);
+        alert(`Error: ${data.message || "Error desconocido"}`);
+      }
+    } else {
+      // Manejo de errores sin respuesta del servidor (red, etc.)
+      console.error("Error durante el login:", error.message);
+      alert("Error de red o del servidor. Intenta de nuevo más tarde.");
+    }
+
     throw error;
   }
 };

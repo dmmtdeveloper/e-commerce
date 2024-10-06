@@ -23,6 +23,7 @@ export default function LoginPage() {
     handleSubmit, // Manejar el envío del formulario
     formState: { errors, isSubmitting }, // Manejar los errores de validación
     reset,
+    setError,
   } = useForm<LoginUpSchema>({ resolver: zodResolver(userLoginSchema) });
 
   const router = useRouter();
@@ -38,8 +39,7 @@ export default function LoginPage() {
       // alert("Login exitoso");
       router.push("/");
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      // alert("Error en el login");
+      console.log(error)
     }
   };
 
@@ -112,4 +112,3 @@ export default function LoginPage() {
     </MainLayout>
   );
 }
-

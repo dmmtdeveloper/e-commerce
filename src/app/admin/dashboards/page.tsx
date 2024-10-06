@@ -3,8 +3,6 @@
 import { useEffect, useState } from 'react';
 import ReporteChartExistencias from '@/components/dashboard/ReporteChartExistencias';
 import ReporteChartPedidos from '@/components/dashboard/ReporteChartPedidos';
-import ResumenCardExistencias from '@/components/dashboard/ResumenCardExistencias';
-import ResumenCardPedidos from '@/components/dashboard/ResumenCardPedidos';
 import { VmReporteExistencias, VmReportePedidos } from '@/types/types';
 import MainLayout from '@/components/layouts/MainLayout';
 import LayoutSectionComponent from '@/components/layouts/layout-section-component';
