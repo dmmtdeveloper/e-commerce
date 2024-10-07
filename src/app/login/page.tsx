@@ -16,13 +16,16 @@ import loginImage from "@/public/assets/img/Banner_login.jpg";
 import MainLayout from "../../components/layouts/MainLayout";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
 import SubmitButton from "@/components/buttons-components/AuthButton";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
   const {
     register, // Registrar los campos del formulario
     handleSubmit, // Manejar el envío del formulario
     formState: { errors, isSubmitting }, // Manejar los errores de validación
     reset,
+    setError,
   } = useForm<LoginUpSchema>({ resolver: zodResolver(userLoginSchema) });
 
   const router = useRouter();
@@ -35,11 +38,14 @@ export default function LoginPage() {
         password: data.password,
       });
       reset();
-      alert("Login exitoso");
+      // alert("Login exitoso");
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al iniciar sesión:", error);
-      alert("Error en el login");
+      // Si el error tiene respuesta del servidor, mostramos el mensaje
+      if (error.response?.data?.message) {
+        setErrorMessage(error.response.data.message);
+      }
     }
   };
 
@@ -89,6 +95,11 @@ export default function LoginPage() {
                   register={register("password")}
                   error={errors.password}
                 />
+                
+                {/* Mostrar mensaje de error */}
+                {errorMessage && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
 
                 <SubmitButton
                   text="Iniciar sesión"
@@ -112,4 +123,3 @@ export default function LoginPage() {
     </MainLayout>
   );
 }
-

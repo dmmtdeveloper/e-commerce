@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MainLayout from "../../components/layouts/MainLayout";
 import {
   GetUsuarioByToken,
@@ -9,25 +9,29 @@ import {
   UpdateFotoUsuario,
   UpdateCorreoUsuario,
 } from "@/utils/authHelpers"; // Asegúrate de ajustar el path correctamente
-import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
-import { useAuthStore } from "@/store/useAuthStore";
-import { useRouter } from "next/navigation";
-import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
-import { InputComponent } from "@/components/input/InputComponent";
-import { Title } from "@/components/title/Title";
-import { NavSetting } from "@/components/shared/NavSetting";
 
-import Image from "next/image";
-import ConfirmationModal from "@/components/ConfirmationModal";
-import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
-import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
+import { NavSetting } from "@/components/shared/NavSetting";
+import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
+import { Title } from "@/components/title/Title";
+import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
+import { useAuthStore } from "@/store/useAuthStore";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-import LabelComponent from "@/components/label-component/label-component";
-import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { InputPassword } from "@/components/input/InputPassword";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import ConfirmationModal from "@/components/ConfirmationModal";
+import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
+import Image from "next/image";
+import InputComponentAuth from "@/components/input/inputComponenAuth";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
+import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
+import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
+import user from "@/public/assets/img/user.png";
+
 
 export default function SettingsPage() {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -35,7 +39,7 @@ export default function SettingsPage() {
   const [correo, setCorreo] = useState<string>("");
   const [clave, setClave] = useState<string>("");
   const [avatar, setAvatar] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
+ 
 
   const [habilitado, setHabilitado] = useState<boolean>(false);
   const [eliminado, setEliminado] = useState<boolean>(false);
@@ -55,15 +59,14 @@ export default function SettingsPage() {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
-  // Mostrar contraseña al mantener presionado
-  const handleMouseDown = () => {
-    setShowPassword(true);
-  };
+  const {
+    register, // Registrar los campos del formulario
+    handleSubmit, // Manejar el envío del formulario
+    formState: { errors, isSubmitting }, // Manejar los errores de validación
+    reset,
+  } = useForm<SaveUserSchema>({ resolver: zodResolver(userSaveSchema) });
 
-  // Ocultar contraseña al soltar el botón del mouse
-  const handleMouseUp = () => {
-    setShowPassword(false);
-  };
+
 
   useEffect(() => {
     setIsClient(true); // Asegura que el hook useRouter solo se use en el cliente
@@ -91,6 +94,7 @@ export default function SettingsPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const id = usuario?.usuarioId;
+
     if (!file) return;
 
     console.log("Selected file:", file);
@@ -100,11 +104,14 @@ export default function SettingsPage() {
       const filePath = `avatars/usuarioId${id}-${file.name}`; // Definir una ruta en Firebase Storage
       const imageUrl = await uploadImage(file, filePath);
       console.log("Uploaded image URL:", imageUrl);
-      setAvatar(imageUrl); // Establecemos la URL de la imagen
+
+      // Establecer el avatar
+      setAvatar(imageUrl);
       sessionStorage.setItem("avatar", imageUrl);
+
       if (imageUrl && id) {
         await UpdateFotoUsuario(id, imageUrl);
-        openSuccessModal("Avatar actualizado correctamente.");
+        // Avatar actualizado con éxito
       } else {
         console.warn("Error: Avatar no existe.");
       }
@@ -113,6 +120,44 @@ export default function SettingsPage() {
       openErrorModal("Error subiendo la imagen.");
     }
   };
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const handleUpdateLimpiarYCambiarFoto = async () => {
+    const id = usuario?.usuarioId;
+
+    // Si hay un avatar, elimina la foto primero
+    if (id && avatar) {
+      try {
+        // Eliminar la foto actual de la base de datos y del almacenamiento
+        await UpdateLimpiaFotoUsuario(id);
+        await deleteImage(avatar); // Eliminar la imagen del almacenamiento
+        setAvatar(null); // Quitar el avatar de la UI
+        sessionStorage.removeItem("avatar"); // Remover avatar de sessionStorage
+
+        // Redirigir automáticamente al input de archivo para seleccionar una nueva imagen
+        if (fileInputRef.current) {
+          fileInputRef.current.click(); // Abre el selector de archivos
+        }
+
+        // openSuccessModal("Foto eliminada correctamente."); // Opcional: mostrar mensaje de éxito
+      } catch (error) {
+        console.error("Error al eliminar la foto:", error);
+        openErrorModal("Error al eliminar la foto.");
+      }
+    } else {
+      // Si no hay avatar, simplemente abrir el selector de archivos
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
+      }
+      console.warn("No se puede eliminar el avatar, valor nulo.");
+    }
+  };
+
+  // const handleChangeAvatarClick = () => {
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.click(); // Simula un clic en el input de archivo
+  //   }
+  // };
 
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
@@ -151,7 +196,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (data: SaveUserSchema) => {
     const id = usuario?.usuarioId;
 
     // Validación de nombre
@@ -180,32 +225,15 @@ export default function SettingsPage() {
 
     if (id) {
       try {
-        await UpdateNombreUsuario(id, nombre);
-        await UpdateClaveUsuario(id, clave);
-        await UpdateCorreoUsuario(id, correo);
+        await UpdateNombreUsuario(id, data.nombre);
+        await UpdateClaveUsuario(id, data.clave);
+        await UpdateCorreoUsuario(id, data.correo);
         openSuccessModal("Cambios guardados exitosamente.");
       } catch (error) {
         openErrorModal("Error actualizando los datos.");
       }
     } else {
       console.warn("ID de usuario no existe.");
-    }
-  };
-
-  const handleUpdateLimpiarFoto = async () => {
-    const id = usuario?.usuarioId;
-    if (id && avatar) {
-      try {
-        await UpdateLimpiaFotoUsuario(id);
-        await deleteImage(avatar);
-        setAvatar(null);
-        openSuccessModal("Foto eliminada correctamente.");
-      } catch (error) {
-        console.error("Error al eliminar la foto:", error);
-        openErrorModal("Error al eliminar la foto.");
-      }
-    } else {
-      console.warn("No se puede eliminar el avatar, valor nulo.");
     }
   };
 
@@ -239,87 +267,93 @@ export default function SettingsPage() {
           </div>
           <div>
             <article className="flex flex-col gap-4">
-              <div className="flex gap-4 flex-col">
-                <LabelComponent text="Avatar" />
-                <div className="flex items-center gap-8">
-                  <div>
-                    {!avatar && (
-                      <input type="file" onChange={handleFileChange} />
-                    )}
-                    {avatar && (
-                      <Image
-                        src={avatar}
-                        alt="Avatar"
-                        className="h-28 w-28 rounded-full object-cover"
-                        width={112}
-                        height={112}
-                        
-                      />
-                    )}
-                  </div>
+              <div className="flex items-center gap-8">
+                <div>
+                  {/* Mostrar imagen de placeholder si no hay avatar cargado */}
+                  {!avatar && (
+                    <Image
+                      src={user} // Imagen de placeholder
+                      alt="Avatar Placeholder"
+                      className="h-28 w-28 rounded-full object-cover"
+                      width={112}
+                      height={112}
+                    />
+                  )}
+
+                  {/* Mostrar la imagen cargada si existe avatar */}
                   {avatar && (
-                    <ButtonCtaComponent
-                      text="Cambiar Avatar"
-                      onClick={() =>
-                        openConfirmationModal(
-                          handleUpdateLimpiarFoto,
-                          "¿Estás seguro de que quieres eliminar tu avatar?"
-                        )
-                      }
+                    <Image
+                      src={avatar}
+                      alt="Avatar"
+                      className="h-28 w-28 rounded-full object-cover"
+                      width={112}
+                      height={112}
                     />
                   )}
                 </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Nombre" className="pl-1" />
-                <InputComponent
-                  name="nombre"
-                  placeholder="Ingresa tu nombre"
-                  value={nombre}
-                  onChange={(e) => setNombre(e.target.value)}
+
+                {/* Botón para cambiar el avatar y también eliminar el existente si lo hay */}
+                <ButtonCtaComponent
+                  onClick={handleUpdateLimpiarYCambiarFoto} // Maneja ambas acciones
+                  text="Cambiar Avatar"
                 />
-              </div>
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Correo electrónico" className="pl-1" />
-                <InputComponent
-                  name="email"
-                  type="email"
-                  placeholder="Ingresa tu correo electrónico"
-                  value={correo}
-                  onChange={(e) => setCorreo(e.target.value)}
-                />
-              </div>
-              <div className="flex flex-col gap-2">
-                <LabelComponent text="Contraseña" className="pl-1" />
-                <InputPassword
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  icon={showPassword ? <FaEye /> : <FaEyeSlash />}
-                  onMouseDown={handleMouseDown}
-                  onMouseUp={handleMouseUp}
-                  placeholder="Ingresa tu contraseña"
-                  value={clave}
-                  onChange={(e) => setClave(e.target.value)}
+
+                {/* Input de archivo oculto */}
+                <input
+                  ref={fileInputRef} // Referencia para abrir el diálogo del archivo
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileChange} // Maneja el cambio de archivo
                 />
               </div>
 
-              <div className="flex gap-4">
-                <ButtonCtaComponent
-                  text="Guardar Cambios"
-                  onClick={handleSaveChanges}
-                />
+              <form onSubmit={handleSubmit(handleSaveChanges)}>
+                <div className="flex flex-col gap-4 w-[30rem]">
+                  <InputComponentAuth
+                    name="nombre"
+                    type="text"
+                    placeholder="Ingresa tu nombre"
+                    register={register("nombre")}
+                    error={errors.nombre}
+                  />
 
-                <ButtonCtaComponent
-                  className="bg-red-500 hover:bg-red-600"
-                  text="Eliminar Cuenta"
-                  onClick={() =>
-                    openConfirmationModal(
-                      handleDeleteAccount,
-                      "¿Estás seguro de que quieres eliminar tu cuenta?"
-                    )
-                  }
-                />
-              </div>
+                  {/* correo */}
+                  <InputComponentAuth
+                    name="correo"
+                    type="email"
+                    placeholder="Ingresa tu correo"
+                    register={register("correo")}
+                    error={errors.correo}
+                  />
+
+                  {/* Input de contraseña */}
+                  <PasswordInputAuth
+                    type="password"
+                    name="clave"
+                    placeholder="Ingresa tu contraseña"
+                    register={register("clave")}
+                    error={errors.clave}
+                  />
+                  <div className="flex gap-4">
+                    <ButtonCtaComponent
+                      text="Guardar los cambios"
+                      type="submit"
+                      isSubmitting={isSubmitting}
+                    />
+
+                    <ButtonCtaComponent
+                      className="bg-red-500 hover:bg-red-600"
+                      text="Eliminar Cuenta"
+                      onClick={() =>
+                        openConfirmationModal(
+                          handleDeleteAccount,
+                          "¿Estás seguro de que quieres eliminar tu cuenta?"
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </form>
             </article>
           </div>
         </LayoutDivComponent>

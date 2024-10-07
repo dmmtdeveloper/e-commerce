@@ -5,6 +5,7 @@ import { FaBagShopping, FaUsers } from "react-icons/fa6";
 import { AiFillProduct } from "react-icons/ai";
 import { TbTruckDelivery } from "react-icons/tb";
 import { usePathname } from "next/navigation"; // Importar el hook para obtener la ruta actual
+import { BsGraphUpArrow } from "react-icons/bs";
 
 interface NavAdminProps {
   className?: string; // Aceptar la prop className
@@ -15,7 +16,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
 
   return (
     <section
-      className={`hidden md:block md:pt-10 2xl:pt-0 lg:pt-10 2xl:block ${className}`}
+      className={`hidden md:block md:pt-10 2xl:mt-0 lg:pt-10 2xl:block ${className}`}
     >
       <div className="flex flex-col gap-10">
         <div className="flex gap-10">
@@ -69,7 +70,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
 
           <div
             className={`hover:text-blue-500 cursor-pointer ${
-              pathname === "/admin/orders"
+              pathname === "/admin/dashboards"
                 ? "active text-blue-500 font-medium"
                 : ""
             }`}
@@ -78,7 +79,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
               href="/admin/dashboards"
               className="flex flex-col items-center justify-center"
             >
-              <FaBagShopping className="text-2xl" />
+              <BsGraphUpArrow className="text-2xl" />
               <p className="text-sm">Dashboards</p>
             </Link>
           </div>

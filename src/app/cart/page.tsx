@@ -12,12 +12,13 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
 import axios from "axios";
 // import { AuthButton } from "@/components/buttons/AuthButton";
-import { Input } from "@/components/input/InputPassword";
+import { InputPassword } from "@/components/input/InputPassword";
 import { InputComponent } from "@/components/input/InputComponent";
 import { login } from "../../utils/authHelpers";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
@@ -54,7 +55,7 @@ export default function CartPage() {
       await addPedido(token, 1, detallesPedido);
       alert("Pedido realizado con éxito");
       clearCart(); // Limpia el carrito después de crear el pedido
-      router.push("/orders");
+      router.push("/cart");
     } catch (error) {
       let errorMessage = "Error desconocido al crear el pedido.";
       if (axios.isAxiosError(error)) {
@@ -148,13 +149,29 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <MainLayout>
-        <section className="p-6 mt-72 justify-center flex flex-col items-center">
-          <h1 className="text-2xl font-bold mb-4">Tu carrito está vacío</h1>
-          <Link href="/">
-            <button className="bg-blue-500 text-white py-2 px-4 rounded">
-              Volver a la tienda
-            </button>
-          </Link>
+        <section className="flex pt-64 flex-col items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <article>
+              <h1 className="text-2xl  font-bold mb-4">
+                Tu carrito está vacío
+              </h1>
+            </article>
+
+            <article className="flex gap-4">
+              <Link href="/">
+                <ButtonCtaComponent
+                  className="bg-green-400 hover:bg-green-500 transition-all duration-300"
+                  text="Volver a tienda"
+                />
+              </Link>
+              <Link href={"/orders"}>
+                <ButtonCtaComponent
+                  className="bg-blue-400 hover:bg-blue-500 transition-all duration-300"
+                  text="Ver mis pedidos"
+                />
+              </Link>
+            </article>
+          </div>
         </section>
       </MainLayout>
     );
@@ -290,7 +307,7 @@ export default function CartPage() {
                 />
               </div>
               <div className="mb-4">
-                <Input
+                <InputPassword
                   type={showPassword ? "text" : "password"}
                   placeholder="Ingresa tu contraseña"
                   value={password}

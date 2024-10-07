@@ -22,7 +22,7 @@ export interface InputProps {
   value?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
-  register: UseFormRegisterReturn;
+  register?: UseFormRegisterReturn;
   error?: FieldError;
 }
 

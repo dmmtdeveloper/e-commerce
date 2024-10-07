@@ -2,8 +2,13 @@ import { useAuthStore } from "@/store/useAuthStore";
 import axiosInstance from "./axiosInstance"; // Importa tu instancia de axios
 import jwt from "jsonwebtoken";
 import axios from "axios";
-import { DetallePedido, Pedido, VmDetallePedido, VmPedido } from "@/types/types";
-import { Product} from "@/types/product";
+import {
+  DetallePedido,
+  Pedido,
+  VmDetallePedido,
+  VmPedido,
+} from "@/types/types";
+import { Product } from "@/types/product";
 
 export const addPedido = async (
   // pedidoId: number,
@@ -43,9 +48,6 @@ export const addPedido = async (
   }
 };
 
-
-
-
 export const registerUser = async (
   nombre: string,
   correo: string,
@@ -60,7 +62,7 @@ export const registerUser = async (
       esAdmin: false,
       eliminado: false,
       habilitado: true,
-      foto: ''
+      foto: "",
     });
 
     return response.data;
@@ -119,8 +121,7 @@ export const AddProducto = async (
       eliminado: false,
       foto,
       nombreFoto,
-      extension
-
+      extension,
     });
 
     return response.data;
@@ -135,7 +136,9 @@ export const AddProducto = async (
 
 export const GetProductosHabilitados = async (): Promise<Product[]> => {
   try {
-    const response = await axiosInstance.get<Product[]>("/api/Productos/habilitados");
+    const response = await axiosInstance.get<Product[]>(
+      "/api/Productos/habilitados"
+    );
     return response.data; // Retorna la lista de productos habilitados
   } catch (error) {
     console.error("Error obteniendo la lista de productos:", error);
@@ -155,9 +158,7 @@ export const GetProductos = async (): Promise<Product[]> => {
 
 export const GetProductoById = async (id: number): Promise<Product> => {
   try {
-    const response = await axiosInstance.get<Product>(
-      `/api/Productos/${id}`
-    );
+    const response = await axiosInstance.get<Product>(`/api/Productos/${id}`);
     return response.data;
   } catch (error) {
     console.error("Error obteniendo el producto:", error);
@@ -167,8 +168,10 @@ export const GetProductoById = async (id: number): Promise<Product> => {
 
 export const UpdateProductoAll = async (producto: Product): Promise<void> => {
   try {
-    
-    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
+    const response = await axiosInstance.post<{
+      isSuccess: boolean;
+      Message: string;
+    }>(
       `/api/Productos/update/all`, // Cambia a POST y elimina el ID del URL
       {
         ProductoId: producto.productoId, // Incluye el ID del producto en el cuerpo
@@ -180,7 +183,7 @@ export const UpdateProductoAll = async (producto: Product): Promise<void> => {
         Eliminado: producto.eliminado,
         Foto: producto.foto ?? "",
         NombreFoto: producto.nombreFoto ?? "",
-        Extension: producto.extension ?? ""
+        Extension: producto.extension ?? "",
       }
     );
 
@@ -223,7 +226,9 @@ export const GetPedidoAdminById = async (id: number): Promise<VmPedido> => {
 };
 
 // Función para obtener el Pedidos basados en el token
-export const GetPedidoDetallesAdminByPedidoId = async (pedidoId: number): Promise<VmDetallePedido[]> => {
+export const GetPedidoDetallesAdminByPedidoId = async (
+  pedidoId: number
+): Promise<VmDetallePedido[]> => {
   try {
     const response = await axiosInstance.get<VmDetallePedido[]>(
       `/api/PedidoDetalle/admin/ByPedidoId/${pedidoId}`
@@ -235,9 +240,7 @@ export const GetPedidoDetallesAdminByPedidoId = async (pedidoId: number): Promis
   }
 };
 
-export const UpdateEstadoPedido = async (
-  pedidoId: number
-): Promise<void> => {
+export const UpdateEstadoPedido = async (pedidoId: number): Promise<void> => {
   try {
     const response = await axiosInstance.put<void>(
       `/api/Pedido/update/state/${pedidoId}`
@@ -275,9 +278,7 @@ export const UpdateEstadoPedidoCancelado = async (
 // Función para obtener el Pedidos basados en el token
 export const GetPedidos = async (): Promise<VmPedido[]> => {
   try {
-    const response = await axiosInstance.get<VmPedido[]>(
-      `/api/Pedido/`
-    );
+    const response = await axiosInstance.get<VmPedido[]>(`/api/Pedido/`);
     return response.data; // El tipo será automáticamente Usuario
   } catch (error) {
     console.error("Error obteniendo los pedidos:", error);
@@ -308,7 +309,7 @@ export const UpdateNombreUsuario = async (
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/name/${usuarioId}/${nombre}`
     );
-    
+
     // Verificamos el código de estado HTTP
     if (response.status === 204) {
       // Actualización exitosa
@@ -322,7 +323,6 @@ export const UpdateNombreUsuario = async (
   }
 };
 
-
 //metodo put para actualizar correo
 export const UpdateCorreoUsuario = async (
   usuarioId: number,
@@ -333,7 +333,7 @@ export const UpdateCorreoUsuario = async (
     const response = await axiosInstance.put<void>(
       `/api/Usuario/update/correo/${usuarioId}/${correo}`
     );
-    
+
     // Verificamos el código de estado HTTP
     if (response.status === 204) {
       // Actualización exitosa
@@ -346,7 +346,6 @@ export const UpdateCorreoUsuario = async (
     handleError(error);
   }
 };
-
 
 //metodo put para actualizar clave
 export const UpdateClaveUsuario = async (
@@ -392,14 +391,13 @@ export const UpdateFotoUsuario = async (
   foto: string
 ): Promise<void> => {
   try {
-
-    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
-      `/api/Usuario/update/avatar`, 
-      {
-        usuarioId: usuarioId,
-        foto: foto 
-      }
-    );
+    const response = await axiosInstance.post<{
+      isSuccess: boolean;
+      Message: string;
+    }>(`/api/Usuario/update/avatar`, {
+      usuarioId: usuarioId,
+      foto: foto,
+    });
 
     if (response.data.isSuccess) {
       console.log("Avatar actualizado con éxito.");
@@ -414,8 +412,10 @@ export const UpdateFotoUsuario = async (
 
 export const UpdateProductoAll2 = async (producto: Product): Promise<void> => {
   try {
-    
-    const response = await axiosInstance.post<{ isSuccess: boolean; Message: string }>(
+    const response = await axiosInstance.post<{
+      isSuccess: boolean;
+      Message: string;
+    }>(
       `/api/Productos/update/all`, // Cambia a POST y elimina el ID del URL
       {
         ProductoId: producto.productoId, // Incluye el ID del producto en el cuerpo
@@ -427,7 +427,7 @@ export const UpdateProductoAll2 = async (producto: Product): Promise<void> => {
         Eliminado: producto.eliminado,
         Foto: producto.foto ?? "",
         NombreFoto: producto.nombreFoto ?? "",
-        Extension: producto.extension ?? ""
+        Extension: producto.extension ?? "",
       }
     );
 
@@ -442,7 +442,6 @@ export const UpdateProductoAll2 = async (producto: Product): Promise<void> => {
     handleError(error);
   }
 };
-
 
 //producto
 export const UpdateHabilitadoProducto = async (
@@ -563,9 +562,8 @@ export const UpdateEliminadoUsuario = async (
 //   usuarioId: number,
 //   esAdmin: boolean
 // ): Promise<void> => {
-  
-// };
 
+// };
 
 export const UpdateEsAdminUsuario = async (
   usuarioId: number,
@@ -620,13 +618,18 @@ export const login = async (data: LoginData) => {
       decodedToken &&
       typeof decodedToken === "object" &&
       "Token" in decodedToken &&
-      "NombreUsuario" in decodedToken && 
+      "NombreUsuario" in decodedToken &&
       "Avatar" in decodedToken
     ) {
       // Llamar al store para iniciar sesión
       useAuthStore
         .getState()
-        .login(data.email, decodedToken.Token, decodedToken.NombreUsuario, decodedToken.Avatar);
+        .login(
+          data.email,
+          decodedToken.Token,
+          decodedToken.NombreUsuario,
+          decodedToken.Avatar
+        );
       console.log(decodedToken.Token);
       console.log(decodedToken.NombreUsuario);
       console.log(decodedToken.Avatar);

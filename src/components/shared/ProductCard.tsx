@@ -4,7 +4,7 @@ import { Product } from "@/types/product";
 import useCartStore from "@/store/cartStore";
 import Modal from "@/components/modals/Modal"; // Asegúrate de importar el componente Modal
 import Image from "next/image";
-import notebook from "@/public/assets/img/notebook.png";
+import noImage from "@/public/assets/img/no_image.jpg";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Reveal } from "@/components/animation/Reveal";
 
@@ -60,7 +60,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               src={
                 product.foto
                   ? `data:image/${product.extension};base64,${product.foto}`
-                  : notebook
+                  : noImage
               }
               alt="items"
               priority

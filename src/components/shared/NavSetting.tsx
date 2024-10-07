@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 export const NavSetting = () => {
   const pathname = usePathname(); // Obtener la ruta actual
   return (
-    <section className={`hidden md:block md:pt-10 2xl:pt-0 lg:pt-10 2xl:block`}>
+    <section className={`hidden md:block md:pt-10 2xl:pt-10 lg:pt-10 2xl:block`}>
       <div className="flex flex-col gap-10">
         <div className="flex gap-10">
           <div

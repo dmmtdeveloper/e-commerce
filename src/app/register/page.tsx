@@ -13,6 +13,7 @@ import { Reveal } from "@/components/animation/Reveal";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SignUpSchema, userRegisterSchema } from "@/validations/userSchema";
+
 import InputComponentAuth from "@/components/input/inputComponenAuth";
 import SubmitButton from "@/components/buttons-components/AuthButton";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
@@ -30,7 +31,7 @@ export default function RegisterPage() {
   const handleRegister = async (data: SignUpSchema) => {
     try {
       await registerUser(data.nombre, data.correo, data.clave);
-      alert("Usuario registrado con éxito");
+      // alert("Usuario registrado con éxito");
       reset();
 
       router.push("/login"); // Redirige a la página de login
