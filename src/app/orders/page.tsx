@@ -2,50 +2,39 @@
 import { useState, useEffect } from "react";
 import MainLayout from "@/components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { GetPedidosByToken, GetUsuarios } from "@/utils/authHelpers";
-import { Usuario } from "@/utils/authHelpers";
+import { GetPedidosByToken } from "@/utils/authHelpers";
 import Link from "next/link";
-import {
-  UpdateHabilitadoUsuario,
-  UpdateEliminadoUsuario,
-  UpdateEsAdminUsuario,
-} from "@/utils/authHelpers";
-import { Pedido } from "@/types/types";
 import { NavSetting } from "@/components/shared/NavSetting";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Title } from "@/components/title/Title";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import { Pedido } from "@/types/types";
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
   const [filteredPedidos, setFilteredPedidos] = useState<Pedido[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [isClient, setIsClient] = useState(false);
   const { isAdmin } = useAuthStore();
-  
-  // Estados para los filtros
-  const [filters, setFilters] = useState({
-    estadoId: "1", // Estado "Pendiente" por defecto
-  });
 
-  // Estado para manejar el colapso del panel
-  const [isPanelCollapsed, setIsPanelCollapsed] = useState<boolean>(true);
+  // Estados para los filtros, paginación, rango de fechas, y colapso de panel
+  const [filters, setFilters] = useState({ estadoId: "1" });
   const [fechaDesde, setFechaDesde] = useState<string>("");
   const [fechaHasta, setFechaHasta] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // Número de elementos por página
+  const [isPanelCollapsed, setIsPanelCollapsed] = useState(true); // Estado para colapsar el panel
 
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
       GetPedidosByToken(token)
         .then((pedidos) => {
-          if (pedidos.length === 0) {
-            setPedidos([]); // Asegúrate de que se establece como un array vacío.
-          } else {
-            setPedidos(pedidos);
-          }
+          setPedidos(pedidos.length === 0 ? [] : pedidos);
           setLoading(false);
         })
         .catch((error) => {
@@ -58,7 +47,6 @@ export default function OrdersPage() {
       setLoading(false);
     }
   }, []);
-  
 
   useEffect(() => {
     const { estadoId } = filters;
@@ -68,7 +56,6 @@ export default function OrdersPage() {
         !fechaDesde || new Date(pedido.fecha) >= new Date(fechaDesde);
       const matchesFechaHasta =
         !fechaHasta || new Date(pedido.fecha) <= new Date(fechaHasta);
-
       return matchesEstadoId && matchesFechaDesde && matchesFechaHasta;
     });
     setFilteredPedidos(filtered);
@@ -86,11 +73,11 @@ export default function OrdersPage() {
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    if (name === "fechaDesde") {
-      setFechaDesde(value);
-    } else {
-      setFechaHasta(value);
-    }
+    name === "fechaDesde" ? setFechaDesde(value) : setFechaHasta(value);
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
   };
 
   const formatCurrency = new Intl.NumberFormat("es-ES", {
@@ -98,49 +85,42 @@ export default function OrdersPage() {
     maximumFractionDigits: 0,
   });
 
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
-  
-  // Renderizado
-  if (loading) {
-    return <div>Cargando...</div>;
-  }
+  const paginatedPedidos = filteredPedidos.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
-  // Mostrar mensaje si no hay pedidos
-  if (pedidos.length === 0) {
-    return (
-      <MainLayout>
-      <LayoutSectionComponent>
-        <LayoutDivComponent>      
-          {!isAdmin ? <NavSetting /> : <NavAdmin />}
-          <div>
-            <Title className="text-left" text="Mis Compras" />
-            <p className="text-gray-500">Panel de pedidos históricos</p>
-          </div>
-          <div className="text-center">
-            <h2 className="text-2xl font-semibold mb-4">Aún no tienes pedidos</h2>
-            <p className="text-gray-600 mb-6">
-              Parece que no has realizado ninguna compra todavía. Explora nuestros productos y realiza tu primer pedido.
-            </p>
-            <ButtonCtaComponent 
-              onClick={() => window.location.href = '/'} 
-              text="Ver Productos" 
-              className="hover:bg-blue-600" 
-              type="button" 
-            />
-          </div>
-      </LayoutDivComponent>
-      </LayoutSectionComponent>
-    </MainLayout>
+  // Función para descargar los pedidos como archivo Excel
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      filteredPedidos.map((pedido) => ({
+        "Pedido ID": pedido.pedidoId,
+        "Fecha": new Date(pedido.fecha).toLocaleDateString(),
+        "Cantidad": pedido.cantidad,
+        "Estado": pedido.estadoNombre,
+        "Total Pedido": pedido.valorTotal,
+        "Valor Total":
+          pedido.valorTotal !== undefined && pedido.valorTotal !== null
+            ? formatCurrency.format(pedido.valorTotal)
+            : "N/A",
+      }))
     );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "pedidos.xlsx");
+  };
+
+  if (loading) {
+    return <div>Cargando...</div>;
   }
 
-  // Manejo de errores
   if (error) {
     return <div>{error}</div>;
   }
-  
+
 
   return (
     <MainLayout>
@@ -151,7 +131,6 @@ export default function OrdersPage() {
             <Title className="text-left" text="Mis Compras" />
             <p className="text-gray-500">Panel de pedidos históricos</p>
           </div>
-          {/* Panel de Filtros */}
           <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
             <button
               className="text-blue-500 mb-4 block"
@@ -159,16 +138,11 @@ export default function OrdersPage() {
             >
               {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
             </button>
-            <div
-              className={`transition-opacity duration-300 ${
-                isPanelCollapsed
-                  ? "opacity-0 h-0 overflow-hidden"
-                  : "opacity-100"
-              }`}
-            >
-              <div className="flex flex-wrap gap-4">
-                <div className="flex flex-col flex-grow">
-                  <label htmlFor="estadoId">Estado:</label>
+            {!isPanelCollapsed && (
+              <div className="transition-opacity duration-300">
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-col flex-grow">
+                    <label htmlFor="estadoId">Estado:</label>
                     <select
                       id="estadoId"
                       name="estadoId"
@@ -181,58 +155,57 @@ export default function OrdersPage() {
                       <option value="2">Completado</option>
                       <option value="3">Cancelado</option>
                       <option value="4">Anulado</option>
-                    </select>                  
+                    </select>
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <label htmlFor="fechaDesde">Fecha Desde:</label>
+                    <input
+                      id="fechaDesde"
+                      name="fechaDesde"
+                      type="date"
+                      value={fechaDesde}
+                      onChange={handleDateChange}
+                      className="border p-2 rounded cursor-pointer"
+                    />
+                  </div>
+                  <div className="flex flex-col flex-grow">
+                    <label htmlFor="fechaHasta">Fecha Hasta:</label>
+                    <input
+                      id="fechaHasta"
+                      name="fechaHasta"
+                      type="date"
+                      value={fechaHasta}
+                      onChange={handleDateChange}
+                      className="border p-2 rounded cursor-pointer"
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-col flex-grow">
-                      <label htmlFor="fechaDesde">Fecha Desde:</label>
-                      <input
-                        id="fechaDesde"
-                        name="fechaDesde"
-                        type="date"
-                        value={fechaDesde}
-                        onChange={handleDateChange}
-                        className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
-                        onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
-                      />
-                    </div>
-                    <div className="flex flex-col flex-grow">
-                      <label htmlFor="fechaHasta">Fecha Hasta:</label>
-                      <input
-                        id="fechaHasta"
-                        name="fechaHasta"
-                        type="date"
-                        value={fechaHasta}
-                        onChange={handleDateChange}
-                        className="border p-2 rounded cursor-pointer" // Añadir cursor pointer para indicar que se puede hacer clic
-                        onClick={(e) => e.currentTarget.showPicker()} // Mostrar el selector de fecha al hacer clic en el input
-                      />
-                    </div>
-
               </div>
-
-            </div>
+            )}
           </div>
 
-          {/* Tabla de Pedidos */}
-          <div>
-            {/* <h1 className="font-semibold text-4xl mb-4">Mis compras</h1>
-            <p className="mb-4">
-              A continuación se muestra la lista de pedidos históricos:
-            </p> */}
+          {/* Botón de descarga */}
+          <div className="w-[20rem]">
+            <ButtonCtaComponent
+              text="Descarga Excel"
+              onClick={downloadExcel}
+            />
+          </div>
 
+          <div>
             <table className="table-auto w-full border">
               <thead>
                 <tr>
-                <th className="border p-2"></th>
-                <th className="border p-2">Fecha</th>
-                <th className="border p-2">Estado</th>
+                  <th className="border p-2"></th>
+                  <th className="border p-2">Fecha</th>
+                  <th className="border p-2">Estado</th>
                   <th className="border p-2">Cantidad Producto</th>
                   <th className="border p-2">Valor Total</th>
                   <th className="border p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>
-                {filteredPedidos.map((pedido) => (
+                {paginatedPedidos.map((pedido) => (
                   <tr key={pedido.pedidoId}>
                     <td className="border p-2">#{pedido.pedidoId}</td>
                     <td className="border p-2">
@@ -241,17 +214,12 @@ export default function OrdersPage() {
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidad}</td>
                     <td className="border p-2">
-                      $
-                      {pedido.valorTotal !== undefined &&
-                      pedido.valorTotal !== null
+                      ${pedido.valorTotal !== undefined && pedido.valorTotal !== null
                         ? `${formatCurrency.format(pedido.valorTotal)}`
                         : "N/A"}
                     </td>
                     <td className="border p-2">
-                      <Link
-                        href={`/orders/ordersDetails/${pedido.pedidoId}`}
-                        className="text-blue-500 hover:underline"
-                      >
+                      <Link href={`/orders/ordersDetails/${pedido.pedidoId}`} className="text-blue-500 hover:underline">
                         Ver Detalle
                       </Link>
                     </td>
@@ -259,6 +227,26 @@ export default function OrdersPage() {
                 ))}
               </tbody>
             </table>
+          </div>
+
+          <div className="flex justify-between items-center mt-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Anterior
+            </button>
+            <span>
+              Página {currentPage} de {Math.ceil(filteredPedidos.length / itemsPerPage)}
+            </span>
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === Math.ceil(filteredPedidos.length / itemsPerPage)}
+              className="bg-blue-500 text-white px-4 py-2 rounded"
+            >
+              Siguiente
+            </button>
           </div>
         </LayoutDivComponent>
       </LayoutSectionComponent>
