@@ -315,7 +315,7 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu nombre"
                     register={register("nombre")}
                     error={errors.nombre}
-                    FieldValue={nombre}
+                    // value={nombre}
                   
                   />
 
@@ -326,7 +326,7 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu correo"
                     register={register("correo")}
                     error={errors.correo}
-                    FieldValue={correo}
+                    // value={correo}
                   />
 
                   {/* Input de contraseña */}
@@ -336,7 +336,7 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu contraseña"
                     register={register("clave")}
                     error={errors.clave}
-                    FieldValue={clave}
+                    // value={clave}
                   />
                   <div className="flex gap-4">
                     <ButtonCtaComponent

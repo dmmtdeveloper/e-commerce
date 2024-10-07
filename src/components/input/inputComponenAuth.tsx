@@ -1,6 +1,6 @@
 import { InputProps } from "@/types/types";
 import ErrorMessage from "../error-message-component/error-message";
-import { FieldValue, FieldValues } from 'react-hook-form';
+import {FieldValues } from 'react-hook-form';
 
 const InputComponentAuth = <TFieldValues extends FieldValues>({
   label,
