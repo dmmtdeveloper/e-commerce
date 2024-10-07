@@ -200,7 +200,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           <div className="mt-5 flex  flex-col">
-            <p>Aprocha las cuotas sin interes</p>
+            <p>Aprovecha las cuotas sin interés</p>
             <div className="flex gap-2">
               <p className="text-sm">Hasta 24 cuotas</p>
               <Image width={90} height={90} src={banco} alt="banco" priority />

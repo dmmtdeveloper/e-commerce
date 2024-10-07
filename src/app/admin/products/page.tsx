@@ -324,7 +324,7 @@ export default function ProductsPage() {
               <div className="overflow-x-center">
                 <div className="grid grid-cols-4 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
                   <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Producto" />
-                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Habilitar" />
+                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Habilitar / Deshabilitar" />
                   <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Eliminar" />
                   <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Editar" />
                 </div>
