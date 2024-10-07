@@ -12,6 +12,10 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -290,6 +294,28 @@ const ReporteChartPedidos: React.FC<ReporteChartPedidosProps> = ({ data }) => {
     },
   };
 
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      data.map((item) => ({
+        "Pedido Id": item.pedidoId,
+        "Detalle Id": item.pedidoDetalleId,
+        "Fecha": item.fecha,
+        "Producto": item.nombreProducto,
+        "Estado": item.estadoPedido,
+        "Cantidad": item.cantidad,
+        "Precio": item.precio,
+        "Total Detalle": item.precioTotal,
+        "Total Pedido": item.valorTotal
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "Reporte Pedidos.xlsx");
+  };
+
   return (
     <div className="flex">
       {/* Filtros */}
@@ -320,6 +346,13 @@ const ReporteChartPedidos: React.FC<ReporteChartPedidosProps> = ({ data }) => {
             Top Productos:
             <input type="number" value={topProductos} onChange={e => setTopProductos(Number(e.target.value))} className="border px-2 py-1 w-full" min="1" />
           </label>
+          {/* Botón de descarga */}
+          <div className="w-[20rem]">
+              <ButtonCtaComponent
+                text="Descarga Reporte"
+                onClick={downloadExcel}
+              />
+            </div>
         </div>
       </div>
 

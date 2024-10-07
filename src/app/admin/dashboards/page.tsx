@@ -10,6 +10,7 @@ import LayoutDivComponent from '@/components/layouts/layout-div-component';
 import NavAdmin from '@/components/shared/navbar-admin-component/NavAdmin';
 import { Title } from '@/components/title/Title';
 
+
 const Reportes: React.FC = () => {
   const [dataExistencias, setDataExistencias] = useState<VmReporteExistencias[]>([]);
   const [dataPedidos, setDataPedidos] = useState<VmReportePedidos[]>([]);
@@ -53,6 +54,7 @@ const Reportes: React.FC = () => {
                   <p className="text-xl">Unidades en Stock: 
                       <span className="font-semibold"> {dataExistencias.reduce((total, item) => total + item.stockDisponible, 0)}</span>
                   </p>
+
               </div>
               <hr className="my-8 border-gray-300" /> {/* Agrega un divisor entre los gráficos */}
               

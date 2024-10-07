@@ -10,6 +10,9 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -133,6 +136,26 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
     },
   };
 
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      data.map((item) => ({
+        "Producto ID": item.productoId,
+        "Nombre": item.nombre,
+        "Precio": item.precio,
+        "Stock": item.stock,
+        "Stock Disponible": item.stockDisponible,
+        "Stock Reservado": item.stockReservado,
+        "Stock Valorado": item.stockValorado,
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Existencias");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "Reporte Existencias.xlsx");
+  };
+
   return (
     <div className="flex">
         {/* Columna de filtros */}
@@ -167,6 +190,14 @@ const ReporteChartExistencias: React.FC<ReporteChartExistenciasProps> = ({ data 
                     <option value={50}>Top 50</option>
                     <option value={100}>Top 100</option>
                 </select>
+            </div>
+
+            {/* Botón de descarga */}
+            <div className="w-[20rem]">
+              <ButtonCtaComponent
+                text="Descarga Reporte"
+                onClick={downloadExcel}
+              />
             </div>
         </div>
 
