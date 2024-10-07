@@ -7,6 +7,7 @@ import { Title } from "@/components/title/Title";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 
 import clsx from "clsx";
 import Image from "next/image";
@@ -18,6 +19,7 @@ import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
 import SubmitButton from "@/components/buttons-components/AuthButton";
 
 export default function LoginPage() {
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
   const {
     register, // Registrar los campos del formulario
     handleSubmit, // Manejar el envío del formulario
@@ -37,9 +39,19 @@ export default function LoginPage() {
       reset();
       // alert("Login exitoso");
       router.push("/");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error al iniciar sesión:", error);
-      alert("Error en el login");
+
+      console.log("aqui  "+error.response);
+      console.log("aqui  "+error.response.data.message);
+
+      // Si el error tiene respuesta del servidor, mostramos el mensaje
+      if (error.response?.data?.message) {
+        setErrorMessage(error.response.data.message);
+      } 
+      // else {
+      //   setErrorMessage("Error en el login. Inténtalo de nuevo.");
+      // }
     }
   };
 
@@ -89,6 +101,11 @@ export default function LoginPage() {
                   register={register("password")}
                   error={errors.password}
                 />
+
+                {/* Mostrar mensaje de error */}
+                {errorMessage && (
+                  <p className="text-red-500 text-sm">{errorMessage}</p>
+                )}
 
                 <SubmitButton
                   text="Iniciar sesión"
