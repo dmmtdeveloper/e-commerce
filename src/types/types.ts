@@ -1,4 +1,4 @@
-import { FieldError, UseFormRegisterReturn } from "react-hook-form";
+import { FieldError, UseFormRegisterReturn, FieldValue, FieldValues } from 'react-hook-form';
 
 export interface InputPasswordProps {
   type?: string;
@@ -13,7 +13,7 @@ export interface InputPasswordProps {
   onMouseUp?: () => void; // Evento para detectar cuando se suelta el ícono
 }
 
-export interface InputProps {
+export interface InputProps<TFieldValues extends FieldValues> {
   label?: string;
   name?: string;
   type?: string;
@@ -21,10 +21,12 @@ export interface InputProps {
   id?: string;
   value?: any;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
+  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   register?: UseFormRegisterReturn;
   error?: FieldError;
+  FieldValue: FieldValue<TFieldValues>; // Se añade el argumento de tipo genérico
 }
+
 
 export interface TextareaProps {
   type?: string;

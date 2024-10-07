@@ -15,7 +15,7 @@ import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
 import { Title } from "@/components/title/Title";
 import { uploadImage, deleteImage } from "@/utils/firebase"; // Función para subir y eliminar imágenes
 import { useAuthStore } from "@/store/useAuthStore";
-import { useForm } from "react-hook-form";
+import { useForm} from 'react-hook-form';
 import { useRouter } from "next/navigation";
 import { Usuario } from "@/utils/authHelpers"; // Asegúrate de importar la interfaz correctamente
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -315,6 +315,8 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu nombre"
                     register={register("nombre")}
                     error={errors.nombre}
+                    FieldValue={nombre}
+                  
                   />
 
                   {/* correo */}
@@ -324,6 +326,7 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu correo"
                     register={register("correo")}
                     error={errors.correo}
+                    FieldValue={correo}
                   />
 
                   {/* Input de contraseña */}
@@ -333,6 +336,7 @@ export default function SettingsPage() {
                     placeholder="Ingresa tu contraseña"
                     register={register("clave")}
                     error={errors.clave}
+                    FieldValue={clave}
                   />
                   <div className="flex gap-4">
                     <ButtonCtaComponent

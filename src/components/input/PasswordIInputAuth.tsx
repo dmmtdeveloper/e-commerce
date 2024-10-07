@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Importamos los íconos de ojo abierto y cerrado
-import clsx from "clsx";
-import ErrorMessage from "../error-message-component/error-message";
-import { FieldError, UseFormRegisterReturn } from "react-hook-form";
 
-interface PasswordInputProps {
+import ErrorMessage from "../error-message-component/error-message";
+import { FieldError, FieldValue, FieldValues, UseFormRegisterReturn, } from 'react-hook-form';
+
+interface PasswordInputProps<TFieldValues extends FieldValues> {
   label?: string;
   name?: string;
   type?: string;
@@ -14,10 +14,11 @@ interface PasswordInputProps {
   register: UseFormRegisterReturn;
   errorMessage?: string; // Para mostrar mensajes de error
   error?: FieldError;
+  FieldValue: FieldValue<TFieldValues>;
  
 }
 
-const PasswordInputAuth: React.FC<PasswordInputProps> = ({
+const PasswordInputAuth = <TFieldValues extends FieldValues> ({
   label,
   name,
   type,
@@ -26,7 +27,8 @@ const PasswordInputAuth: React.FC<PasswordInputProps> = ({
   className,
   register,
   error,
-}) => {
+  FieldValue,  // Usar este campo de forma adecuada
+}: PasswordInputProps<TFieldValues>) => {
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
 
   // Función para alternar la visibilidad de la contraseña
@@ -46,6 +48,7 @@ const PasswordInputAuth: React.FC<PasswordInputProps> = ({
         type={showPassword ? "text" : "password"} // Cambia entre texto y contraseña
         placeholder={placeholder}
         disabled={isSubmitting}
+        value = {FieldValue}
         className={`relative border border-slate-300${
           error
             ? "border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-red-500"

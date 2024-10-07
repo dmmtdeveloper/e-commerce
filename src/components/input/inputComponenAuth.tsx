@@ -1,14 +1,16 @@
 import { InputProps } from "@/types/types";
 import ErrorMessage from "../error-message-component/error-message";
+import { FieldValue, FieldValues } from 'react-hook-form';
 
-const InputComponentAuth: React.FC<InputProps> = ({
+const InputComponentAuth = <TFieldValues extends FieldValues>({
   label,
   name,
   type,
   placeholder,
   register,
   error,
-}) => {
+  FieldValue,  // Usar este campo de forma adecuada
+}: InputProps<TFieldValues>) => {
   return (
     <div className="flex flex-col gap-2">
       {label && (
@@ -18,6 +20,7 @@ const InputComponentAuth: React.FC<InputProps> = ({
       )}
       <input
         id={name}
+        value = {FieldValue}
         type={type}
         placeholder={placeholder}
         {...register}
