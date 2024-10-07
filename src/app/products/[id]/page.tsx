@@ -164,7 +164,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
                 <div>
                   <div>
                     <div className="text-lg">
-                      Total: {product.precio * quantity}
+                      Total: ${formatCurrency.format(product.precio * quantity)}
                     </div>
                     <button
                       onClick={handleDecreaseQuantity}

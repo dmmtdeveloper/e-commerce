@@ -12,6 +12,11 @@ interface ModalProps {
   onGoToCart: () => void;
 }
 
+const formatCurrency = new Intl.NumberFormat("es-ES", {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 const ModalProductId = ({ product, onClose, onContinueShopping }: ModalProps) => {
   return (
     <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
@@ -22,9 +27,11 @@ const ModalProductId = ({ product, onClose, onContinueShopping }: ModalProps) =>
         <div className="mb-4">
           <p className="text-lg font-semibold">{product.nombre}</p>
           <p className="text-lg">Cantidad: {product.quantity}</p>
-          <p className="text-lg">Precio unitario: ${product.precio}</p>
+          <p className="text-lg">Precio unitario: ${product.precio !== undefined && product.precio !== null
+                        ? `${formatCurrency.format(product.precio)}`
+                        : "N/A"}</p>
           <p className="text-lg font-bold">
-            Total: ${(product.precio * product.quantity).toFixed(2)}
+            Total: ${formatCurrency.format(product.precio * product.quantity)}
           </p>
         </div>
 
