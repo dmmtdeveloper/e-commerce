@@ -18,6 +18,10 @@ export const userRegisterSchema = z
     message: "Las contraseñas deben coincidir",
     path: ["confirmPassword"],
   });
+export type SignUpSchema = z.infer<typeof userRegisterSchema>;
+
+
+
 
 export const userLoginSchema = z.object({
   email: z.string().email({ message: "Por favor ingresa un correo válido" }),
@@ -25,18 +29,19 @@ export const userLoginSchema = z.object({
     .string()
     .min(6, { message: "La contraseña debe tener 6 caracteres" }),
 });
+export type LoginUpSchema = z.infer<typeof userLoginSchema>;
+
+
 
 export const userSaveSchema = z.object({
-  nombre: z
-    .string()
-    .min(3, { message: "El nombre debe tener mínimo 3 caracteres." }),
+  nombre: 
+  z.string()
+    .min(3, { message: "El nombre debe tener mínimo 3 caracteres" }),
 
-  clave: z
-    .string()
+  clave: 
+  z.string()
     .min(6, { message: "La contraseña debe tener 6 caracteres" }),
+
   correo: z.string().email({ message: "Por favor ingresa un correo válido" }),
 });
-
-export type SignUpSchema = z.infer<typeof userRegisterSchema>;
-export type LoginUpSchema = z.infer<typeof userLoginSchema>;
 export type SaveUserSchema = z.infer<typeof userSaveSchema>;
