@@ -3,14 +3,13 @@
 import { useEffect, useState } from 'react';
 import ReporteChartExistencias from '@/components/dashboard/ReporteChartExistencias';
 import ReporteChartPedidos from '@/components/dashboard/ReporteChartPedidos';
-import ResumenCardExistencias from '@/components/dashboard/ResumenCardExistencias';
-import ResumenCardPedidos from '@/components/dashboard/ResumenCardPedidos';
 import { VmReporteExistencias, VmReportePedidos } from '@/types/types';
 import MainLayout from '@/components/layouts/MainLayout';
 import LayoutSectionComponent from '@/components/layouts/layout-section-component';
 import LayoutDivComponent from '@/components/layouts/layout-div-component';
 import NavAdmin from '@/components/shared/navbar-admin-component/NavAdmin';
 import { Title } from '@/components/title/Title';
+
 
 const Reportes: React.FC = () => {
   const [dataExistencias, setDataExistencias] = useState<VmReporteExistencias[]>([]);
@@ -55,6 +54,7 @@ const Reportes: React.FC = () => {
                   <p className="text-xl">Unidades en Stock: 
                       <span className="font-semibold"> {dataExistencias.reduce((total, item) => total + item.stockDisponible, 0)}</span>
                   </p>
+
               </div>
               <hr className="my-8 border-gray-300" /> {/* Agrega un divisor entre los gráficos */}
               

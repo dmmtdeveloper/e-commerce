@@ -14,6 +14,7 @@ interface PasswordInputProps {
   register: UseFormRegisterReturn;
   errorMessage?: string; // Para mostrar mensajes de error
   error?: FieldError;
+  value?:string
  
 }
 
@@ -26,6 +27,7 @@ const PasswordInputAuth: React.FC<PasswordInputProps> = ({
   className,
   register,
   error,
+  value
 }) => {
   const [showPassword, setShowPassword] = useState(false); // Estado para mostrar u ocultar la contraseña
 

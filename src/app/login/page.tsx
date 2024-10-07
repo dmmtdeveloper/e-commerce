@@ -4,8 +4,9 @@ import { login } from "../../utils/authHelpers";
 import { LoginUpSchema, userLoginSchema } from "@/validations/userSchema";
 import { Reveal } from "@/components/animation/Reveal";
 import { Title } from "@/components/title/Title";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -17,14 +18,20 @@ import loginImage from "@/public/assets/img/Banner_login.jpg";
 import MainLayout from "../../components/layouts/MainLayout";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
 import SubmitButton from "@/components/buttons-components/AuthButton";
+import { useState } from "react";
 
 export default function LoginPage() {
+<<<<<<< HEAD
   const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+=======
+  const [errorMessage, setErrorMessage] = useState<string | null>(null); // Estado para el mensaje de error
+>>>>>>> cefed3f2a4036bff4d149357a7e59747c3f8228a
   const {
     register, // Registrar los campos del formulario
     handleSubmit, // Manejar el envío del formulario
     formState: { errors, isSubmitting }, // Manejar los errores de validación
     reset,
+    setError,
   } = useForm<LoginUpSchema>({ resolver: zodResolver(userLoginSchema) });
 
   const router = useRouter();
@@ -41,6 +48,7 @@ export default function LoginPage() {
       router.push("/");
     } catch (error: any) {
       console.error("Error al iniciar sesión:", error);
+<<<<<<< HEAD
 
       console.log("aqui  "+error.response);
       console.log("aqui  "+error.response.data.message);
@@ -52,6 +60,12 @@ export default function LoginPage() {
       // else {
       //   setErrorMessage("Error en el login. Inténtalo de nuevo.");
       // }
+=======
+      // Si el error tiene respuesta del servidor, mostramos el mensaje
+      if (error.response?.data?.message) {
+        setErrorMessage(error.response.data.message);
+      }
+>>>>>>> cefed3f2a4036bff4d149357a7e59747c3f8228a
     }
   };
 
@@ -129,4 +143,3 @@ export default function LoginPage() {
     </MainLayout>
   );
 }
-

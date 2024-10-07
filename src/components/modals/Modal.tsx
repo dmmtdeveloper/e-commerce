@@ -8,6 +8,11 @@ interface ModalProps {
   onGoToCart?: () => void;
 }
 
+const formatCurrency = new Intl.NumberFormat("es-ES", {
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
+
 export default function Modal({ product, onClose }: ModalProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -16,7 +21,9 @@ export default function Modal({ product, onClose }: ModalProps) {
         <p className="mb-2">
           Has agregado <strong>{product.nombre}</strong> al carrito.
         </p>
-        <p className="mb-4">Precio: ${product.precio}</p>
+        <p className="mb-4">Precio: {product.precio !== undefined && product.precio !== null
+                ? `$${formatCurrency.format(product.precio)}`
+                : "N/A"}</p>
 
         <div className="flex justify-between">
           <button

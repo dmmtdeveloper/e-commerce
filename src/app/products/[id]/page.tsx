@@ -1,17 +1,17 @@
 "use client";
-
-import MainLayout from "@/components/layouts/MainLayout";
-import { Product } from "@/types/product";
-import { notFound } from "next/navigation";
-import { useState, useEffect } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa";
-import Image from "next/image";
+import { notFound } from "next/navigation";
+import { Product } from "@/types/product";
+import { useState, useEffect } from "react";
 
+import banco from "@/public/assets/icons/logo-bancoestado-pdp-modyo.svg";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import fetchProductDetails from "@/services/fetchProductDetails";
-
-import useCartStore from "@/store/cartStore";
-import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
+import Image from "next/image";
 import Link from "next/link";
+import MainLayout from "@/components/layouts/MainLayout";
+import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
+import useCartStore from "@/store/cartStore";
 
 interface ProductPageProps {
   params: {
@@ -113,90 +113,98 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
 
   return (
     <MainLayout>
-      <section className="mt-32 p-4">
+      <section className="mt-32 p-4 grid 2xl:grid-cols-2 2xl:px-80 items-center">
         <div>
-          <h1 className="text-3xl font-bold">{product.nombre}</h1>
-          <p className="text-lg text-gray-600">{product.descripcion}</p>
-          <p>
-            {product.foto && product.foto !== "" ? (
-              <Image
-                src={`data:image/${product.extension};base64,${product.foto}`}
-                alt={product.nombre}
-                className="w-32 h-32 object-cover rounded"
-                height={80}
-                width={80}
-                priority
-              />
-            ) : (
-              <div className="h-32 w-32 bg-gray-200 mr-4"></div>
-            )}
-          </p>
-          <p className="text-xl font-semibold mt-4">
-            Precio: $
-            {product.precio !== undefined && product.precio !== null
-              ? `${formatCurrency.format(product.precio)}`
-              : "N/A"}
-          </p>
-          <p className="text-xl font-semibold mt-4">
-            Stock Disponible: {product.stock - product.stockReservado}
-          </p>
+          {product.foto && product.foto !== "" ? (
+            <Image
+              src={`data:image/${product.extension};base64,${product.foto}`}
+              alt={product.nombre}
+              className="w-500 h-500 object-cover rounded"
+              height={500}
+              width={500}
+              priority
+            />
+          ) : (
+            <div className="h-32 w-32 bg-gray-200 mr-4"></div>
+          )}
+        </div>
+        <div>
+          <div className="flex flex-col">
+            <p className="text-lg text-gray-600">{product.descripcion}</p>
+            <h1 className="text-2xl">{product.nombre}</h1>
+            <p className="text-5xl font-semibold mt-4">
+              $
+              {product.precio !== undefined && product.precio !== null
+                ? `${formatCurrency.format(product.precio)}`
+                : "N/A"}
+            </p>
+            <div className="flex gap-1 items-center mt-2">
+              <p>Stock disponible:</p>
+              <p className="text-md font-semibold">
+                {product.stock - product.stockReservado}
+              </p>
+              <p>ud.</p>
+            </div>
+          </div>
 
           {/* Controles de cantidad o botón de agregar al carrito */}
 
-          <div className="flex items-center mt-4">
+          <div className="flex mt-4">
             {product.stock - product.stockReservado === 0 ? (
-              <div className="px-4 py-2 bg-gray-200 text-white rounded">
+              <div className="px-4 py-2  bg-gray-200 text-slate-400 rounded-xl">
                 No Disponible
               </div>
             ) : quantity === 0 ? (
-              <button
+              <ButtonCtaComponent
                 onClick={handleAddToCart}
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-              >
-                Agregar al carrito
-              </button>
+                text="Agregar al carrito"
+              />
             ) : (
-              <>
+              <div className="flex flex-col">
                 <div>
-                  <button
-                    onClick={handleDecreaseQuantity}
-                    className="p-2 bg-gray-200 rounded"
-                    aria-label="Decrease quantity"
-                  >
-                    <FaMinus />
-                  </button>
-                  <span className="mx-4 text-lg">{quantity}</span>
-                  <button
-                    onClick={handleIncreaseQuantity}
-                    className="p-2 bg-gray-200 rounded"
-                    aria-label="Increase quantity"
-                  >
-                    <FaPlus />
-                  </button>
-                  <div className="mx-4 text-lg">
-                    Total: {product.precio * quantity}
+                  <div>
+                    <div className="text-lg">
+                      Total: ${formatCurrency.format(product.precio * quantity)}
+                    </div>
+                    <button
+                      onClick={handleDecreaseQuantity}
+                      className="p-2 bg-gray-200 rounded-md hover:bg-gray-300"
+                      aria-label="Decrease quantity"
+                    >
+                      <FaMinus />
+                    </button>
+                    <span className="mx-4 text-lg">{quantity}</span>
+
+                    <button
+                      onClick={handleIncreaseQuantity}
+                      className="p-2 bg-gray-200 rounded  hover:bg-gray-300"
+                      aria-label="Increase quantity"
+                    >
+                      <FaPlus />
+                    </button>
                   </div>
                 </div>
                 <div className="flex space-x-4 mt-4">
                   <Link href="/cart">
-                    <button
-                      type="button"
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                    >
-                      Ir al Carrito
-                    </button>
+                    <ButtonCtaComponent text="Ir al carro" />
                   </Link>
                   <Link href="/">
-                    <button
-                      type="button"
-                      className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                    >
-                      Seguir Comprando
-                    </button>
+                    <ButtonCtaComponent
+                      className="bg-green-400 hover:bg-green-500"
+                      text="Seguir comprando"
+                    />
                   </Link>
                 </div>
-              </>
+              </div>
             )}
+          </div>
+
+          <div className="mt-5 flex  flex-col">
+            <p>Aprovecha las cuotas sin interés</p>
+            <div className="flex gap-2">
+              <p className="text-sm">Hasta 24 cuotas</p>
+              <Image width={90} height={90} src={banco} alt="banco" priority />
+            </div>
           </div>
 
           {/* Mostrar modal cuando se agrega un producto */}
