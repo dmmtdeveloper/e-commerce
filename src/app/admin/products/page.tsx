@@ -28,6 +28,7 @@ import { BsFillBagDashFill } from "react-icons/bs";
 import { ImFilePicture } from "react-icons/im";
 import { PiProhibitBold } from "react-icons/pi";
 import { CgCheck } from "react-icons/cg";
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 
 export default function ProductsPage() {
   useAdmin();
@@ -202,6 +203,27 @@ export default function ProductsPage() {
     maximumFractionDigits: 0,
   });
 
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      filteredProductos.map((producto) => ({
+        "Producto ID": producto.productoId,
+        "Nombre": producto.nombre,
+        "Descripcion": producto.descripcion,
+        "Precio": formatCurrency.format(producto.precio) ,
+        "Stock": producto.stock,
+        "Stock Reservado": producto.stockReservado,
+        "Habilitado": producto.habilitado,
+        "Eliminado": producto.eliminado,
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Productos");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "Productos.xlsx");
+  };
+
   if (loading) {
     return <div>Cargando...</div>;
   }
@@ -312,14 +334,24 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              {/* Botón para Crear Producto */}
+              <div className="flex flex-wrap gap-4">
+                {/* Botón para Crear Producto */}
+                <Link href={"/admin/products/create"}>
+                  <ButtonCtaComponent
+                    className="bg-green-500 hover:bg-green-600 translate-all duration-300"
+                    text="Crear Producto"
+                  />
+                </Link>
 
-              <Link href={"/admin/products/create"}>
-                <ButtonCtaComponent
-                  className="bg-green-500 hover:bg-green-600 translate-all duration-300"
-                  text="Crear Producto"
-                />
-              </Link>
+                {/* Botón de descarga */}
+                <div className="w-[20rem]">
+                  <ButtonCtaComponent
+                    text="Descarga Excel"
+                    onClick={downloadExcel}
+                  />
+                </div>
+              </div>
+
 
               <div className="overflow-x-center">
                 <div className="grid grid-cols-4 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">

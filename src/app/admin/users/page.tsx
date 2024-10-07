@@ -23,6 +23,8 @@ import { FaUserSlash } from "react-icons/fa";
 import { FaUserCheck } from "react-icons/fa";
 import { FaUserTag } from "react-icons/fa";
 import { GoPasskeyFill } from "react-icons/go";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 
 export default function UsersPage() {
   useAdmin();
@@ -177,6 +179,25 @@ export default function UsersPage() {
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
+  const downloadExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(
+      filteredUsers.map((usuario) => ({
+        "ID": usuario.usuarioId,
+        "Nombre": usuario.nombre,
+        "Correo": usuario.correo,
+        "Es Admin": usuario.esAdmin,
+        "Habilitado": usuario.habilitado,
+        "Eliminado": usuario.eliminado,
+      }))
+    );
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Usuarios");
+
+    // Generar y descargar el archivo Excel
+    XLSX.writeFile(workbook, "Listado de usuarios de sistema.xlsx");
+  };
+
   // if (loading) {
   //   return <div>Cargando...</div>;
   // }
@@ -259,6 +280,16 @@ export default function UsersPage() {
                       <LabelComponent text="Existentes" />
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                {/* Botón de descarga */}
+                <div className="w-[20rem]">
+                  <ButtonCtaComponent
+                    text="Descarga Excel"
+                    onClick={downloadExcel}
+                  />
                 </div>
               </div>
 
