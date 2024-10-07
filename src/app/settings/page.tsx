@@ -56,19 +56,20 @@ export default function SettingsPage() {
     resolver: zodResolver(userSaveSchema),
   });
 
-  // Cargar datos del usuario al montar el componente
+
   // Cargar datos del usuario al montar el componente
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
       GetUsuarioByToken(token)
-        .then((usuarioData: Usuario) => {
-          console.log("Datos del usuario:", usuarioData);
-          setUsuario(usuarioData); // Guarda el usuario en el estado
-          reset({
-            nombre: usuarioData.nombre,
-            correo: usuarioData.correo,
-            clave: usuarioData.clave,
+        .then((usuario: Usuario) => {
+          console.log("Datos del usuario:", usuario);
+          setUsuario(usuario); // Guarda el usuario en el estado
+          setAvatar(usuario.foto || null); // Establece el avatar
+          reset({ // Establece los valores del formulario
+            nombre: usuario.nombre,
+            correo: usuario.correo,
+            clave: usuario.clave,
           });
         })
         .catch((error) => {
@@ -77,7 +78,7 @@ export default function SettingsPage() {
     } else {
       console.warn("Token no encontrado en sessionStorage");
     }
-  }, [reset]);
+  }, []);
 
   const onSubmit = (data: SaveUserSchema) => {
     // Lógica para enviar datos del formulario
