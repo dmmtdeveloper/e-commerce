@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const productoSchema = z.object({
+export const productoSaveSchema = z.object({
   nombre: z.string()
     .min(1, { message: 'El campo nombre es obligatorio'})
     .min(2, { message: "El nombre debe tener al menos 2 caracteres." })
@@ -27,4 +27,13 @@ const productoSchema = z.object({
   
   foto: z.string()
     .min(1,{ message: "El campo foto es obligatorio." }),
+
+  nombreFoto: z.string()
+    .min(1,{ message: "El campo nombreFoto es obligatorio." }),
+
+    extension: z.string()
+    .min(1,{ message: "El campo extension es obligatorio." }),
+
+  
 });
+export type SaveProductoSchema = z.infer<typeof productoSaveSchema>;
