@@ -7,7 +7,7 @@ const InputComponentAuth: React.FC<InputProps> = ({
   type,
   placeholder,
   register,
-  error,
+  error
 }) => {
   return (
     <div className="flex flex-col gap-2">

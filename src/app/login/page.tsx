@@ -4,8 +4,9 @@ import { login } from "../../utils/authHelpers";
 import { LoginUpSchema, userLoginSchema } from "@/validations/userSchema";
 import { Reveal } from "@/components/animation/Reveal";
 import { Title } from "@/components/title/Title";
-import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import clsx from "clsx";
@@ -95,7 +96,7 @@ export default function LoginPage() {
                   register={register("password")}
                   error={errors.password}
                 />
-                
+
                 {/* Mostrar mensaje de error */}
                 {errorMessage && (
                   <p className="text-red-500 text-sm">{errorMessage}</p>
