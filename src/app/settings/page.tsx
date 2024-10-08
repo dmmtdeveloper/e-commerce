@@ -80,8 +80,6 @@ export default function SettingsPage() {
     }
   }, []);
 
-
-
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const id = usuario?.usuarioId;
@@ -123,17 +121,28 @@ export default function SettingsPage() {
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
     const id = usuario?.usuarioId;
-    
   
     if (token && id) {
       try {
         // Llamar a la API para actualizar el estado de eliminado del usuario
         await UpdateEliminadoUsuario(id, true);
   
-        // Cerrar sesión y redirigir al login
-        logout();
-        router.push("/login");
-        alert("Cuenta eliminada con éxito.");
+        openConfirmation("Cuenta eliminada con éxito");
+  
+        // Mostrar modal de éxito después de 3 segundos
+        setTimeout(() => {
+          // openSuccessModal("Cuenta eliminada con éxito.");
+  
+          // Cerrar el modal después de 3 segundos
+          setTimeout(() => {
+            closeSuccessModal();
+  
+            // Cerrar sesión y redirigir al login solo después de que el modal se cierre
+            logout();
+            router.push("/login");
+          }, 1000);
+  
+        }, 2000); // Aquí estableces el retraso de 3 segundos antes de abrir el modal
       } catch (error) {
         console.error("Error eliminando la cuenta:", error);
         openErrorModal("Error eliminando la cuenta.");
@@ -142,7 +151,7 @@ export default function SettingsPage() {
       console.warn("Token no encontrado o ID de usuario no existe");
     }
   };
-
+  
 
   const openConfirmationModal = (
     action: () => void,
@@ -166,6 +175,8 @@ export default function SettingsPage() {
     }
   };
 
+
+
   const handleSaveChanges = async (data: SaveUserSchema) => {
     const id = usuario?.usuarioId;
 
@@ -174,7 +185,19 @@ export default function SettingsPage() {
         await UpdateNombreUsuario(id, data.nombre);
         await UpdateClaveUsuario(id, data.clave);
         await UpdateCorreoUsuario(id, data.correo);
-        openSuccessModal("Cambios guardados exitosamente.");
+        openSuccessModal("Datos actualizados con exito.");
+        setTimeout(() => {
+  
+          // Cerrar el modal después de 3 segundos
+          setTimeout(() => {
+            closeSuccessModal();
+  
+            // Cerrar sesión y redirigir al login solo después de que el modal se cierre
+            // logout();
+            // router.push("/settings");
+          }, 1000);
+  
+        }, 2000); // Aquí estableces el retraso de 3 segundos antes de abrir el modal
       } catch (error) {
         openErrorModal("Error actualizando los datos.");
       }
@@ -188,10 +211,17 @@ export default function SettingsPage() {
     setIsSuccessModalOpen(true);
   };
 
+  const openConfirmation = (message: string) => {
+    setModalMessage(message);
+    setIsSuccessModalOpen(true);
+  };
+
   const openErrorModal = (message: string) => {
     setModalMessage(message);
     setIsErrorModalOpen(true);
   };
+
+
 
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
   const closeErrorModal = () => setIsErrorModalOpen(false);

@@ -23,7 +23,7 @@ const ButtonCtaComponent: React.FC<ButtonSettingProps> = ({
       type={type}
       onSubmit={onSubmit}
       onClick={onClick}
-      className={`bg-blue-500 hover:bg-blue-600 text-gray-100 text-sm py-2  rounded-lg px-4 ${className}`}
+      className={`bg-blue-500 hover:bg-blue-600 transition-all duration-300 text-gray-100 text-sm py-2  rounded-lg px-4 ${className}`}
     >
       {text}
     </button>
