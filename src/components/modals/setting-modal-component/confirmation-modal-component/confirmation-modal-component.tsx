@@ -1,3 +1,4 @@
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import React from "react";
 
 interface ConfirmationModalProps {
@@ -17,16 +18,13 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-      <div className="bg-white p-6 rounded shadow-lg">
+      <div className="bg-white p-6 rounded-3xl">
         <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
-        <p>{message}</p>
+        <p className="text-sm">{message}</p>
         <div className="mt-4 flex justify-end gap-4">
-          <button onClick={onConfirm} className="bg-blue-500 text-white p-2 rounded">
-            Confirmar
-          </button>
-          <button onClick={onCancel} className="bg-gray-500 text-white p-2 rounded">
-            Cancelar
-          </button>
+          <ButtonCtaComponent onClick={onConfirm} className="bg-red-500 hover:bg-red-600 transition-all duration-300" text="Confirmar"/>
+          <ButtonCtaComponent onClick={onCancel} text="Cancelar"/>
+      
         </div>
       </div>
     </div>

@@ -558,12 +558,6 @@ export const UpdateEliminadoUsuario = async (
   }
 };
 
-// export const GetPedidoAdminById = async (
-//   usuarioId: number,
-//   esAdmin: boolean
-// ): Promise<void> => {
-
-// };
 
 export const UpdateEsAdminUsuario = async (
   usuarioId: number,
