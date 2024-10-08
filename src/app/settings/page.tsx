@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { UpdateEliminadoUsuario } from "@/utils/authHelpers";
 import MainLayout from "@/components/layouts/MainLayout";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
@@ -56,7 +56,6 @@ export default function SettingsPage() {
     resolver: zodResolver(userSaveSchema),
   });
 
-
   // Cargar datos del usuario al montar el componente
   useEffect(() => {
     const token = sessionStorage.getItem("token");
@@ -66,7 +65,8 @@ export default function SettingsPage() {
           console.log("Datos del usuario:", usuario);
           setUsuario(usuario); // Guarda el usuario en el estado
           setAvatar(usuario.foto || null); // Establece el avatar
-          reset({ // Establece los valores del formulario
+          reset({
+            // Establece los valores del formulario
             nombre: usuario.nombre,
             correo: usuario.correo,
             clave: usuario.clave,
@@ -80,11 +80,8 @@ export default function SettingsPage() {
     }
   }, []);
 
-  const onSubmit = (data: SaveUserSchema) => {
-    // Lógica para enviar datos del formulario
-    console.log(data);
-  };
-  
+
+
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const id = usuario?.usuarioId;
@@ -125,18 +122,27 @@ export default function SettingsPage() {
 
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
-    if (token) {
+    const id = usuario?.usuarioId;
+    
+  
+    if (token && id) {
       try {
+        // Llamar a la API para actualizar el estado de eliminado del usuario
+        await UpdateEliminadoUsuario(id, true);
+  
+        // Cerrar sesión y redirigir al login
         logout();
         router.push("/login");
+        alert("Cuenta eliminada con éxito.");
       } catch (error) {
         console.error("Error eliminando la cuenta:", error);
         openErrorModal("Error eliminando la cuenta.");
       }
     } else {
-      console.warn("Token no encontrado en sessionStorage");
+      console.warn("Token no encontrado o ID de usuario no existe");
     }
   };
+
 
   const openConfirmationModal = (
     action: () => void,
@@ -238,7 +244,7 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <form onSubmit={handleSubmit(handleSaveChanges)}>
+              <section>
                 <div className="flex flex-col gap-4 w-[30rem]">
                   <InputComponentAuth
                     name="nombre"
@@ -264,9 +270,12 @@ export default function SettingsPage() {
                   <div className="flex gap-4">
                     <ButtonCtaComponent
                       text="Guardar los cambios"
-                      type="submit"
+                      type="button" // Cambiar el tipo a "button" en lugar de "submit" aquí
                       isSubmitting={isSubmitting}
+                      onClick={handleSubmit(handleSaveChanges)} // Cambiar a onClick con handleSubmit
                     />
+
+                    {/* <button type="submit">hola</button> */}
                     <ButtonCtaComponent
                       className="bg-red-500 hover:bg-red-600"
                       text="Eliminar Cuenta"
@@ -279,7 +288,7 @@ export default function SettingsPage() {
                     />
                   </div>
                 </div>
-              </form>
+              </section>
             </article>
           </div>
         </LayoutDivComponent>
