@@ -7,6 +7,7 @@ import Image from "next/image";
 import noImage from "@/public/assets/img/no_image.jpg";
 import { MdOutlineShoppingCart } from "react-icons/md";
 import { Reveal } from "@/components/animation/Reveal";
+import ButtonShoppingComponent from "../buttons-components/button-shopping";
 
 interface ProductCardProps {
   product: Product;
@@ -87,13 +88,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Botón para agregar al carrito */}
 
         {product.stock - product.stockReservado > 0 ? (
-          <button
-            onClick={handleAddToCart}
-            className="flex items-center justify-center gap-4 bg-blue-500 hover:bg-blue-600 font-semibold transition-all text-slate-50 py-2 mt-4 w-full rounded-xl group"
-          >
-            Agregar al carrito
-            <MdOutlineShoppingCart className="text-2xl transition-transform group-hover:translate-x-4" />
-          </button>
+          <ButtonShoppingComponent text="Agregar al carrito" onClick={handleAddToCart}/>
         ) : (
           <div className="bg-gray-200 text-gray-500 p-2 mt-4 w-full rounded-xl text-center">
             No Disponible
