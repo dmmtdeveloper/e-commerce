@@ -8,6 +8,7 @@ import ReactDOM from "react-dom";
 import Image from "next/image"; // Importamos el componente Image
 import noImage from "@/public/assets/img/no_image.jpg"; // Imagen de respaldo si no hay imagen
 import clsx from "clsx";
+import banco from "@/public/assets/icons/logo-bancoestado-pdp-modyo.svg";
 
 interface ModalProps {
   product: Product;
@@ -54,8 +55,8 @@ export default function Modal({ product, onClose }: ModalProps) {
 
           "bg-white",
           "flex flex-col gap-4",
-          "p-4",
-          "shadow-lg",
+          "p-8 rounded-3xl",
+          "shadow-lg"
         )}
       >
         <div className="flex 2xl:gap-4 gap-2 items-center">
@@ -68,16 +69,17 @@ export default function Modal({ product, onClose }: ModalProps) {
             className="w-10"
             animationData={cartSuccess}
           />
-          <h2 className="text-sm 2xl:text-normal text-pretty font-semibold">
+          <h2 className="text-[12px] 2xl:text-normal text-pretty font-semibold">
             Producto agregado al carro de compras
           </h2>
         </div>
 
         {/* Mostrar la imagen del producto */}
-        <div className="flex gap-28 justify-between">
+        <div className="flex flex-col 2xl:flex-row 2xl:gap-18  justify-between">
+
           <div className="2xl:flex md:flex lg:flex 2xl:flex-col">
             <Image
-              className="2xl:w-32 w-full h-auto 2xl:h-36 "
+              className="2xl:w-32 w-44 h-auto 2xl:h-36 "
               width={128}
               height={128}
               src={
@@ -97,15 +99,30 @@ export default function Modal({ product, onClose }: ModalProps) {
                 : "Sin Nombre disponible"}
             </p>
           </div>
-          <div className="flex flex-col justify-center">
-            <p className="2xl:font-normal text-sm">Otros medios de pago</p>
 
-            <p className="text-3xl font-semibold">
-              {product.precio !== undefined && product.precio !== null
-                ? `$${formatCurrency.format(product.precio)}`
-                : "N/A"}
-            </p>
-            <p className="font-light text-gray-400">Transferencia</p>
+          <div className="flex flex-col 2xl:w-52 md:w-52 lg:w-52">
+            <div className="flex flex-col justify-center">
+              <p className="2xl:font-normal text-[12px]">Otros medios de pago</p>
+
+              <p className="text-3xl font-semibold">
+                {product.precio !== undefined && product.precio !== null
+                  ? `$${formatCurrency.format(product.precio)}`
+                  : "N/A"}
+              </p>
+              <p className="font-light text-gray-400">Transferencia</p>
+            </div>
+            <div className=" flex justify-center gap-1 mt-4 flex-col">
+              <p className="2xl:text-[12px] text-[10px]">Hasta 24 cuotas sin interés</p>
+              <div className="flex gap-2">
+                <Image
+                  width={90}
+                  height={90}
+                  src={banco}
+                  alt="banco"
+                  priority
+                />
+              </div>
+            </div>
           </div>
         </div>
 
