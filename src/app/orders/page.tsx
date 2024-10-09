@@ -12,7 +12,10 @@ import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import { Pedido } from "@/types/types";
 import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-
+import Pagination from "@/components/pagination-component/pagination-component";
+import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
+import LabelComponent from "@/components/label-component/label-component";
+import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -29,6 +32,8 @@ export default function OrdersPage() {
   const itemsPerPage = 10; // Número de elementos por página
   const [isPanelCollapsed, setIsPanelCollapsed] = useState(true); // Estado para colapsar el panel
 
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+
   useEffect(() => {
     const token = sessionStorage.getItem("token");
     if (token) {
@@ -38,7 +43,9 @@ export default function OrdersPage() {
           setLoading(false);
         })
         .catch((error) => {
-          setError("Error obteniendo los pedidos. Por favor, intente de nuevo.");
+          setError(
+            "Error obteniendo los pedidos. Por favor, intente de nuevo."
+          );
           console.error("Error obteniendo los pedidos:", error);
           setLoading(false);
         });
@@ -85,9 +92,12 @@ export default function OrdersPage() {
     maximumFractionDigits: 0,
   });
 
+  // Lógica de paginación
+  const indexOfLastItems = currentPage * itemsPerPage;
+  const indexOfFirstItems = indexOfLastItems - itemsPerPage;
   const paginatedPedidos = filteredPedidos.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    indexOfFirstItems,
+    indexOfLastItems
   );
 
   // Función para descargar los pedidos como archivo Excel
@@ -95,11 +105,10 @@ export default function OrdersPage() {
     const worksheet = XLSX.utils.json_to_sheet(
       filteredPedidos.map((pedido) => ({
         "Pedido ID": pedido.pedidoId,
-        "Fecha": new Date(pedido.fecha).toLocaleDateString(),
-        "Cantidad": pedido.cantidad,
-        "Estado": pedido.estadoNombre,
-        "Total Pedido": pedido.valorTotal,
-        "Valor Total":
+        Fecha: new Date(pedido.fecha).toLocaleDateString(),
+        Cantidad: pedido.cantidad,
+        Estado: pedido.estadoNombre,
+        "Total Pedido":
           pedido.valorTotal !== undefined && pedido.valorTotal !== null
             ? formatCurrency.format(pedido.valorTotal)
             : "N/A",
@@ -121,28 +130,36 @@ export default function OrdersPage() {
     return <div>{error}</div>;
   }
 
-
+  // Calcular el total de páginas
+  const totalPages = Math.ceil(filteredPedidos.length / itemsPerPage);
   return (
     <MainLayout>
       <LayoutSectionComponent>
         <LayoutDivComponent>
           {!isAdmin ? <NavSetting /> : <NavAdmin />}
           <div>
-            <Title className="text-left" text="Mis Compras" />
-            <p className="text-gray-500">Panel de pedidos históricos</p>
-          </div>
-          <div className="bg-gray-100 p-4 border-b-2 border-gray-200 mb-4">
-            <button
-              className="text-blue-500 mb-4 block"
-              onClick={() => setIsPanelCollapsed(!isPanelCollapsed)}
-            >
-              {isPanelCollapsed ? "Mostrar Filtros" : "Ocultar Filtros"}
-            </button>
+            <div className="mb-10">
+              <Title className="text-left" text="Mis Compras" />
+              <p className="text-gray-500">Panel de pedidos históricos</p>
+            </div>
+            <FilterButtonComponent
+              text={isPanelCollapsed ? "Mostrar filtros" : "Ocultar filtros"}
+              onclick={() => setIsPanelCollapsed(!isPanelCollapsed)}
+              className="my-custom-class"
+              isPanelCollapsed={isPanelCollapsed} // Pasar el estado como prop
+            />
+            <div
+              className={`transition-opacity duration-300 ${
+                isPanelCollapsed
+                  ? "opacity-0 h-0 overflow-hidden"
+                  : "opacity-100"
+              }`}
+            ></div>
             {!isPanelCollapsed && (
               <div className="transition-opacity duration-300">
                 <div className="flex flex-wrap gap-4">
                   <div className="flex flex-col flex-grow">
-                    <label htmlFor="estadoId">Estado:</label>
+                    <LabelComponent text="Estado" />
                     <select
                       id="estadoId"
                       name="estadoId"
@@ -158,7 +175,8 @@ export default function OrdersPage() {
                     </select>
                   </div>
                   <div className="flex flex-col flex-grow">
-                    <label htmlFor="fechaDesde">Fecha Desde:</label>
+                    <LabelComponent text="Fecha desde:" />
+
                     <input
                       id="fechaDesde"
                       name="fechaDesde"
@@ -169,7 +187,7 @@ export default function OrdersPage() {
                     />
                   </div>
                   <div className="flex flex-col flex-grow">
-                    <label htmlFor="fechaHasta">Fecha Hasta:</label>
+                    <LabelComponent text="Fecha hasta:" />
                     <input
                       id="fechaHasta"
                       name="fechaHasta"
@@ -186,13 +204,11 @@ export default function OrdersPage() {
 
           {/* Botón de descarga */}
           <div className="w-[20rem]">
-            <ButtonCtaComponent
-              text="Descarga Excel"
-              onClick={downloadExcel}
-            />
+            <ExcelButtonComponent text="Descarga Excel" onClick={downloadExcel}/>
+           
           </div>
 
-          <div>
+          <div className="flex items-center flex-col">
             <table className="table-auto w-full border">
               <thead>
                 <tr>
@@ -214,12 +230,17 @@ export default function OrdersPage() {
                     <td className="border p-2">{pedido.estadoNombre}</td>
                     <td className="border p-2">{pedido.cantidad}</td>
                     <td className="border p-2">
-                      ${pedido.valorTotal !== undefined && pedido.valorTotal !== null
+                      $
+                      {pedido.valorTotal !== undefined &&
+                      pedido.valorTotal !== null
                         ? `${formatCurrency.format(pedido.valorTotal)}`
                         : "N/A"}
                     </td>
                     <td className="border p-2">
-                      <Link href={`/orders/ordersDetails/${pedido.pedidoId}`} className="text-blue-500 hover:underline">
+                      <Link
+                        href={`/orders/ordersDetails/${pedido.pedidoId}`}
+                        className="text-blue-500 hover:underline"
+                      >
                         Ver Detalle
                       </Link>
                     </td>
@@ -227,26 +248,14 @@ export default function OrdersPage() {
                 ))}
               </tbody>
             </table>
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Anterior
-            </button>
-            <span>
-              Página {currentPage} de {Math.ceil(filteredPedidos.length / itemsPerPage)}
-            </span>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === Math.ceil(filteredPedidos.length / itemsPerPage)}
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Siguiente
-            </button>
+            <div className="flex  items-center mt-4">
+              {/* Paginación */}
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={paginate}
+              />
+            </div>
           </div>
         </LayoutDivComponent>
       </LayoutSectionComponent>

@@ -25,6 +25,7 @@ import { FaUserTag } from "react-icons/fa";
 import { GoPasskeyFill } from "react-icons/go";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
+import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 
 export default function UsersPage() {
   useAdmin();
@@ -182,12 +183,12 @@ export default function UsersPage() {
   const downloadExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(
       filteredUsers.map((usuario) => ({
-        "ID": usuario.usuarioId,
-        "Nombre": usuario.nombre,
-        "Correo": usuario.correo,
+        ID: usuario.usuarioId,
+        Nombre: usuario.nombre,
+        Correo: usuario.correo,
         "Es Admin": usuario.esAdmin,
-        "Habilitado": usuario.habilitado,
-        "Eliminado": usuario.eliminado,
+        Habilitado: usuario.habilitado,
+        Eliminado: usuario.eliminado,
       }))
     );
 
@@ -286,7 +287,7 @@ export default function UsersPage() {
               <div className="flex flex-wrap gap-4">
                 {/* Botón de descarga */}
                 <div className="w-[20rem]">
-                  <ButtonCtaComponent
+                  <ExcelButtonComponent
                     text="Descarga Excel"
                     onClick={downloadExcel}
                   />
@@ -302,16 +303,16 @@ export default function UsersPage() {
                     <FaUserTag className="text-2xl" title="Nombre" />
                   </div>
                   <div className="flex justify-center items-center">
-                    <MdEmail className="text-2xl" title="Correo"/>
+                    <MdEmail className="text-2xl" title="Correo" />
                   </div>
                   <div className="flex justify-center items-center">
-                    <GoPasskeyFill className="text-2xl" title="Administrador"/>
+                    <GoPasskeyFill className="text-2xl" title="Administrador" />
                   </div>
                   <div className="flex justify-center items-center">
-                    <FaUserCheck className="text-2xl" title="Habilitado"/>
+                    <FaUserCheck className="text-2xl" title="Habilitado" />
                   </div>
                   <div className="flex justify-center items-center">
-                    <FaUserSlash className="text-2xl" title="Eliminado"/>
+                    <FaUserSlash className="text-2xl" title="Eliminado" />
                   </div>
                 </div>
 
