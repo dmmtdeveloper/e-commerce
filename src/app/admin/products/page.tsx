@@ -29,6 +29,7 @@ import { ImFilePicture } from "react-icons/im";
 import { PiProhibitBold } from "react-icons/pi";
 import { CgCheck } from "react-icons/cg";
 import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
+import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 
 export default function ProductsPage() {
   useAdmin();
@@ -207,13 +208,13 @@ export default function ProductsPage() {
     const worksheet = XLSX.utils.json_to_sheet(
       filteredProductos.map((producto) => ({
         "Producto ID": producto.productoId,
-        "Nombre": producto.nombre,
-        "Descripcion": producto.descripcion,
-        "Precio": formatCurrency.format(producto.precio) ,
-        "Stock": producto.stock,
+        Nombre: producto.nombre,
+        Descripcion: producto.descripcion,
+        Precio: formatCurrency.format(producto.precio),
+        Stock: producto.stock,
         "Stock Reservado": producto.stockReservado,
-        "Habilitado": producto.habilitado,
-        "Eliminado": producto.eliminado,
+        Habilitado: producto.habilitado,
+        Eliminado: producto.eliminado,
       }))
     );
 
@@ -337,28 +338,36 @@ export default function ProductsPage() {
               <div className="flex flex-wrap gap-4">
                 {/* Botón para Crear Producto */}
                 <Link href={"/admin/products/create"}>
-                  <ButtonCtaComponent
-                    className="bg-green-500 hover:bg-green-600 translate-all duration-300"
-                    text="Crear Producto"
-                  />
+                  <ButtonCtaComponent text="Crear Producto" />
                 </Link>
 
                 {/* Botón de descarga */}
                 <div className="w-[20rem]">
-                  <ButtonCtaComponent
+                  <ExcelButtonComponent
                     text="Descarga Excel"
                     onClick={downloadExcel}
                   />
                 </div>
               </div>
 
-
               <div className="overflow-x-center">
                 <div className="grid grid-cols-4 bg-blue-500 text-gray-50 text-sm font-bold py-2 px-4 justify-items-center">
-                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Producto" />
-                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Habilitar / Deshabilitar" />
-                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Eliminar" />
-                  <LabelComponent className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm" text="Editar" />
+                  <LabelComponent
+                    className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm"
+                    text="Producto"
+                  />
+                  <LabelComponent
+                    className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm"
+                    text="Habilitar / Deshabilitar"
+                  />
+                  <LabelComponent
+                    className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm"
+                    text="Eliminar"
+                  />
+                  <LabelComponent
+                    className="text-[12px] 2xl:text-sm md:text-sm lg:text-sm"
+                    text="Editar"
+                  />
                 </div>
                 {currentProductos.map((producto) => (
                   <div
@@ -369,7 +378,11 @@ export default function ProductsPage() {
                     <div className="flex items-center space-x-4">
                       <div className="w-100 h-100 p-5 rounded-full bg-slate-200">
                         <Link
-                          href={!producto.eliminado ? `/admin/products/${producto.productoId}` : `#`}
+                          href={
+                            !producto.eliminado
+                              ? `/admin/products/${producto.productoId}`
+                              : `#`
+                          }
                           className="text-blue-500 w-200 h-auto hover:underline"
                         >
                           {producto.foto && producto.foto !== "" ? (
@@ -383,15 +396,17 @@ export default function ProductsPage() {
                             />
                           ) : (
                             <div className="w-50 p-4 h-auto  rounded-full">
-                              <ImFilePicture  />
+                              <ImFilePicture />
                             </div>
                           )}
                         </Link>
                       </div>
                       <div className="hidden 2xl:block md:block lg:block">
                         <p className="font-bold text-lg">{producto.nombre}</p>
-                        <p className="text-sm text-gray-600">
-                          {producto.descripcion}
+                        <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
+                          {producto.descripcion.length > 10
+                            ? `${producto.descripcion.substring(0, 37)}...`
+                            : producto.descripcion}
                         </p>
                         <p className="text-sm font-bold text-gray-800">
                           Precio: $
@@ -401,37 +416,42 @@ export default function ProductsPage() {
                             : "N/A"}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Stock: {producto.eliminado ? ("--"): (producto.habilitado? (producto.stock):("--"))}
+                          Stock:{" "}
+                          {producto.eliminado
+                            ? "--"
+                            : producto.habilitado
+                            ? producto.stock
+                            : "--"}
                         </p>
                         <p className="text-sm text-gray-600">
-                          Stock Reservado: {producto.eliminado ? ("--"): (producto.habilitado? (producto.stockReservado):("--"))}
+                          Stock Reservado:{" "}
+                          {producto.eliminado
+                            ? "--"
+                            : producto.habilitado
+                            ? producto.stockReservado
+                            : "--"}
                         </p>
 
-                        {producto.eliminado? (
+                        {producto.eliminado ? (
                           <p className="font-bold text-md text-red-600">
                             Producto Eliminado
                           </p>
-                        ):(
-                          producto.habilitado? (
+                        ) : producto.habilitado ? (
                           <p className="font-bold text-md text-gray-600">
                             Stock Disponible:{" "}
                             {producto.stock - producto.stockReservado}
-                          </p>):
-                          (
-                            <p className="font-bold text-md text-gray-600">
+                          </p>
+                        ) : (
+                          <p className="font-bold text-md text-gray-600">
                             Producto Deshabilitado
                           </p>
-                          )
-                          
                         )}
-
                       </div>
                     </div>
 
-                  {/* Habilitar/Deshabilitar (solo si no está eliminado) */}
-                  <div className="flex justify-center">
-
-                    {!producto.eliminado && (
+                    {/* Habilitar/Deshabilitar (solo si no está eliminado) */}
+                    <div className="flex justify-center">
+                      {!producto.eliminado && (
                         <button
                           onClick={() =>
                             handleCheckboxChange(
@@ -440,21 +460,20 @@ export default function ProductsPage() {
                               !producto.habilitado
                             )
                           }
-                          title={producto.habilitado ? "Deshabilitar" : "Habilitar"}
+                          title={
+                            producto.habilitado ? "Deshabilitar" : "Habilitar"
+                          }
                           className="text-green-500 hover:underline"
                         >
                           {producto.habilitado ? (
-                            <PiProhibitBold className="text-red-500 text-3xl"  />
+                            <PiProhibitBold className="text-red-500 text-3xl" />
                           ) : (
-                            <CgCheck className="text-green-500 text-4xl"/>
+                            <CgCheck className="text-green-500 text-4xl" />
                           )}
                         </button>
                       )}
-                    
-                  </div>
-                  
-                
-              
+                    </div>
+
                     {/* Eliminado */}
                     <div className="flex justify-center">
                       {!producto.eliminado ? (
@@ -470,20 +489,26 @@ export default function ProductsPage() {
                         >
                           <FaTrashAlt className="text-2xl hover:scale-110 duration-300 text-red-500" />
                         </button>
-                      ):( <FaTrashAlt className="text-2xl text-gray-400" title="Eliminado" />)}
+                      ) : (
+                        <FaTrashAlt
+                          className="text-2xl text-gray-400"
+                          title="Eliminado"
+                        />
+                      )}
                     </div>
 
                     {/* Acciones */}
                     <div className="flex justify-center">
-
-                    {!producto.eliminado ? (
-                      <Link
-                        href={`/admin/products/${producto.productoId}`}
-                        className="text-blue-500 hover:underline"
-                      >
-                        <RiEdit2Fill className="text-3xl hover:scale-110 duration-300 transition-all" />
-                      </Link>
-                      ):(<RiEdit2Fill className="text-3xl text-gray-400" />)}
+                      {!producto.eliminado ? (
+                        <Link
+                          href={`/admin/products/${producto.productoId}`}
+                          className="text-blue-500 hover:underline"
+                        >
+                          <RiEdit2Fill className="text-3xl hover:scale-110 duration-300 transition-all" />
+                        </Link>
+                      ) : (
+                        <RiEdit2Fill className="text-3xl text-gray-400" />
+                      )}
                     </div>
                   </div>
                 ))}

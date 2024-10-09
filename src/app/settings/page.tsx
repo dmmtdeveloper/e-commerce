@@ -1,15 +1,15 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { Title } from "@/components/title/Title";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { NavSetting } from "@/components/shared/NavSetting";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateEliminadoUsuario } from "@/utils/authHelpers";
 import MainLayout from "@/components/layouts/MainLayout";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
-import { NavSetting } from "@/components/shared/NavSetting";
-import { Title } from "@/components/title/Title";
 import Image from "next/image";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import InputComponentAuth from "@/components/input/inputComponenAuth";

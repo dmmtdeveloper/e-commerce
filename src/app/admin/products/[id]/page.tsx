@@ -88,7 +88,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; // Obtener el archivo seleccionado
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
+    if (file && (file.type === "image/png" || file.type === "image/jpeg" || file.type === "image/jpg")) {
       setSelectedFile(file); // Asegurarse de que es un archivo png o jpg
       setFileName(file.name); // Almacenar el nombre del archivo
       setFileType(file.type); // Almacenar el tipo del archivo
@@ -117,7 +117,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
         // Agregar la imagen base64 al producto antes de actualizar
         const updatedProduct = {
           ...producto,
-          foto: imageBase64 ? getBase64String(imageBase64) : "",
+          foto: imageBase64 ? getBase64String(imageBase64) : "", extension: fileType ? fileType : "", nombreFoto: fileName ? fileName : ""
         };
 
         await UpdateProductoAll(updatedProduct);

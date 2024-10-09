@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
                 <div className="relative" ref={menuRef}>
                   {/* Modal */}
                   <div
-                    className={`absolute mt-4 right-0 ${ isAdmin ? "h-[37rem]" : "h-[25rem]"} w-[22.5rem] bg-slate-200 text-black p-4 rounded-3xl transition-all duration-300 ease-in-out z-[99999] ${
+                    className={`absolute mt-4 right-0 ${ isAdmin ? "h-[40rem]" : "h-[25rem]"} w-[22.5rem] bg-slate-200 text-black p-4 rounded-[2.5rem] transition-all duration-300 ease-in-out z-[99999] ${
                       menuOpen ? "scale-100 opacity-100" : "scale-0 opacity-0"
                     }`}
                   >

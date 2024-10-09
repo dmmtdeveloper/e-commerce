@@ -17,6 +17,7 @@ import MainLayout from "../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import useAdmin from "@/hooks/useAdmin";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 
 export default function OrdersPage() {
   useAdmin();
@@ -217,7 +218,7 @@ export default function OrdersPage() {
 
               {/* Botón de descarga */}
               <div className="w-[20rem]">
-                <ButtonCtaComponent
+                <ExcelButtonComponent
                   text="Descarga Excel"
                   onClick={downloadExcel}
                 />

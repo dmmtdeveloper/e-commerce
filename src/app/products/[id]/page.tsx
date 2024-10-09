@@ -119,7 +119,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
             <Image
               src={`data:image/${product.extension};base64,${product.foto}`}
               alt={product.nombre}
-              className="w-500 h-500 object-cover rounded"
+              className="w-500 h-500 object-cover rounded hover:scale-125 transition-all duration-300"
               height={500}
               width={500}
               priority
@@ -130,8 +130,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         </div>
         <div>
           <div className="flex flex-col">
+            <h2 className="text-normal">{product.nombre}</h2>
             <p className="text-lg text-gray-600">{product.descripcion}</p>
-            <h1 className="text-2xl">{product.nombre}</h1>
             <p className="text-5xl font-semibold mt-4">
               $
               {product.precio !== undefined && product.precio !== null

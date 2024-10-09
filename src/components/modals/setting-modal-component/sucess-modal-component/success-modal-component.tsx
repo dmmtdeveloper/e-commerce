@@ -1,7 +1,7 @@
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import sucessAnimation from "@/public/assets/animation/Animation-success.json";
 import React, { useRef } from "react";
-import ButtonModalClose from "../../button-modal/button-modal-close";
+
 
 interface SuccessModalProps {
   isOpen: boolean;
