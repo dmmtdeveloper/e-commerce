@@ -130,7 +130,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
         </div>
         <div>
           <div className="flex flex-col">
-            <h1 className="text-2xl">{product.nombre}</h1>
+            <h2 className="text-normal">{product.nombre}</h2>
             <p className="text-lg text-gray-600">{product.descripcion}</p>
             <p className="text-5xl font-semibold mt-4">
               $
