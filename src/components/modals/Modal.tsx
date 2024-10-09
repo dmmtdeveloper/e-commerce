@@ -76,8 +76,7 @@ export default function Modal({ product, onClose }: ModalProps) {
 
         {/* Mostrar la imagen del producto */}
         <div className="flex flex-col 2xl:flex-row 2xl:gap-18  justify-between">
-
-          <div className="2xl:flex md:flex lg:flex 2xl:flex-col">
+          <div className="2xl:flex md:flex-col lg:flex-col 2xl:flex-col">
             <Image
               className="2xl:w-32 w-44 h-auto 2xl:h-36 "
               width={128}
@@ -90,10 +89,10 @@ export default function Modal({ product, onClose }: ModalProps) {
               alt={product.nombre}
               priority
             />
-            <p className="font-semibold 2xl:block md:block lg:block hidden text-gray-700">
+            <p className="text-sm font-light text-gray-500">
               {product.nombre ? product.nombre : "Sin Nombre disponible"}
             </p>
-            <p className="font-light 2xl:block md:block lg:block hidden text-gray-700">
+            <p className="font-light 2xl:block 2xl:max-w-[30rem] hidden text-gray-700">
               {product.descripcion
                 ? product.descripcion
                 : "Sin Nombre disponible"}
@@ -102,17 +101,21 @@ export default function Modal({ product, onClose }: ModalProps) {
 
           <div className="flex flex-col 2xl:w-52 md:w-52 lg:w-52">
             <div className="flex flex-col justify-center">
-              <p className="2xl:font-normal text-[12px]">Otros medios de pago</p>
+              <p className="2xl:font-normal text-[12px]">
+                Otros medios de pago
+              </p>
 
               <p className="text-3xl font-semibold">
                 {product.precio !== undefined && product.precio !== null
                   ? `$${formatCurrency.format(product.precio)}`
                   : "N/A"}
               </p>
-              <p className="font-light text-gray-400">Transferencia</p>
+              <p className="font-light text-sm text-gray-400">Transferencia</p>
             </div>
             <div className=" flex justify-center gap-1 mt-4 flex-col">
-              <p className="2xl:text-[12px] text-[10px]">Hasta 24 cuotas sin interés</p>
+              <p className="2xl:text-[12px] text-[10px]">
+                Hasta 24 cuotas sin interés
+              </p>
               <div className="flex gap-2">
                 <Image
                   width={90}
