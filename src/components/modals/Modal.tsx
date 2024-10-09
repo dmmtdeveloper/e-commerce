@@ -1,4 +1,5 @@
 import { Product } from "@/types/product";
+import sucessAnimation from "@/public/assets/animation/Animation-success.json";
 import Link from "next/link";
 
 interface ModalProps {
