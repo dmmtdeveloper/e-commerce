@@ -71,13 +71,13 @@ export default function ProductCard({ product }: ProductCardProps) {
               "justify-center mb-8",
               "overflow-hidden",
               "relative",
-              "w-full h-48", // Tamaño fijo para el contenedor de la imagen
+              "w-full h-48" // Tamaño fijo para el contenedor de la imagen
             )}
           >
             <Image
               className="object-cover" // Asegúrate de que la imagen mantenga la proporción correcta
               width={190}
-              height={190} 
+              height={190}
               src={
                 product.foto
                   ? `data:image/${product.extension};base64,${product.foto}`
@@ -93,7 +93,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             <h2 className="text-lg font-semibold text-slate-900">
               {product.nombre}
             </h2>
-            <p className="text-sm text-gray-600">{product.descripcion}</p>
+            <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
+              {product.descripcion.length > 10
+                ? `${product.descripcion.substring(0, 40)}...`
+                : product.descripcion}
+            </p>
+
             <p className="text-md font-semibold mt-2 text-slate-600">
               {product.precio !== undefined && product.precio !== null
                 ? `$${formatCurrency.format(product.precio)}`
