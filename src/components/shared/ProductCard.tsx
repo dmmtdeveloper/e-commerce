@@ -95,7 +95,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             </h2>
             <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
               {product.descripcion.length > 10
-                ? `${product.descripcion.substring(0, 40)}...`
+                ? `${product.descripcion.substring(0, 37)}...`
                 : product.descripcion}
             </p>
 

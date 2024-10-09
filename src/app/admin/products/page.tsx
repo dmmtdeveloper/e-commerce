@@ -338,10 +338,7 @@ export default function ProductsPage() {
               <div className="flex flex-wrap gap-4">
                 {/* Botón para Crear Producto */}
                 <Link href={"/admin/products/create"}>
-                  <ButtonCtaComponent
-                    
-                    text="Crear Producto"
-                  />
+                  <ButtonCtaComponent text="Crear Producto" />
                 </Link>
 
                 {/* Botón de descarga */}
@@ -406,8 +403,10 @@ export default function ProductsPage() {
                       </div>
                       <div className="hidden 2xl:block md:block lg:block">
                         <p className="font-bold text-lg">{producto.nombre}</p>
-                        <p className="text-sm text-gray-600">
-                          {producto.descripcion}
+                        <p className="text-sm text-gray-600 overflow-hidden whitespace-nowrap text-ellipsis">
+                          {producto.descripcion.length > 10
+                            ? `${producto.descripcion.substring(0, 37)}...`
+                            : producto.descripcion}
                         </p>
                         <p className="text-sm font-bold text-gray-800">
                           Precio: $
