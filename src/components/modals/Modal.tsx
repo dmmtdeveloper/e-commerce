@@ -1,6 +1,13 @@
 import { Product } from "@/types/product";
-import sucessAnimation from "@/public/assets/animation/Animation-success.json";
+import cartSuccess from "@/public/assets/animation/cart-success.json";
 import Link from "next/link";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import { useRef } from "react";
+import ButtonCtaComponent from "../buttons-components/button-cta-component";
+import ReactDOM from "react-dom";
+import Image from "next/image"; // Importamos el componente Image
+import noImage from "@/public/assets/img/no_image.jpg"; // Imagen de respaldo si no hay imagen
+import clsx from "clsx";
 
 interface ModalProps {
   product: Product;
@@ -14,32 +21,107 @@ const formatCurrency = new Intl.NumberFormat("es-ES", {
   maximumFractionDigits: 0,
 });
 
-export default function Modal({ product, onClose }: ModalProps) {
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">Producto agregado al carrito</h2>
-        <p className="mb-2">
-          Has agregado <strong>{product.nombre}</strong> al carrito.
-        </p>
-        <p className="mb-4">Precio: {product.precio !== undefined && product.precio !== null
-                ? `$${formatCurrency.format(product.precio)}`
-                : "N/A"}</p>
+// Función para manejar el clic fuera del modal
 
-        <div className="flex justify-between">
-          <button
+export default function Modal({ product, onClose }: ModalProps) {
+  const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    // Si el clic se realiza en el contenedor externo (fuera del contenido modal), se cierra el modal
+    if (event.target === event.currentTarget) {
+      onClose();
+    }
+  };
+  const successRef = useRef<LottieRefCurrentProps>(null);
+
+  // Asegúrate de que el modal se monte al final del body usando createPortal
+  return ReactDOM.createPortal(
+    <div
+      onClick={handleOutsideClick}
+      className="fixed inset-0 w-full h-full bg-black bg-opacity-50 grid items-center justify-center z-50"
+    >
+      <div
+        className={clsx(
+          "2xl:px-16",
+          "2xl:py-8 2xl:rounded-[3rem]",
+          "2xl:w-[60rem]",
+
+          "lg:px-16",
+          "lg:py-8 2xl:rounded-[3rem]",
+          "lg:w-[60rem]",
+
+          "md:px-16",
+          "md:py-8 2xl:rounded-[3rem]",
+          "md:w-[60rem]",
+
+          "bg-white",
+          "flex flex-col gap-4",
+          "p-4",
+          "shadow-lg",
+        )}
+      >
+        <div className="flex 2xl:gap-4 gap-2 items-center">
+          <Lottie
+            onComplete={() => {
+              successRef.current?.goToAndPlay(45, true);
+            }}
+            lottieRef={successRef}
+            loop={false}
+            className="w-10"
+            animationData={cartSuccess}
+          />
+          <h2 className="text-sm 2xl:text-normal text-pretty font-semibold">
+            Producto agregado al carro de compras
+          </h2>
+        </div>
+
+        {/* Mostrar la imagen del producto */}
+        <div className="flex gap-28 justify-between">
+          <div className="2xl:flex md:flex lg:flex 2xl:flex-col">
+            <Image
+              className="2xl:w-32 w-full h-auto 2xl:h-36 "
+              width={128}
+              height={128}
+              src={
+                product.foto
+                  ? `data:image/${product.extension};base64,${product.foto}` // Si hay imagen, mostrarla
+                  : noImage // Si no hay imagen, mostrar la imagen por defecto
+              }
+              alt={product.nombre}
+              priority
+            />
+            <p className="font-semibold 2xl:block md:block lg:block hidden text-gray-700">
+              {product.nombre ? product.nombre : "Sin Nombre disponible"}
+            </p>
+            <p className="font-light 2xl:block md:block lg:block hidden text-gray-700">
+              {product.descripcion
+                ? product.descripcion
+                : "Sin Nombre disponible"}
+            </p>
+          </div>
+          <div className="flex flex-col justify-center">
+            <p className="2xl:font-normal text-sm">Otros medios de pago</p>
+
+            <p className="text-3xl font-semibold">
+              {product.precio !== undefined && product.precio !== null
+                ? `$${formatCurrency.format(product.precio)}`
+                : "N/A"}
+            </p>
+            <p className="font-light text-gray-400">Transferencia</p>
+          </div>
+        </div>
+
+        <div className="flex gap-4">
+          <ButtonCtaComponent
+            className="bg-green-500 hover:bg-green-700"
+            text="Seguir Comprando"
             onClick={onClose}
-            className="bg-gray-300 text-gray-700 py-2 px-4 rounded hover:bg-gray-400"
-          >
-            Seguir comprando
-          </button>
+          />
+
           <Link href={"/cart"}>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
-              Ir al carrito
-            </button>
+            <ButtonCtaComponent text="Ir al carrito" />
           </Link>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body // El modal se montará directamente en el body para cubrir toda la pantalla
   );
 }

@@ -5,9 +5,9 @@ import useCartStore from "@/store/cartStore";
 import Modal from "@/components/modals/Modal"; // Asegúrate de importar el componente Modal
 import Image from "next/image";
 import noImage from "@/public/assets/img/no_image.jpg";
-import { MdOutlineShoppingCart } from "react-icons/md";
 import { Reveal } from "@/components/animation/Reveal";
 import ButtonShoppingComponent from "../buttons-components/button-shopping";
+import clsx from "clsx";
 
 interface ProductCardProps {
   product: Product;
@@ -48,16 +48,36 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <Reveal>
-      <section className="bg-slate-50 pb-5 flex flex-col justify-between border-slate-200 border  p-4  hover:shadow-xl transition-shadow duration-300 cursor-pointer rounded-3xl">
+      <section
+        className={clsx(
+          "bg-slate-50 pb-5",
+          "border-slate-200 border",
+          "duration-300 cursor-pointer",
+          "flex flex-col justify-between",
+          "p-4 hover:shadow-xl",
+          "rounded-3xl",
+          "transition-shadow",
+          "min-h-[450px]", // Altura mínima de la tarjeta para mantener el tamaño uniforme
+          "h-[450px]" // Altura fija para todas las tarjetas
+        )}
+      >
         <Link
           href={`/products/${product.productoId}`}
           className="flex items-center justify-between flex-col"
         >
-          <div className="relative w-50 h-50 overflow-hidden flex items-center justify-center mb-8">
+          <div
+            className={clsx(
+              "flex items-center",
+              "justify-center mb-8",
+              "overflow-hidden",
+              "relative",
+              "w-full h-48", // Tamaño fijo para el contenedor de la imagen
+            )}
+          >
             <Image
-              className="w-48 h-auto"
-              width={260}
-              height={260} // Asegúrate de que la altura sea igual al ancho para mantener la proporción
+              className="object-cover" // Asegúrate de que la imagen mantenga la proporción correcta
+              width={190}
+              height={190} 
               src={
                 product.foto
                   ? `data:image/${product.extension};base64,${product.foto}`
@@ -85,17 +105,17 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
         </Link>
 
-        {/* Botón para agregar al carrito */}
-
         {product.stock - product.stockReservado > 0 ? (
-          <ButtonShoppingComponent text="Agregar al carrito" onClick={handleAddToCart}/>
+          <ButtonShoppingComponent
+            text="Agregar al carrito"
+            onClick={handleAddToCart}
+          />
         ) : (
           <div className="bg-gray-200 text-gray-500 p-2 mt-4 w-full rounded-xl text-center">
             No Disponible
           </div>
         )}
 
-        {/* Modal que aparece después de agregar al carrito */}
         {isModalOpen && <Modal product={product} onClose={handleCloseModal} />}
       </section>
     </Reveal>
