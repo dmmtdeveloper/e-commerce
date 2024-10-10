@@ -13,6 +13,8 @@ export const Footer = () => {
         "pt-10 pb-5",
         "flex justify-center items-center",
         "flex-col px-5",
+        "md:px-8",
+        "lg:px-8",
         "xl:px-24",
         "border-t-1",
         "border-gray-950/[.1] bg-slate-50"

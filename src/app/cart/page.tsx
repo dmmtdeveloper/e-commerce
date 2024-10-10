@@ -180,7 +180,7 @@ export default function CartPage() {
 
   return (
     <MainLayout>
-      <section className="p-6 mt-24 2xl:px-24 lg:px-24 md:px-24 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section className="p-6 mt-24 2xl:px-24 lg:px-8 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Lista de productos */}
         <div className="lg:col-span-2">
           <Link href={"/"} className="flex gap-2 items-center hover:underline font-light">
@@ -211,7 +211,7 @@ export default function CartPage() {
                     />
                   </div>
 
-                  <div className="2xl:block hidden">
+                  <div className="2xl:block md:block lg:block hidden">
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm text-gray-500">
                       Precio: $
