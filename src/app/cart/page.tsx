@@ -254,7 +254,7 @@ export default function CartPage() {
         />
 
         {/* Botón para vaciar el carrito */}
-        <button  className="text-left hover:underline" onClick={handleClearCart}>Vaciar Carrito</button>
+          <button  className="text-left text-gray-500 font-light hover:underline" onClick={handleClearCart}>Vaciar Carrito</button>
       </section>
 
       {/* Modal de inicio de sesión */}
