@@ -1,29 +1,26 @@
 "use client";
-
+import { addPedido } from "@/utils/authHelpers";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { InputComponent } from "@/components/input/InputComponent";
+import { InputPassword } from "@/components/input/InputPassword";
+import { IoHome } from "react-icons/io5";
+import { login } from "../../utils/authHelpers";
+import { Title } from "@/components/title/Title";
+import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import useCartStore from "@/store/cartStore"; // Importa el store del carrito
+
+import axios from "axios";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import CartSummaryComponent from "@/components/cart-component/cart-summary-component";
+import ConfirmationModal from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component"; // Importar el modal
+import Image from "next/image";
 import Link from "next/link";
 import MainLayout from "../../components/layouts/MainLayout";
-import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa"; // Importar los íconos
-import ConfirmationModal from "@/components/ConfirmationModal"; // Importar el modal
-import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
-import { addPedido } from "@/utils/authHelpers";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
-import axios from "axios";
-// import { AuthButton } from "@/components/buttons/AuthButton";
-import { InputPassword } from "@/components/input/InputPassword";
-import { InputComponent } from "@/components/input/InputComponent";
-import { login } from "../../utils/authHelpers";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
-import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import QuantityControl from "@/components/cart-component/quantity-control-component";
-import { Title } from "@/components/title/Title";
-import { IoHome } from "react-icons/io5";
-import CartSummaryComponent from "@/components/cart-component/cart-summary-component";
+import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
+import useCartStore from "@/store/cartStore"; // Importa el store del carrito
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
@@ -196,9 +193,9 @@ export default function CartPage() {
                 className="grid grid-cols-3 p-2 items-center text-center justify-center border border-gray-300 border-b-1 border-x-0 border-t-0"
               >
                 <div className="flex items-center gap-8">
-                  <div className="relative w-50 h-50 overflow-hidden flex items-center justify-center mb-8">
+                  <div className="relative items-center flex justify-center w-50 h-50 mb-8">
                     <Image
-                      className="w-32 h-auto"
+                      className="w-32 h-auto flex"
                       width={200}
                       height={200} // Asegúrate de que la altura sea igual al ancho para mantener la proporción
                       src={
@@ -212,7 +209,7 @@ export default function CartPage() {
                   </div>
 
                   <div className="2xl:block md:block lg:block hidden">
-                    <h2 className="text-lg font-bold">{item.name}</h2>
+                    <h2 className="text-sm text-left">{item.name}</h2>
                     <p className="text-sm text-gray-500">
                       Precio: $
                       {item.price !== undefined && item.price !== null

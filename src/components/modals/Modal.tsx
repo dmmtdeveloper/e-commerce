@@ -43,15 +43,15 @@ export default function Modal({ product, onClose }: ModalProps) {
         className={clsx(
           "2xl:px-16",
           "2xl:py-8 2xl:rounded-[3rem]",
-          "2xl:w-[60rem]",
+          "2xl:w-[50rem]",
 
           "lg:px-16",
           "lg:py-8 2xl:rounded-[3rem]",
-          "lg:w-[60rem]",
+          "lg:w-[50rem]",
 
           "md:px-16",
           "md:py-8 2xl:rounded-[3rem]",
-          "md:w-[60rem]",
+          "md:w-[50rem]",
 
           "bg-white",
           "flex flex-col gap-4",
