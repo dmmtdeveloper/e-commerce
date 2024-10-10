@@ -55,7 +55,7 @@ export default function CartPage() {
 
     try {
       await addPedido(token, 1, detallesPedido);
-      alert("Pedido realizado con éxito");
+      setShowSuccessModal(true); // Mostrar modal de éxito
       clearCart(); // Limpia el carrito después de crear el pedido
       router.push("/cart");
     } catch (error) {
@@ -146,6 +146,8 @@ export default function CartPage() {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
+
+  
 
   // Si no hay productos en el carrito
   if (items.length === 0) {

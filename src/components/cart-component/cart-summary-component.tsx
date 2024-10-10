@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component"; // Asegúrate de tener este componente
-import { Title } from "@/components/title/Title"; // Asegúrate de tener este componente para el título
 import { TbLockFilled } from "react-icons/tb";
 import { GoShieldCheck } from "react-icons/go";
 import { FaCarSide } from "react-icons/fa";
+import SuccessModal from "../SuccessModal";
 
 interface CartSummaryComponentProps {
   items: {
@@ -54,6 +54,7 @@ const CartSummaryComponent: React.FC<CartSummaryComponentProps> = ({
               className="bg-green-500 py-4 hover:bg-green-600 w-full font-semibold"
               text="Crear pedido"
               type="submit" // Usamos un botón de tipo submit
+              onClick={() => SuccessModal}
             />
           </form>
           <div className="2xl:flex 2xl:items-center 2xl:gap-8">
