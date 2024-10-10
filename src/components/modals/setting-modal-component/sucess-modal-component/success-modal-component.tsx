@@ -14,9 +14,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   message,
   onClose,
 }) => {
+  const successRef = useRef<LottieRefCurrentProps>(null);
   if (!isOpen) return null;
 
-  const successRef = useRef<LottieRefCurrentProps>(null);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="bg-white p-6 rounded-3xl flex-col">

@@ -27,7 +27,7 @@ const CartSummaryComponent: React.FC<CartSummaryComponentProps> = ({
 
   return (
     <div>
-      <div className="border border-gray-300 p-8 mt-[116px]">
+      <div className="border border-gray-300 p-8 2xl:mt-[116px] mt-0">
         <h2 className="text-lg font-semibold mb-8">Resumen de tu compra</h2>
         <div className="mb-2 flex justify-between">
           <span>Total transferencia</span>
