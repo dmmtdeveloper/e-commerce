@@ -19,6 +19,11 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Image from "next/image";
 import notebook from "@/public/assets/img/notebook.png";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
+import QuantityControl from "@/components/cart-component/quantity-control-component";
+import { Title } from "@/components/title/Title";
+import { IoHome } from "react-icons/io5";
+import CartSummaryComponent from "@/components/cart-component/cart-summary-component";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
@@ -151,11 +156,7 @@ export default function CartPage() {
       <MainLayout>
         <section className="flex pt-64 flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-4">
-            <article>
-              <h1 className="text-2xl  font-bold mb-4">
-                Tu carrito está vacío
-              </h1>
-            </article>
+            <Title text="Tu carrito de está vacio" />
 
             <article className="flex gap-4">
               <Link href="/">
@@ -179,22 +180,27 @@ export default function CartPage() {
 
   return (
     <MainLayout>
-      <section className="p-6 mt-32 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <section className="p-6 mt-24 2xl:px-24 lg:px-24 md:px-24 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Lista de productos */}
         <div className="lg:col-span-2">
-          <h1 className="text-2xl font-bold mb-4">Tu carrito de compras</h1>
-          <ul>
+          <Link href={"/"} className="flex gap-2 items-center hover:underline font-light">
+            <IoHome className="text-2xl" />
+            <p>home</p>
+          </Link>
+          <Title className="mt-4 mb-10" text="Tu carrito de compras" />
+
+          <ul className="border border-gray-300 border-x-0 border-b-0">
             {items.map((item) => (
-              <li
+              <section
                 key={item.id}
-                className="border p-4 mb-4 flex justify-between items-center"
+                className="grid grid-cols-3 p-2 items-center text-center justify-center border border-gray-300 border-b-1 border-x-0 border-t-0"
               >
-                <div className="flex">
+                <div className="flex items-center gap-8">
                   <div className="relative w-50 h-50 overflow-hidden flex items-center justify-center mb-8">
                     <Image
-                      className="w-48 h-auto"
-                      width={260}
-                      height={260} // Asegúrate de que la altura sea igual al ancho para mantener la proporción
+                      className="w-32 h-auto"
+                      width={200}
+                      height={200} // Asegúrate de que la altura sea igual al ancho para mantener la proporción
                       src={
                         item.foto
                           ? `data:image/${item.extension};base64,${item.foto}`
@@ -205,7 +211,7 @@ export default function CartPage() {
                     />
                   </div>
 
-                  <div>
+                  <div className="2xl:block hidden">
                     <h2 className="text-lg font-bold">{item.name}</h2>
                     <p className="text-sm text-gray-500">
                       Precio: $
@@ -215,77 +221,40 @@ export default function CartPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center">
-                  <button
-                    onClick={() =>
-                      handleDecreaseQuantity(item.id, item.quantity)
-                    }
-                    className="p-2 bg-gray-200 rounded"
-                  >
-                    <FaMinus />
-                  </button>
-                  <span className="mx-4 text-lg">{item.quantity}</span>
-                  <button
-                    onClick={() =>
-                      handleIncreaseQuantity(item.id, item.quantity)
-                    }
-                    className="p-2 bg-gray-200 rounded"
-                  >
-                    <FaPlus />
-                  </button>
-                  {/* <span className="mx-4 text-lg">Precio Unitario: {item.price}</span> */}
-                  <span className="mx-4 text-lg">
-                    Precio Total: $
-                    {item.totalPrice !== undefined && item.totalPrice !== null
-                      ? `${formatCurrency.format(item.totalPrice)}`
-                      : "N/A"}
-                  </span>
+
+                {/* suma y resta de productos */}
+                <QuantityControl
+                  id={item.id}
+                  quantity={item.quantity}
+                  handleDecreaseQuantity={handleDecreaseQuantity}
+                  handleIncreaseQuantity={handleIncreaseQuantity}
+                  handleRemove={handleRemove}
+                />
+
+                <div className="font-semibold text-right">
+                  <p className="font-light">Transferencia</p>$
+                  {item.totalPrice !== undefined && item.totalPrice !== null
+                    ? `${formatCurrency.format(item.totalPrice)}`
+                    : "N/A"}
                 </div>
-                <div className="p-10">
-                  <FaTrashAlt
-                    className="text-red-500 hover:text-red-700 text-2xl"
-                    onClick={() => handleRemove(item.id)}
-                  />
-                </div>
-              </li>
+              </section>
             ))}
           </ul>
         </div>
-
         {/* Resumen de compra */}
-        <div className="bg-gray-100 p-4 rounded-lg">
-          <h2 className="text-lg font-bold mb-4">Resumen de tu compra</h2>
-          <div className="mb-2 flex justify-between">
-            <span>Total transferencia</span>
-            <span className="font-bold">
-              $
-              {formatCurrency.format(
-                items.reduce((acc, item) => acc + item.price * item.quantity, 0)
-              )}
-            </span>
-          </div>
-          <p className="text-sm text-gray-500 mb-4">
-            El costo de envío se calculará al añadir la dirección.
-          </p>
-          <Link href="/">
-            <button className="bg-green-500 text-white w-full py-2 rounded mb-2">
-              Agregar más productos
-            </button>
-          </Link>
-          <button
-            onClick={handlePedido}
-            className="bg-black text-white w-full py-2 rounded"
-          >
-            Crear Pedido
-          </button>
-        </div>
+        <CartSummaryComponent
+          items={items}
+          formatCurrency={
+            new Intl.NumberFormat("es-CL", {
+              style: "currency",
+              currency: "CLP",
+            })
+          }
+          handlePedido={handlePedido}
+        />
+
         {/* Botón para vaciar el carrito */}
-        <button
-          onClick={handleClearCart}
-          className="bg-red-500 text-white w-full py-2 rounded mb-2"
-        >
-          Vaciar Carrito
-        </button>
+        <button  className="text-left hover:underline" onClick={handleClearCart}>Vaciar Carrito</button>
       </section>
 
       {/* Modal de inicio de sesión */}
@@ -319,18 +288,12 @@ export default function CartPage() {
                 />
               </div>
               <div className="flex justify-between mb-4">
-                <button
-                  onClick={() => setShowLoginModal(false)}
+                <ButtonCtaComponent
+                  text="Cancelar"
                   className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none shadow-lg"
-                >
-                  Iniciar Sesión
-                </button>
+                  onClick={() => setShowLoginModal(false)}
+                />
+                <ButtonCtaComponent type="submit" text="Iniciar sesión" />
               </div>
             </form>
 

@@ -3,7 +3,6 @@ import React from "react";
 import clsx from "clsx";
 import { footerLinks, socialMedia } from "@/types/footer-Links";
 import Link from "next/link";
-import { Reveal } from "@/components/animation/Reveal";
 import Image from "next/image";
 import logo from "@/public/assets/icons/LOGO.svg";
 
@@ -14,7 +13,7 @@ export const Footer = () => {
         "pt-10 pb-5",
         "flex justify-center items-center",
         "flex-col px-5",
-        "xl:px-44",
+        "xl:px-24",
         "border-t-1",
         "border-gray-950/[.1] bg-slate-50"
       )}
