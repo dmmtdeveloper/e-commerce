@@ -1,8 +1,8 @@
 import React from "react";
 
 interface ButtonSettingProps {
-  onClick?: () => void;
-  onSubmit?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onSubmit?: (e: React.FormEvent<HTMLButtonElement>) => void;
   text: string;
   className?: string;
   type?: "button" | "submit" | "reset"; // Opciones para el tipo de botón, por defecto será "submit"

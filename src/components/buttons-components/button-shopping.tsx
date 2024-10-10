@@ -1,6 +1,6 @@
 import React from "react";
 import { MdOutlineShoppingCart } from "react-icons/md";
-import { SiMicrosoftexcel } from "react-icons/si";
+
 
 interface ButtonSettingProps {
   onClick?: () => void;
