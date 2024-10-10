@@ -19,7 +19,7 @@ import { InputComponent } from "@/components/input/InputComponent";
 import TextareaComponent from "@/components/textarea-component/textarea-component";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import { FaTrashAlt } from "react-icons/fa";
-import ConfirmationModal from "@/components/ConfirmationModal";
+import ConfirmationModal from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component";
 
 interface EditPageProps {
   params: {

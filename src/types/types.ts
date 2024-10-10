@@ -24,7 +24,8 @@ export interface InputProps {
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
   register?: UseFormRegisterReturn;
   error?: FieldError;
-}
+  accept?: any;
+} 
 
 export interface TextareaProps {
   type?: string;

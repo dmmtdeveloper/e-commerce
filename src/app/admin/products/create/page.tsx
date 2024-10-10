@@ -52,12 +52,7 @@ const CrearProducto = () => {
 
     setProducto((prev) => ({
       ...prev,
-      [name]:
-        name === "precio" || name === "stock"
-          ? value === ""
-            ? null
-            : Number(value) // Si el campo está vacío, dejar como null
-          : value,
+      [name]: name === "precio" || name === "stock" ? (value === "" ? null : Number(value)) : value,
     }));
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,17 +82,21 @@ const CrearProducto = () => {
   const handleSubmitProducto = async (data: SaveProductoSchema) => {
     try {
       const newProduct = {
-        ...producto,
+        ...data,
         foto: imageBase64 ? getBase64String(imageBase64) : "",
         nombreFoto: fileName ? fileName : "",
         extension: fileType ? fileType : "",
+        stockReservado: 0, // Asignar valor predeterminado
+        habilitado: true,  // Asignar valor predeterminado
+        eliminado: false,  // Asignar valor predeterminado
       };
-
-      await AddProducto(       
-        newProduct.nombre ,
+  
+      // Aquí se llama a la función para agregar el producto
+      await AddProducto(
+        newProduct.nombre,
         newProduct.descripcion,
-        newProduct.precio!, // Asegúrate de validar que el precio no sea null antes de enviar
-        newProduct.stock!, // Lo mismo con el stock
+        newProduct.precio,
+        newProduct.stock,
         newProduct.stockReservado,
         newProduct.habilitado,
         newProduct.eliminado,
@@ -105,13 +104,15 @@ const CrearProducto = () => {
         newProduct.nombreFoto,
         newProduct.extension
       );
-      reset();
-      router.push("/admin/products");
+  
+      reset(); // Reinicia el formulario
+      router.push("/admin/products"); // Redirige después de crear el producto
     } catch (error) {
       console.error("Error al crear el producto:", error);
       alert("Error al crear el producto.");
     }
   };
+  
 
   const handleLimpiarFoto = () => {
     setImageBase64(null);
@@ -143,8 +144,8 @@ const CrearProducto = () => {
         <section className="pt-8 p-4">
           <h1 className="font-semibold text-4xl mb-4">Crear Producto</h1>
           <form
-            onSubmit={handleSubmit(handleSubmitProducto)}
-            className="bg-white p-4 rounded shadow-md"
+              onSubmit={handleSubmit(handleSubmitProducto)}
+              className="bg-white p-4 rounded shadow-md"
           >
             <div className="mb-4">
               <label className="block mb-1">Nombre:</label>
@@ -185,7 +186,6 @@ const CrearProducto = () => {
                 type="number"
                 name="stock"
                 onChange={handleChange}
-                // value={producto.stock !== null ? producto.stock : ""} // Mostrar cadena vacía si es null
                 register={register("stock")}
                 error={errors.stock}
               />
@@ -235,6 +235,7 @@ const CrearProducto = () => {
               <SubmitButton
                 text="Crear Producto"
                 type="submit"
+                isSubmitting={isSubmitting}
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
               />
 

@@ -11,8 +11,15 @@ export const InputComponent: React.FC<InputProps> = ({
   name,
   id,
   register,
+  accept,
   error
 }) => {
+  // Prevent 'e' or 'E' input for type="number"
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (type === "number" && e.key.toLowerCase() === "e") {
+      e.preventDefault();
+    }
+  };
   return (
     <div className="relative w-full">
       <input
@@ -24,7 +31,9 @@ export const InputComponent: React.FC<InputProps> = ({
         autoComplete="true"
         name={name}
         id={id}
+        accept={accept}
         {...register}
+        onKeyDown={handleKeyDown} // Prevent 'e' or 'E' only for number type
         className={`${
           error
             ? "border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-red-500"

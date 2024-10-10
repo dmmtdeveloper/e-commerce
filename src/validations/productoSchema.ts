@@ -1,39 +1,51 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const productoSaveSchema = z.object({
-  nombre: z.string()
-    .min(1, { message: 'El campo nombre es obligatorio'})
-    .min(2, { message: "El nombre debe tener al menos 2 caracteres." })
-    .max(100, { message: "El nombre no puede tener más de 100 caracteres." }),
-  
-  descripcion: z.string()
-    .min(1,{ message: "La descripción no puede estar vacía." })
-    .max(500, { message: "La descripción no puede tener más de 500 caracteres." }),
-  
-  precio: z.number()
-    .positive({ message: "El precio debe ser mayor que 0." }),
-  
-  stock: z.number()
-    .min(0, { message: "El stock no puede ser negativo." }),
-  
-  stockReservado: z.number()
-    .min(0, { message: "El stock reservado no puede ser negativo." }),
-  
-  habilitado: z.boolean()
-    .refine((value) => value !== null, { message: "El campo habilitado es obligatorio." }),
-  
-  eliminado: z.boolean()
-    .refine((value) => value !== null, { message: "El campo eliminado es obligatorio." }),
-  
-  foto: z.string()
-    .min(1,{ message: "El campo foto es obligatorio." }),
+  nombre: z
+    .string()
+    .min(1, { message: "El campo nombre es obligatorio" })
+    .max(200, { message: "El nombre no puede tener más de 200 caracteres." }),
 
-  nombreFoto: z.string()
-    .min(1,{ message: "El campo nombreFoto es obligatorio." }),
+  descripcion: z
+    .string()
+    .min(1, { message: "La descripción no puede estar vacía." })
+    .max(500, {
+      message: "La descripción no puede tener más de 500 caracteres.",
+    }),
 
-    extension: z.string()
-    .min(1,{ message: "El campo extension es obligatorio." }),
-
+    precio: z
+    .string()
+    .min(1, { message: "El precio es obligatorio." })
+    .transform((value) => parseFloat(value)) // Transformar a número
+    .refine((value) => !isNaN(value) && value >= 0, {
+      message: "El precio no puede ser negativo.",
+    })
+    .refine((value) => value > 0, {
+      message: "El precio debe ser mayor que 0.",
+    }),
   
+  stock: z
+    .string()
+    .min(1, { message: "El stock es obligatorio." })
+    .transform((value) => parseFloat(value)) // Transformar a número
+    .refine((value) => !isNaN(value) && value >= 0, {
+      message: "El stock no puede ser negativo.",
+    }),
+
+  stockReservado: z.number().int().nonnegative("El stock reservado no puede ser negativo.").optional(), // Asegúrate de que sea opcional si no siempre se incluye
+  //habilitado: z.boolean(),
+  //eliminado: z.boolean(),
+
+  foto:  z.string().optional(),
+  // .any()
+  // .refine(
+  //   (file) => file instanceof File || (file && typeof file === "string"), // Permitir archivos o strings (en caso de ser base64)
+  //   {
+  //     message: "La foto es requerida.",
+  //   }
+  // ),
+
+  nombreFoto: z.string().optional(), // Puede ser opcional
+  extension: z.string().optional(), // Puede ser opcional
 });
 export type SaveProductoSchema = z.infer<typeof productoSaveSchema>;
