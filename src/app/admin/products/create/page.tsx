@@ -232,7 +232,8 @@ const CrearProducto = () => {
               )}
             </div>
             <div className="flex space-x-4">
-              <SubmitButton
+
+              <ButtonCtaComponent
                 text="Crear Producto"
                 type="submit"
                 isSubmitting={isSubmitting}
