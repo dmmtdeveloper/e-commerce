@@ -14,14 +14,14 @@ export const productoSaveSchema = z.object({
     }),
 
     precio: z
-    .string()
-    .min(1, { message: "El precio es obligatorio." })
-    .transform((value) => parseFloat(value)) // Transformar a número
-    .refine((value) => !isNaN(value) && value >= 0, {
-      message: "El precio no puede ser negativo.",
-    })
-    .refine((value) => value > 0, {
-      message: "El precio debe ser mayor que 0.",
+      .string()
+      .min(1, { message: "El precio es obligatorio." })
+      .transform((value) => parseFloat(value)) // Transformar a número
+      .refine((value) => !isNaN(value) && value >= 0, {
+        message: "El precio no puede ser negativo.",
+      })
+      .refine((value) => value > 0, {
+        message: "El precio debe ser mayor que 0.",
     }),
   
   stock: z

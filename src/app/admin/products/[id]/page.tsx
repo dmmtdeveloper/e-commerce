@@ -266,8 +266,9 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 <InputComponent
                   type="number"
                   name="stock"
-                  value={producto.stock}
+                  register={register("stock")}
                   onChange={handleChange}
+                  error={errors.stock?.message}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -275,8 +276,9 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 <InputComponent
                   type="number"
                   name="precio"
-                  value={producto.precio}
                   onChange={handleChange}
+                  register={register("precio")}
+                  error={errors.precio?.message}
                 />
               </div>
             </div>
