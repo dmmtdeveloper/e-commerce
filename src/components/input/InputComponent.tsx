@@ -31,16 +31,16 @@ export const InputComponent: React.FC<InputProps> = ({
         autoComplete="true"
         name={name}
         id={id}
+        {...register} // Aquí aplicas el `register` al input
         accept={accept}
-        {...register}
         onKeyDown={handleKeyDown} // Prevent 'e' or 'E' only for number type
         className={`${
           error
             ? "border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-red-500"
             : "border border-slate-300 font-light py-2 px-4 w-full rounded-xl focus:outline-blue-400"
-        }`}
-        />
-        {error && <ErrorMessage message={error.message} />}
+          }`}
+      />
+        {error && <ErrorMessage message={error} />}
     </div>
   );
 };

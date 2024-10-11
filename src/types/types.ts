@@ -23,16 +23,18 @@ export interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void; // Modificado
   register?: UseFormRegisterReturn;
-  error?: FieldError;
+  error?: string;
   accept?: any;
 } 
 
 export interface TextareaProps {
   type?: string;
   placeholder?: string;
-  value: any;
+  value?: any;
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   name: string;
+  error?: string;
+  register?: UseFormRegisterReturn;
 }
 
 export interface DetallePedido {

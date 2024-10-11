@@ -21,6 +21,11 @@ import ButtonCtaComponent from "@/components/buttons-components/button-cta-compo
 import { FaTrashAlt } from "react-icons/fa";
 import ConfirmationModal from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component";
 
+import { useForm } from "react-hook-form"; // Asegurándote de importar react-hook-form
+import { zodResolver } from "@hookform/resolvers/zod"; // Asegurándote de importar zodResolver de @hookform/resolvers/zod
+import { productoUpdateSchema } from "@/validations/productoUpdateSchema"; 
+
+
 interface EditPageProps {
   params: {
     id: string;
@@ -44,11 +49,34 @@ const EditarProducto = ({ params }: EditPageProps) => {
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
   const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
 
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    register, // Agregar register aquí
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(productoUpdateSchema),
+    defaultValues: {
+      nombre: "",
+      descripcion: "",
+      stock: 0,
+      precio: 0,
+    },
+  });
+
   useEffect(() => {
     const fetchProducto = async () => {
       try {
         const data = await GetProductoById(productId);
         setProducto(data);
+        
+        // Actualizar los valores del formulario con los datos obtenidos
+        setValue("nombre", data.nombre);
+        setValue("descripcion", data.descripcion);
+        setValue("stock", data.stock);
+        setValue("precio", data.precio);
+        
         if (data.foto) {
           setImageBase64(data.foto); // Si hay foto en el producto, cargarla
           setFileName(data.nombreFoto);
@@ -60,14 +88,14 @@ const EditarProducto = ({ params }: EditPageProps) => {
         setLoading(false);
       }
     };
-
+  
     if (!isNaN(productId) && !hasFetched.current) {
       hasFetched.current = true;
       fetchProducto();
     } else if (isNaN(productId)) {
       setLoading(false);
     }
-  }, [productId]);
+  }, [productId, setValue]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -110,30 +138,32 @@ const EditarProducto = ({ params }: EditPageProps) => {
     return base64.replace(/^data:image\/[a-z]+;base64,/, "");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (producto) {
-      try {
-        // Agregar la imagen base64 al producto antes de actualizar
+  const onSubmit = async (data: { nombre: string; descripcion: string; stock: number; precio: number }) => {
+    console.log("Formulario enviado con los datos:", data);
+    try {
+      if (producto?.productoId) {
         const updatedProduct = {
           ...producto,
-          foto: imageBase64 ? getBase64String(imageBase64) : "", extension: fileType ? fileType : "", nombreFoto: fileName ? fileName : ""
+          ...data,
+          foto: imageBase64 ? getBase64String(imageBase64) : "",
+          extension: fileType ? fileType : "",
+          nombreFoto: fileName ? fileName : "",
+          productoId: producto.productoId,
         };
-
         await UpdateProductoAll(updatedProduct);
-
+        console.log("Redirigiendo a productos...");
         router.push("/admin/products");
-      } catch (error) {
-        let errorMessage = "Error desconocido al actualizar el producto.";
-
-        if (axios.isAxiosError(error)) {
-          errorMessage = error.response?.data?.message || error.message;
-        } else if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-
-        alert(errorMessage);
+      } else {
+        alert("ID del producto no disponible.");
       }
+    } catch (error) {
+      let errorMessage = "Error desconocido al actualizar el producto.";
+      if (axios.isAxiosError(error)) {
+        errorMessage = error.response?.data?.message || error.message;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      alert(errorMessage);
     }
   };
 
@@ -208,22 +238,25 @@ const EditarProducto = ({ params }: EditPageProps) => {
             <p className="text-gray-500">Edita los productos de tu cuenta</p>
           </div>
 
-          <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+          <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-2">
               <LabelComponent text="Nombre" className="pl-1" />
               <InputComponent
+                type="text"
                 name="nombre"
-                placeholder="Ingresa tu nombre"
-                value={producto.nombre}
                 onChange={handleChange}
+                register={register("nombre")} // Usando el registro de react-hook-form
+                error={errors.nombre?.message} // Mostrando el mensaje de error si existe
               />
             </div>
             <div className="flex flex-col gap-2">
               <LabelComponent text="Descripción" className="pl-1" />
               <TextareaComponent
+                type="text"
                 name="descripcion"
-                value={producto.descripcion}
+                register={register("descripcion")}
                 onChange={handleChange}
+                error={errors.descripcion?.message} // Mostrando el mensaje de error si existe
               />
             </div>
 

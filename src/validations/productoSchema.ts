@@ -32,19 +32,10 @@ export const productoSaveSchema = z.object({
       message: "El stock no puede ser negativo.",
     }),
 
-  stockReservado: z.number().int().nonnegative("El stock reservado no puede ser negativo.").optional(), // Asegúrate de que sea opcional si no siempre se incluye
-  //habilitado: z.boolean(),
-  //eliminado: z.boolean(),
-
+  stockReservado: z.number().int()
+    .nonnegative("El stock reservado no puede ser negativo.").optional(), // Asegúrate de que sea opcional si no siempre se incluye
+  
   foto:  z.string().optional(),
-  // .any()
-  // .refine(
-  //   (file) => file instanceof File || (file && typeof file === "string"), // Permitir archivos o strings (en caso de ser base64)
-  //   {
-  //     message: "La foto es requerida.",
-  //   }
-  // ),
-
   nombreFoto: z.string().optional(), // Puede ser opcional
   extension: z.string().optional(), // Puede ser opcional
 });

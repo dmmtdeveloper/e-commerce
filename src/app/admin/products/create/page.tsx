@@ -155,7 +155,7 @@ const CrearProducto = () => {
                 // value={producto.nombre}
                 onChange={handleChange}
                 register={register("nombre")}
-                error={errors.nombre}
+                error={errors.nombre?.message}
               />
 
             </div>
@@ -167,7 +167,7 @@ const CrearProducto = () => {
                 // value={producto.descripcion}
                 onChange={handleChange}
                 register={register("descripcion")}
-                error={errors.descripcion}
+                error={errors.descripcion?.message}
               />
             </div>
             <div className="mb-4">
@@ -177,7 +177,7 @@ const CrearProducto = () => {
                 name="precio"
                 onChange={handleChange}
                 register={register("precio")}
-                error={errors.precio}
+                error={errors.precio?.message}
               />
             </div>
             <div className="mb-4">
@@ -187,7 +187,7 @@ const CrearProducto = () => {
                 name="stock"
                 onChange={handleChange}
                 register={register("stock")}
-                error={errors.stock}
+                error={errors.stock?.message}
               />
             </div>
             <div className="mb-4">
