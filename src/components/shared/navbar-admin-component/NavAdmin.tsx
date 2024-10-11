@@ -91,7 +91,7 @@ const NavAdmin: React.FC<NavAdminProps> = ({ className }) => {
           >
             <Link href="/orders" className="flex flex-col items-center">
               <TbTruckDelivery className="text-2xl" />
-              <p className="text-sm">Mis Compras</p>
+              <p className="text-sm">Mis compras</p>
             </Link>
           </div>
 
