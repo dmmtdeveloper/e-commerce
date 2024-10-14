@@ -274,14 +274,14 @@ export default function SettingsPage() {
                     type="text"
                     placeholder="Ingresa tu nombre"
                     register={register("nombre")}
-                    error={errors.nombre}
+                    error={errors.nombre?.message}
                   />
                   <InputComponentAuth
                     name="correo"
                     type="email"
                     placeholder="Ingresa tu correo"
                     register={register("correo")}
-                    error={errors.correo}
+                    error={errors.correo?.message}
                   />
                   <PasswordInputAuth
                     name="clave"

@@ -315,7 +315,7 @@ export default function CartPage() {
 
       {/* Modal de confirmación para eliminar producto */}
       <ConfirmationModal
-        title="Confitmación"
+        title="Confirmación"
         isOpen={showRemoveModal}
         onConfirm={confirmRemove}
         onCancel={cancelRemove}

@@ -13,6 +13,7 @@ export interface InputPasswordProps {
   onMouseUp?: () => void; // Evento para detectar cuando se suelta el ícono
 }
 
+
 export interface InputProps {
   label?: string;
   name?: string;

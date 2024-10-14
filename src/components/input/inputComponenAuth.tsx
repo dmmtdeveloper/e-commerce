@@ -1,5 +1,5 @@
 import { InputProps } from "@/types/types";
-import ErrorMessage from "../error-message-component/error-message";
+import ErrorMessage from '../error-message-component/error-message';
 
 const InputComponentAuth: React.FC<InputProps> = ({
   label,
@@ -7,7 +7,7 @@ const InputComponentAuth: React.FC<InputProps> = ({
   type,
   placeholder,
   register,
-  error
+  error,
 }) => {
   return (
     <div className="flex flex-col gap-2">
