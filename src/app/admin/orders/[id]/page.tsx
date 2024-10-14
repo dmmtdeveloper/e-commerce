@@ -15,6 +15,7 @@ import Link from "next/link";
 import Image from "next/image";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 interface PedidoDetallePageProps {
   params: {
@@ -99,42 +100,40 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
     <MainLayout>
       <LayoutSectionComponent>
         <LayoutDivComponent>
-        <NavAdmin/>
-          <div className="bg-white p-6 shadow-md rounded-lg mb-6">
+          <NavAdmin />
+          <div className="bg-white p-6 shadow-md mb-6 rounded-3xl">
             <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">
               Pedido #{pedido.pedidoId}
             </h2>
 
             <div className="flex justify-between">
-              {/* Columna 1: Datos del cliente */}
-              <div className="w-1/2 pr-4">
-                <h3 className="font-semibold text-lg mb-3 text-gray-700">
-                  Datos del Cliente
-                </h3>
-                <p>
-                  <strong>Usuario:</strong> {pedido.nombreUsuario}
-                </p>
-                <p>
-                  <strong>Correo:</strong> {pedido.correoUsuario}
-                </p>
+              <div className="flex flex-col justify-between">
+                {/* Columna 1: Datos del cliente */}
+                <div className="w-3/4 pr-4">
+                  <h3 className="font-semibold text-lg w-[20rem] mb-3 text-gray-700">
+                    Datos del Cliente
+                  </h3>
+                  <p>
+                    <strong>Usuario:</strong> {pedido.nombreUsuario}
+                  </p>
+                  <p>
+                    <strong>Correo:</strong> {pedido.correoUsuario}
+                  </p>
+                </div>
 
                 {/* Botón para cambiar el estado a "Completado" si EstadoId es 1 */}
                 {pedido.estadoId === 1 && (
-                  <>
-                    <button
-                      className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700 mr-2"
+                  <div className="flex gap-2">
+                    <ButtonCtaComponent
+                      text="Completar pedido"
                       onClick={() => setShowModalCompletar(true)}
-                    >
-                      Completar Pedido
-                    </button>
-
-                    <button
-                      className="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                    />
+                    <ButtonCtaComponent
                       onClick={() => setShowModalCancelar(true)}
-                    >
-                      Cancelar Pedido
-                    </button>
-                  </>
+                      className="bg-red-500 hover:bg-red-600"
+                      text="Cancelar pedido"
+                    />
+                  </div>
                 )}
               </div>
 
@@ -231,12 +230,10 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
           {/* Botón de regreso */}
           <div className="mt-4">
             <Link href="/admin/orders">
-              <button
-                type="button"
-                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-              >
-                Volver a Pedidos
-              </button>
+              <ButtonCtaComponent
+                text="Volver a pedidos"
+                className="bg-green-500 hover:bg-green-600"
+              />
             </Link>
           </div>
         </LayoutDivComponent>
