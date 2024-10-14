@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { SaveProductoSchema, productoSaveSchema } from "@/validations/productoSchema";
+import {
+  SaveProductoSchema,
+  productoSaveSchema,
+} from "@/validations/productoSchema";
 import { useRouter } from "next/navigation";
 import MainLayout from "../../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
@@ -13,6 +16,10 @@ import { useForm } from "react-hook-form";
 import { InputComponent } from "@/components/input/InputComponent";
 import SubmitButton from "@/components/buttons-components/AuthButton";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import LabelComponent from "@/components/label-component/label-component";
+import { Title } from "@/components/title/Title";
 
 const CrearProducto = () => {
   const router = useRouter();
@@ -34,7 +41,9 @@ const CrearProducto = () => {
     formState: { errors, isSubmitting }, // Manejar los errores de validación
     reset,
     setError,
-  } = useForm<SaveProductoSchema>({ resolver: zodResolver(productoSaveSchema) });
+  } = useForm<SaveProductoSchema>({
+    resolver: zodResolver(productoSaveSchema),
+  });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
@@ -52,7 +61,12 @@ const CrearProducto = () => {
 
     setProducto((prev) => ({
       ...prev,
-      [name]: name === "precio" || name === "stock" ? (value === "" ? null : Number(value)) : value,
+      [name]:
+        name === "precio" || name === "stock"
+          ? value === ""
+            ? null
+            : Number(value)
+          : value,
     }));
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,10 +101,10 @@ const CrearProducto = () => {
         nombreFoto: fileName ? fileName : "",
         extension: fileType ? fileType : "",
         stockReservado: 0, // Asignar valor predeterminado
-        habilitado: true,  // Asignar valor predeterminado
-        eliminado: false,  // Asignar valor predeterminado
+        habilitado: true, // Asignar valor predeterminado
+        eliminado: false, // Asignar valor predeterminado
       };
-  
+
       // Aquí se llama a la función para agregar el producto
       await AddProducto(
         newProduct.nombre,
@@ -104,7 +118,7 @@ const CrearProducto = () => {
         newProduct.nombreFoto,
         newProduct.extension
       );
-  
+
       reset(); // Reinicia el formulario
       router.push("/admin/products"); // Redirige después de crear el producto
     } catch (error) {
@@ -112,7 +126,6 @@ const CrearProducto = () => {
       alert("Error al crear el producto.");
     }
   };
-  
 
   const handleLimpiarFoto = () => {
     setImageBase64(null);
@@ -139,16 +152,16 @@ const CrearProducto = () => {
 
   return (
     <MainLayout>
-      <div className="relative mt-20 mb-20 2xl:pt-8 2xl:px-16">
+      <LayoutSectionComponent>
+        <LayoutDivComponent>
         <NavAdmin />
-        <section className="pt-8 p-4">
-          <h1 className="font-semibold text-4xl mb-4">Crear Producto</h1>
+        <Title text="Crear producto"/>
           <form
-              onSubmit={handleSubmit(handleSubmitProducto)}
-              className="bg-white p-4 rounded shadow-md"
+            onSubmit={handleSubmit(handleSubmitProducto)}
+            className=""
           >
             <div className="mb-4">
-              <label className="block mb-1">Nombre:</label>
+              <LabelComponent text="Nombre"/>
               <InputComponent
                 type="text"
                 name="nombre"
@@ -156,11 +169,11 @@ const CrearProducto = () => {
                 onChange={handleChange}
                 register={register("nombre")}
                 error={errors.nombre?.message}
-              />
-
+                placeholder="Ingresa el nombre del producto"
+                />
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Descripción:</label>
+              <LabelComponent text="Descripción"/>
               <InputComponent
                 type="text"
                 name="descripcion"
@@ -168,30 +181,34 @@ const CrearProducto = () => {
                 onChange={handleChange}
                 register={register("descripcion")}
                 error={errors.descripcion?.message}
-              />
+                placeholder="Ingresa una descripción"
+                />
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Precio:</label>
+              <LabelComponent text="Precio"/>
               <InputComponent
                 type="number"
                 name="precio"
                 onChange={handleChange}
                 register={register("precio")}
                 error={errors.precio?.message}
-              />
+                placeholder="Ingresa un precio"
+                />
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Stock:</label>
+              <LabelComponent text="Stock"/>
               <InputComponent
                 type="number"
                 name="stock"
                 onChange={handleChange}
                 register={register("stock")}
                 error={errors.stock?.message}
-              />
+                placeholder="Ingresa el stock disponible en bodega"
+                />
             </div>
             <div className="mb-4">
-              <label className="block mb-1">Foto (selecciona archivo):</label>
+              <LabelComponent text="Foto (selecciona archivo):"/>
+          
               {imageBase64 ? (
                 <div className="flex items-center mb-4">
                   <Image
@@ -232,7 +249,6 @@ const CrearProducto = () => {
               )}
             </div>
             <div className="flex space-x-4">
-
               <ButtonCtaComponent
                 text="Crear Producto"
                 type="submit"
@@ -247,34 +263,33 @@ const CrearProducto = () => {
                   className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
                 />
               </Link>
-              
             </div>
           </form>
-        </section>
-      </div>
+        </LayoutDivComponent>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
-            <p>{modalMessage}</p>
-            <div className="mt-4 flex justify-end gap-4">
-              <button
-                onClick={confirmActionHandler}
-                className="bg-blue-500 text-white p-2 rounded"
-              >
-                Confirmar
-              </button>
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="bg-gray-500 text-white p-2 rounded"
-              >
-                Cancelar
-              </button>
+        {isModalOpen && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-lg">
+              <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
+              <p>{modalMessage}</p>
+              <div className="mt-4 flex justify-end gap-4">
+                <button
+                  onClick={confirmActionHandler}
+                  className="bg-blue-500 text-white p-2 rounded"
+                >
+                  Confirmar
+                </button>
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="bg-gray-500 text-white p-2 rounded"
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </LayoutSectionComponent>
     </MainLayout>
   );
 };

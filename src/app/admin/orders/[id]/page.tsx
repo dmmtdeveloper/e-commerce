@@ -13,6 +13,8 @@ import {
 import { VmPedido, VmDetallePedido } from "@/types/types";
 import Link from "next/link";
 import Image from "next/image";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 interface PedidoDetallePageProps {
   params: {
@@ -95,10 +97,9 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
 
   return (
     <MainLayout>
-      <div className="relative mt-20 min-h-screen flex flex-col">
-        <NavAdmin className="pl-8 w-full z-50 bg-white shadow-md" />
-
-        <section className="pt-8 p-4 flex-grow">
+      <LayoutSectionComponent>
+        <LayoutDivComponent>
+        <NavAdmin/>
           <div className="bg-white p-6 shadow-md rounded-lg mb-6">
             <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">
               Pedido #{pedido.pedidoId}
@@ -238,8 +239,8 @@ const PedidoDetalle = ({ params }: PedidoDetallePageProps) => {
               </button>
             </Link>
           </div>
-        </section>
-      </div>
+        </LayoutDivComponent>
+      </LayoutSectionComponent>
 
       {/* Modal de confirmación para completar pedido */}
       {showModalCompletar && (
