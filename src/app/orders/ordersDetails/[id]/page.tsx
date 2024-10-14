@@ -11,6 +11,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { UpdateEstadoPedidoCancelado } from "@/utils/authHelpers";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
 
 interface PedidoDetallePageProps {
   params: {
@@ -42,7 +45,6 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
     }
   };
 
-  
   const handleConfirmCancelarPedido = () => {
     if (pedido) {
       UpdateEstadoPedidoCancelado(pedido.pedidoId, 4) // Cambia a "Cancelado"
@@ -73,8 +75,9 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
 
   return (
     <MainLayout>
-      <div className="relative mt-20">
-        <section className="pt-8 p-4">
+      <LayoutSectionComponent>
+        <LayoutDivComponent>
+          <NavAdmin />
           <div className="bg-white p-6 shadow-md rounded-lg mb-6">
             <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">
               Pedido #{pedidoId}
@@ -110,7 +113,7 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
                     <ButtonCtaComponent
                       onClick={() => setShowModalCancelar(true)}
                       text="Anular Pedido"
-                      className="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
+                      className="mt-4 bg-red-500 hover:bg-red-700"
                     />
                   </>
                 )}
@@ -176,17 +179,15 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
             </table>
             <div className="mt-4">
               <Link href="/orders" passHref>
-                <button
-                  type="button"
-                  className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-                >
-                  Volver a Pedidos
-                </button>
+                <ButtonCtaComponent
+                  className="bg-green-500 hover:bg-green-600"
+                  text="Volver a pedidos"
+                />
               </Link>
             </div>
           </div>
-        </section>
-      </div>
+        </LayoutDivComponent>
+      </LayoutSectionComponent>
 
       {/* Modal de confirmación para cancelar pedido */}
       {showModalCancelar && (
@@ -213,7 +214,6 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
           </div>
         </div>
       )}
-
     </MainLayout>
   );
 };

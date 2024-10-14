@@ -16,8 +16,8 @@ import Link from "next/link";
 import MainLayout from "../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import useAdmin from "@/hooks/useAdmin";
-import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
+import Pagination from "@/components/pagination-component/pagination-component";
 
 export default function OrdersPage() {
   useAdmin();
@@ -26,6 +26,8 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { isAdmin } = useAuthStore();
+
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Estados para los filtros
   const [filters, setFilters] = useState({
@@ -101,6 +103,8 @@ export default function OrdersPage() {
   // Calcular los elementos a mostrar según la página y los filtros aplicados
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+
   const currentPedidos = filteredPedidos.slice(
     indexOfFirstItem,
     indexOfLastItem
@@ -282,16 +286,22 @@ export default function OrdersPage() {
               </div>
 
               {/* Paginación */}
-              <div>
+
+                   {/* Paginación */}
+                   <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                setCurrentPage={paginate}
+              />
+              {/* <div>
                 <p>
                   Mostrando {indexOfFirstItem + 1} a{" "}
                   {Math.min(indexOfLastItem, filteredPedidos.length)} de{" "}
                   {filteredPedidos.length} pedidos
                 </p>
                 <div>
-                  {/* Aquí puedes implementar tus controles de paginación */}
                 </div>
-              </div>
+              </div> */}
             </LayoutDivComponent>
           </LayoutSectionComponent>
         </MainLayout>
