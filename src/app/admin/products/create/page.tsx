@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { SaveProductoSchema, productoSaveSchema } from "@/validations/productoSchema";
 import { useRouter } from "next/navigation";
 import MainLayout from "../../../../components/layouts/MainLayout";
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { AddProducto } from "@/utils/authHelpers";
 import Link from "next/link";
 import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { InputComponent } from "@/components/input/InputComponent";
+import SubmitButton from "@/components/buttons-components/AuthButton";
+import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 
 const CrearProducto = () => {
   const router = useRouter();
@@ -22,6 +28,13 @@ const CrearProducto = () => {
     nombreFoto: "",
     extension: "",
   });
+  const {
+    register, // Registrar los campos del formulario
+    handleSubmit, // Manejar el envío del formulario
+    formState: { errors, isSubmitting }, // Manejar los errores de validación
+    reset,
+    setError,
+  } = useForm<SaveProductoSchema>({ resolver: zodResolver(productoSaveSchema) });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imageBase64, setImageBase64] = useState<string | null>(null);
@@ -39,12 +52,7 @@ const CrearProducto = () => {
 
     setProducto((prev) => ({
       ...prev,
-      [name]:
-        name === "precio" || name === "stock"
-          ? value === ""
-            ? null
-            : Number(value) // Si el campo está vacío, dejar como null
-          : value,
+      [name]: name === "precio" || name === "stock" ? (value === "" ? null : Number(value)) : value,
     }));
   };
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,21 +79,24 @@ const CrearProducto = () => {
     return base64.replace(/^data:image\/[a-z]+;base64,/, "");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmitProducto = async (data: SaveProductoSchema) => {
     try {
       const newProduct = {
-        ...producto,
+        ...data,
         foto: imageBase64 ? getBase64String(imageBase64) : "",
         nombreFoto: fileName ? fileName : "",
         extension: fileType ? fileType : "",
+        stockReservado: 0, // Asignar valor predeterminado
+        habilitado: true,  // Asignar valor predeterminado
+        eliminado: false,  // Asignar valor predeterminado
       };
-
+  
+      // Aquí se llama a la función para agregar el producto
       await AddProducto(
         newProduct.nombre,
         newProduct.descripcion,
-        newProduct.precio!, // Asegúrate de validar que el precio no sea null antes de enviar
-        newProduct.stock!, // Lo mismo con el stock
+        newProduct.precio,
+        newProduct.stock,
         newProduct.stockReservado,
         newProduct.habilitado,
         newProduct.eliminado,
@@ -93,12 +104,15 @@ const CrearProducto = () => {
         newProduct.nombreFoto,
         newProduct.extension
       );
-      router.push("/admin/products");
+  
+      reset(); // Reinicia el formulario
+      router.push("/admin/products"); // Redirige después de crear el producto
     } catch (error) {
       console.error("Error al crear el producto:", error);
       alert("Error al crear el producto.");
     }
   };
+  
 
   const handleLimpiarFoto = () => {
     setImageBase64(null);
@@ -130,50 +144,50 @@ const CrearProducto = () => {
         <section className="pt-8 p-4">
           <h1 className="font-semibold text-4xl mb-4">Crear Producto</h1>
           <form
-            onSubmit={handleSubmit}
-            className="bg-white p-4 rounded shadow-md"
+              onSubmit={handleSubmit(handleSubmitProducto)}
+              className="bg-white p-4 rounded shadow-md"
           >
             <div className="mb-4">
               <label className="block mb-1">Nombre:</label>
-              <input
+              <InputComponent
                 type="text"
                 name="nombre"
-                value={producto.nombre}
+                // value={producto.nombre}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
+                register={register("nombre")}
+                error={errors.nombre?.message}
               />
+
             </div>
             <div className="mb-4">
               <label className="block mb-1">Descripción:</label>
-              <textarea
+              <InputComponent
+                type="text"
                 name="descripcion"
-                value={producto.descripcion}
+                // value={producto.descripcion}
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
+                register={register("descripcion")}
+                error={errors.descripcion?.message}
               />
             </div>
             <div className="mb-4">
               <label className="block mb-1">Precio:</label>
-              <input
+              <InputComponent
                 type="number"
                 name="precio"
-                value={producto.precio !== null ? producto.precio : ""} // Mostrar cadena vacía si es null
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
+                register={register("precio")}
+                error={errors.precio?.message}
               />
             </div>
             <div className="mb-4">
               <label className="block mb-1">Stock:</label>
-              <input
+              <InputComponent
                 type="number"
                 name="stock"
-                value={producto.stock !== null ? producto.stock : ""} // Mostrar cadena vacía si es null
                 onChange={handleChange}
-                required
-                className="border p-2 rounded w-full"
+                register={register("stock")}
+                error={errors.stock?.message}
               />
             </div>
             <div className="mb-4">
@@ -218,20 +232,22 @@ const CrearProducto = () => {
               )}
             </div>
             <div className="flex space-x-4">
-              <button
+
+              <ButtonCtaComponent
+                text="Crear Producto"
                 type="submit"
+                isSubmitting={isSubmitting}
                 className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-              >
-                Crear Producto
-              </button>
+              />
+
               <Link href="/admin/products">
-                <button
+                <ButtonCtaComponent
+                  text="Cancelar"
                   type="button"
                   className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-700"
-                >
-                  Cancelar
-                </button>
+                />
               </Link>
+              
             </div>
           </form>
         </section>
