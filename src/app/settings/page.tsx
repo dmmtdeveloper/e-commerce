@@ -14,7 +14,7 @@ import Image from "next/image";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
 import InputComponentAuth from "@/components/input/inputComponenAuth";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
-import ConfirmationModal from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component";
+import ConfirmationModalComponent from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component";
 import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
 import user from "@/public/assets/img/user.png";
@@ -31,6 +31,7 @@ import {
 } from "@/utils/authHelpers";
 import { uploadImage, deleteImage } from "@/utils/firebase";
 import { SaveUserSchema, userSaveSchema } from "@/validations/userSchema";
+import SuccessModalComponent from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 
 export default function SettingsPage() {
   // Estados del componente
@@ -121,27 +122,26 @@ export default function SettingsPage() {
   const handleDeleteAccount = async () => {
     const token = sessionStorage.getItem("token");
     const id = usuario?.usuarioId;
-  
+
     if (token && id) {
       try {
         // Llamar a la API para actualizar el estado de eliminado del usuario
         await UpdateEliminadoUsuario(id, true);
-  
+
         openConfirmation("Cuenta eliminada con éxito");
-  
+
         // Mostrar modal de éxito después de 3 segundos
         setTimeout(() => {
           // openSuccessModal("Cuenta eliminada con éxito.");
-  
+
           // Cerrar el modal después de 3 segundos
           setTimeout(() => {
             closeSuccessModal();
-  
+
             // Cerrar sesión y redirigir al login solo después de que el modal se cierre
             logout();
             router.push("/login");
           }, 1000);
-  
         }, 2000); // Aquí estableces el retraso de 3 segundos antes de abrir el modal
       } catch (error) {
         console.error("Error eliminando la cuenta:", error);
@@ -151,7 +151,6 @@ export default function SettingsPage() {
       console.warn("Token no encontrado o ID de usuario no existe");
     }
   };
-  
 
   const openConfirmationModal = (
     action: () => void,
@@ -175,8 +174,6 @@ export default function SettingsPage() {
     }
   };
 
-
-
   const handleSaveChanges = async (data: SaveUserSchema) => {
     const id = usuario?.usuarioId;
 
@@ -187,16 +184,14 @@ export default function SettingsPage() {
         await UpdateCorreoUsuario(id, data.correo);
         openSuccessModal("Datos actualizados con exito.");
         setTimeout(() => {
-  
           // Cerrar el modal después de 3 segundos
           setTimeout(() => {
             closeSuccessModal();
-  
+
             // Cerrar sesión y redirigir al login solo después de que el modal se cierre
             // logout();
             // router.push("/settings");
           }, 1000);
-  
         }, 2000); // Aquí estableces el retraso de 3 segundos antes de abrir el modal
       } catch (error) {
         openErrorModal("Error actualizando los datos.");
@@ -220,8 +215,6 @@ export default function SettingsPage() {
     setModalMessage(message);
     setIsErrorModalOpen(true);
   };
-
-
 
   const closeSuccessModal = () => setIsSuccessModalOpen(false);
   const closeErrorModal = () => setIsErrorModalOpen(false);
@@ -324,7 +317,8 @@ export default function SettingsPage() {
         </LayoutDivComponent>
 
         {isModalOpen && (
-          <ConfirmationModal
+          <ConfirmationModalComponent
+            title="Oh no!"
             isOpen={isModalOpen}
             onCancel={closeConfirmationModal}
             onConfirm={confirmActionHandler}
@@ -332,7 +326,8 @@ export default function SettingsPage() {
           />
         )}
         {isSuccessModalOpen && (
-          <SuccessModal
+          <SuccessModalComponent
+            title="Confirmación"
             isOpen={isSuccessModalOpen}
             onClose={closeSuccessModal}
             message={modalMessage}

@@ -13,12 +13,14 @@ interface CartSummaryComponentProps {
   }[];
   formatCurrency: Intl.NumberFormat;
   handlePedido: (e: React.FormEvent) => Promise<void>; // Ajustamos la firma de handlePedido
+ 
 }
 
 const CartSummaryComponent: React.FC<CartSummaryComponentProps> = ({
   items,
   formatCurrency,
   handlePedido,
+  
 }) => {
   const total = items.reduce(
     (acc, item) => acc + item.price * item.quantity,

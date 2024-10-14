@@ -8,7 +8,7 @@ import { login } from "../../utils/authHelpers";
 import { Title } from "@/components/title/Title";
 import { useAuthStore } from "@/store/useAuthStore"; // Para obtener el token
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import axios from "axios";
 import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
@@ -21,6 +21,7 @@ import notebook from "@/public/assets/img/notebook.png";
 import QuantityControl from "@/components/cart-component/quantity-control-component";
 import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
 import useCartStore from "@/store/cartStore"; // Importa el store del carrito
+import SuccessModalComponent from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
@@ -54,10 +55,10 @@ export default function CartPage() {
     }));
 
     try {
-      await addPedido(token, 1, detallesPedido);
       setShowSuccessModal(true); // Mostrar modal de éxito
+      await addPedido(token, 1, detallesPedido);
       clearCart(); // Limpia el carrito después de crear el pedido
-      router.push("/cart");
+      // router.push("/cart");
     } catch (error) {
       let errorMessage = "Error desconocido al crear el pedido.";
       if (axios.isAxiosError(error)) {
@@ -86,7 +87,7 @@ export default function CartPage() {
       await login({ email, password });
       setShowLoginModal(false); // Cierra el modal al iniciar sesión exitosamente
       alert("Login exitoso");
-      router.push("/cart");
+      // router.push("/cart");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       alert("Error en el login");
@@ -142,51 +143,43 @@ export default function CartPage() {
     setShowClearModal(false); // Cierra el modal
   };
 
+  // Cerrar el modal de éxito después de 3 segundos
+  useEffect(() => {
+    if (showSuccessModal) {
+      const timer = setTimeout(() => {
+        setShowSuccessModal(false);
+      }, 3000); // 3000 ms = 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el timer en caso de que el componente se desmonte
+    }
+  }, [showSuccessModal]);
+
   const formatCurrency = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-
-  
-
-  // Si no hay productos en el carrito
-  if (items.length === 0) {
-    return (
-      <MainLayout>
-        <section className="flex pt-64 flex-col items-center justify-center">
-          <div className="flex flex-col items-center gap-4">
-            <Title text="Tu carrito de está vacio" />
-
-            <article className="flex gap-4">
-              <Link href="/">
-                <ButtonCtaComponent
-                  className="bg-green-400 hover:bg-green-500 transition-all duration-300"
-                  text="Volver a tienda"
-                />
-              </Link>
-              <Link href={"/orders"}>
-                <ButtonCtaComponent
-                  className="bg-blue-400 hover:bg-blue-500 transition-all duration-300"
-                  text="Ver mis pedidos"
-                />
-              </Link>
-            </article>
-          </div>
-        </section>
-      </MainLayout>
-    );
-  }
 
   return (
     <MainLayout>
       <section className="p-6 mt-24 2xl:px-24 lg:px-8 md:px-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Lista de productos */}
         <div className="lg:col-span-2">
-          <Link href={"/"} className="flex gap-2 items-center hover:underline font-light">
+          <Link
+            href={"/"}
+            className="flex gap-2 items-center hover:underline font-light"
+          >
             <IoHome className="text-2xl" />
             <p>home</p>
           </Link>
-          <Title className="mt-4 mb-10" text="Tu carrito de compras" />
+
+          <Title
+            className="mt-4 mb-10"
+            text={
+              items.length === 0
+                ? "Tu carrito de compras está vacío"
+                : "Tu carrito de compras"
+            }
+          />
 
           <ul className="border border-gray-300 border-x-0 border-b-0">
             {items.map((item) => (
@@ -240,20 +233,31 @@ export default function CartPage() {
             ))}
           </ul>
         </div>
-        {/* Resumen de compra */}
-        <CartSummaryComponent
-          items={items}
-          formatCurrency={
-            new Intl.NumberFormat("es-CL", {
-              style: "currency",
-              currency: "CLP",
-            })
-          }
-          handlePedido={handlePedido}
-        />
+
+        <section>
+          {/* Condicional para mostrar el CartSummaryComponent solo si hay items */}
+          {items.length > 0 && (
+            <CartSummaryComponent
+              items={items}
+              formatCurrency={
+                new Intl.NumberFormat("es-CL", {
+                  style: "currency",
+                  currency: "CLP",
+                })
+              }
+              handlePedido={handlePedido}
+            />
+          )}
+        </section>
 
         {/* Botón para vaciar el carrito */}
-          <button  className="text-left text-gray-500 font-light hover:underline" onClick={handleClearCart}>Vaciar Carrito</button>
+
+        <button
+          className="text-left text-gray-500 font-light hover:underline"
+          onClick={handleClearCart}
+        >
+          {items.length === 0 ? "" : "Vaciar Carrito"}
+        </button>
       </section>
 
       {/* Modal de inicio de sesión */}
@@ -311,6 +315,7 @@ export default function CartPage() {
 
       {/* Modal de confirmación para eliminar producto */}
       <ConfirmationModal
+        title="Confitmación"
         isOpen={showRemoveModal}
         onConfirm={confirmRemove}
         onCancel={cancelRemove}
@@ -319,6 +324,7 @@ export default function CartPage() {
 
       {/* Modal de confirmación para vaciar el carrito */}
       <ConfirmationModal
+        title="Confirmación"
         isOpen={showClearModal}
         onConfirm={confirmClearCart}
         onCancel={cancelClearCart}
@@ -326,9 +332,10 @@ export default function CartPage() {
       />
 
       {/* Modal de éxito al crear pedido */}
-      <SuccessModal
+      <SuccessModalComponent
+        title="Éxito"
         isOpen={showSuccessModal}
-        onClose={() => setShowSuccessModal(false)} // Cierra el modal
+        onClose={close}
         message="¡Pedido realizado con éxito!"
       />
     </MainLayout>

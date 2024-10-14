@@ -5,10 +5,11 @@ import React, { useRef } from "react";
 
 
 interface ConfirmationModalProps {
-  isOpen: boolean;
   message: string;
-  onConfirm: () => void;
-  onCancel: () => void;
+  title:string;
+  isOpen: boolean;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -16,6 +17,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   message,
   onConfirm,
   onCancel,
+  title,
 }) => {
   const successRef = useRef<LottieRefCurrentProps>(null);
 
@@ -35,7 +37,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             animationData={sadShopping}
           />
         </div>
-        <h2 className="text-xl font-semibold mb-4">Confirmación</h2>
+        <h2 className="text-xl font-semibold mb-4">{title}</h2>
         <p className="text-sm">{message}</p>
         <div className="mt-4 flex justify-start gap-4">
           <ButtonCtaComponent onClick={onConfirm} className="bg-red-500 hover:bg-red-600 transition-all duration-300" text="Confirmar"/>

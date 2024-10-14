@@ -6,12 +6,14 @@ import React, { useRef } from "react";
 interface SuccessModalProps {
   isOpen: boolean;
   message: string;
+  title:string
   onClose: () => void;
 }
 
-const SuccessModal: React.FC<SuccessModalProps> = ({
+const SuccessModalComponent: React.FC<SuccessModalProps> = ({
   isOpen,
   message,
+  title,
   onClose,
 }) => {
   const successRef = useRef<LottieRefCurrentProps>(null);
@@ -32,7 +34,7 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
           />
         </div>
           <div className="flex flex-col pb-5">
-            <h2 className="text-xl font-semibold">Éxito</h2>
+            <h2 className="text-xl font-semibold">{title}</h2>
             <p className="text-sm">{message}</p>
           </div>
       </div>
@@ -40,4 +42,4 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
   );
 };
 
-export default SuccessModal;
+export default SuccessModalComponent;
