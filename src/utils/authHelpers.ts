@@ -205,10 +205,15 @@ export const GetPedidosByToken = async (token: string): Promise<Pedido[]> => {
     const response = await axiosInstance.get<Pedido[]>(
       `/api/Pedido/ByToken/${token}`
     );
-    return response.data; // El tipo será automáticamente Usuario
-  } catch (error) {
-    console.error("Error obteniendo los pedidos:", error);
-    throw error;
+    return response.data;
+  } catch (error: any) {
+    if (error.response && error.response.status === 404) {
+      console.warn("No se encontraron pedidos para el token proporcionado.");
+      return []; // Devuelve un array vacío si el error es 404
+    } else {
+      console.error("Error obteniendo los pedidos:", error);
+      throw error; // Lanza el error en otros casos
+    }
   }
 };
 
