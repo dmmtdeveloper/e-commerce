@@ -93,11 +93,11 @@ export default function CartPage() {
     try {
       await login({ email, password });
       setShowLoginModal(false); // Cierra el modal al iniciar sesión exitosamente
-      alert("Login exitoso");
+      // alert("Login exitoso");
       // router.push("/cart");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("Error en el login");
+      // alert("Error en el login");
     }
   };
 
