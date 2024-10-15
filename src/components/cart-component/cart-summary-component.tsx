@@ -56,7 +56,7 @@ const CartSummaryComponent: React.FC<CartSummaryComponentProps> = ({
               className="bg-green-500 py-4 hover:bg-green-600 w-full font-semibold"
               text="Crear pedido"
               type="submit" // Usamos un botón de tipo submit
-              onClick={() => SuccessModal}
+              // onClick={() => SuccessModal}
             />
           </form>
           <div className="2xl:flex 2xl:items-center 2xl:gap-8">

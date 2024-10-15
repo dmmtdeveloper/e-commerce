@@ -4,16 +4,16 @@ export const productoUpdateSchema = z.object({
     nombre: z.string().min(1, "El nombre es obligatorio."),
     descripcion: z.string().min(1, "La descripción es obligatoria."),
     stock: z
-      .string()
+      .number()
       .min(1, { message: "El stock es obligatorio." })
-      .transform((value) => parseFloat(value)) // Transformar a número
+      // .transform((value) => parseFloat(value)) // Transformar a número
       .refine((value) => !isNaN(value) && value >= 0, {
         message: "El stock no puede ser negativo.",
     }),    
     precio: z
-      .string()
+      .number()
       .min(1, { message: "El precio es obligatorio." })
-      .transform((value) => parseFloat(value)) // Transformar a número
+      // .transform((value) => parseFloat(value)) // Transformar a número
       .refine((value) => !isNaN(value) && value >= 0, {
         message: "El precio no puede ser negativo.",
       })

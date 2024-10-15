@@ -12,6 +12,7 @@ import Link from "next/link";
 import MainLayout from "@/components/layouts/MainLayout";
 import ModalProductId from "@/components/modals/ModalProductId"; // Importar el modal
 import useCartStore from "@/store/cartStore";
+import Modal from "@/components/modals/Modal";
 
 interface ProductPageProps {
   params: {
@@ -110,7 +111,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
   if (!product) {
     return <p>Loading...</p>;
   }
-
+  // Función para cerrar el modal
+  const handleCloseModal = () => setShowModal(false);
   return (
     <MainLayout>
       <section className="mt-32 p-4 grid 2xl:grid-cols-2 2xl:px-80 items-center">
@@ -208,7 +210,8 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
           </div>
 
           {/* Mostrar modal cuando se agrega un producto */}
-          {showModal && product && (
+          {showModal && <Modal product={product} onClose={handleCloseModal} />}
+          {/* {showModal && product && (
             <ModalProductId
               product={{
                 nombre: product.nombre,
@@ -219,7 +222,7 @@ export default function ProductDetailPage({ params }: ProductPageProps) {
               onGoToCart={handleGoToCart}
               onContinueShopping={handleContinueShopping}
             />
-          )}
+          )} */}
         </div>
       </section>
     </MainLayout>

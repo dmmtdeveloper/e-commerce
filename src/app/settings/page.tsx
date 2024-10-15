@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { NavSetting } from "@/components/shared/NavSetting";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdateEliminadoUsuario } from "@/utils/authHelpers";
+
 import MainLayout from "@/components/layouts/MainLayout";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
@@ -15,7 +16,6 @@ import ButtonCtaComponent from "@/components/buttons-components/button-cta-compo
 import InputComponentAuth from "@/components/input/inputComponenAuth";
 import PasswordInputAuth from "@/components/input/PasswordIInputAuth";
 import ConfirmationModalComponent from "@/components/modals/setting-modal-component/confirmation-modal-component/confirmation-modal-component";
-import SuccessModal from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
 import ErrorModal from "@/components/modals/setting-modal-component/error-modal-component/error-modal-component";
 import user from "@/public/assets/img/user.png";
 

@@ -1,14 +1,14 @@
 import { Product } from "@/types/product";
+import { useRef } from "react";
+import banco from "@/public/assets/icons/logo-bancoestado-pdp-modyo.svg";
+import ButtonCtaComponent from "../buttons-components/button-cta-component";
 import cartSuccess from "@/public/assets/animation/cart-success.json";
+import clsx from "clsx";
+import Image from "next/image"; // Importamos el componente Image
 import Link from "next/link";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import { useRef } from "react";
-import ButtonCtaComponent from "../buttons-components/button-cta-component";
-import ReactDOM from "react-dom";
-import Image from "next/image"; // Importamos el componente Image
 import noImage from "@/public/assets/img/no_image.jpg"; // Imagen de respaldo si no hay imagen
-import clsx from "clsx";
-import banco from "@/public/assets/icons/logo-bancoestado-pdp-modyo.svg";
+import ReactDOM from "react-dom";
 
 interface ModalProps {
   product: Product;

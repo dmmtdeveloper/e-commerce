@@ -22,15 +22,18 @@ import QuantityControl from "@/components/cart-component/quantity-control-compon
 import SuccessModal from "@/components/SuccessModal"; // Importa el modal de éxito
 import useCartStore from "@/store/cartStore"; // Importa el store del carrito
 import SuccessModalComponent from "@/components/modals/setting-modal-component/sucess-modal-component/success-modal-component";
+import CustomErrorModal from "@/components/modals/custom-error-modal/custom-error-modal";
 
 export default function CartPage() {
   const { items, removeItem, updateItemQuantity, clearCart } = useCartStore(); // Obtenemos los productos del carrito
   const [showRemoveModal, setShowRemoveModal] = useState(false); // Estado para mostrar el modal de eliminar
   const [showClearModal, setShowClearModal] = useState(false); // Estado para mostrar el modal de vaciar
   const [showSuccessModal, setShowSuccessModal] = useState(false); // Estado para mostrar el modal de éxito
+  const [showErrorModal, setShowErrorModal] = useState(false); // Error
   const [showLoginModal, setShowLoginModal] = useState(false); // Estado para mostrar el modal de login
   const [itemToRemove, setItemToRemove] = useState<string | null>(null); // ID del producto a eliminar
   const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
@@ -55,8 +58,8 @@ export default function CartPage() {
     }));
 
     try {
-      setShowSuccessModal(true); // Mostrar modal de éxito
       await addPedido(token, 1, detallesPedido);
+      setShowSuccessModal(true); // Mostrar modal de éxito
       clearCart(); // Limpia el carrito después de crear el pedido
       // router.push("/cart");
     } catch (error) {
@@ -66,7 +69,11 @@ export default function CartPage() {
       } else if (error instanceof Error) {
         errorMessage = error.message;
       }
-      alert("Error al crear el pedido: " + errorMessage);
+
+      setErrorMessage("Error al crear el pedido: " + errorMessage)
+      setShowErrorModal(true); // Mostrar modal de error
+
+      // alert("Error al crear el pedido: " + errorMessage);
       console.error("Error al crear el pedido:", error);
     }
   };
@@ -152,7 +159,16 @@ export default function CartPage() {
 
       return () => clearTimeout(timer); // Limpiar el timer en caso de que el componente se desmonte
     }
-  }, [showSuccessModal]);
+
+
+    if (showErrorModal) {
+      const timer = setTimeout(() => {
+        setShowErrorModal(false);
+      }, 3000); // 3000 ms = 3 segundos
+
+      return () => clearTimeout(timer); // Limpiar el timer en caso de que el componente se desmonte
+    }
+  }, [showSuccessModal, showErrorModal]);
 
   const formatCurrency = new Intl.NumberFormat("es-ES", {
     minimumFractionDigits: 0,
@@ -336,7 +352,15 @@ export default function CartPage() {
         title="Éxito"
         isOpen={showSuccessModal}
         onClose={close}
-        message="¡Pedido realizado con éxito!"
+        message={"¡Pedido realizado con éxito!"}
+      />
+
+      {/* Modal de éxito al crear pedido */}
+      <CustomErrorModal
+        title="Error"
+        isOpen={showErrorModal}
+        onClose={close}
+        message={errorMessage}
       />
     </MainLayout>
   );

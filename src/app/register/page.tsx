@@ -94,7 +94,7 @@ export default function RegisterPage() {
                   type="text"
                   placeholder="Ingresa tu nombre"
                   register={register("nombre")}
-                  error={errors.nombre}
+                  error={errors.nombre?.message}
                 />
 
                 {/* correo */}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                   type="email"
                   placeholder="Ingresa tu correo"
                   register={register("correo")}
-                  error={errors.correo}
+                  error={errors.correo?.message}
                 />
 
                 {/* Input de contraseña */}
