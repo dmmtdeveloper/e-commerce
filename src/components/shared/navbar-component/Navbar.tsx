@@ -56,7 +56,7 @@ const Navbar: React.FC = () => {
           "flex flex-col",
           "justify-between",
           "items-center",
-          "bg-slate-50",
+          "bg-slate-100 border-b-slate-200 border border-t-0 border-x-0",
           " z-[99999]"
         )}
       >
