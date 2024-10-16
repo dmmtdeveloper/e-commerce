@@ -14,6 +14,8 @@ import ButtonCtaComponent from "@/components/buttons-components/button-cta-compo
 import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import LayoutSectionComponent from "@/components/layouts/layout-section-component";
 import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import { NavSetting } from "@/components/shared/NavSetting";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface PedidoDetallePageProps {
   params: {
@@ -27,7 +29,7 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [showModalCancelar, setShowModalCancelar] = useState<boolean>(false);
-
+  const { isAdmin } = useAuthStore();
   const pedidoId = Number(params.id); // Convertir el ID a número
 
   // Función para obtener el pedido y sus detalles
@@ -77,7 +79,7 @@ const OrdersDetails = ({ params }: PedidoDetallePageProps) => {
     <MainLayout>
       <LayoutSectionComponent>
         <LayoutDivComponent>
-          <NavAdmin />
+        {!isAdmin ? <NavSetting /> : <NavAdmin />}
           <div className="bg-white p-6 shadow-md rounded-lg mb-6">
             <h2 className="font-semibold text-2xl mb-4 border-b-2 border-gray-300 pb-2">
               Pedido #{pedidoId}
