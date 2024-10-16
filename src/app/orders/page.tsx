@@ -1,21 +1,23 @@
+
 "use client";
-import { useState, useEffect } from "react";
-import MainLayout from "@/components/layouts/MainLayout";
-import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import { GetPedidosByToken } from "@/utils/authHelpers";
-import Link from "next/link";
+import { IoMdSearch } from "react-icons/io";
 import { NavSetting } from "@/components/shared/NavSetting";
-import { useAuthStore } from "@/store/useAuthStore";
-import { Title } from "@/components/title/Title";
-import LayoutSectionComponent from "@/components/layouts/layout-section-component";
-import LayoutDivComponent from "@/components/layouts/layout-div-component";
 import { Pedido } from "@/types/types";
+import { Title } from "@/components/title/Title";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useState, useEffect } from "react";
+
 import * as XLSX from "xlsx"; // Importar la biblioteca XLSX
-import ButtonCtaComponent from "@/components/buttons-components/button-cta-component";
-import Pagination from "@/components/pagination-component/pagination-component";
+import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 import FilterButtonComponent from "@/components/buttons-components/button-product-component/Filter-button-component";
 import LabelComponent from "@/components/label-component/label-component";
-import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
+import LayoutDivComponent from "@/components/layouts/layout-div-component";
+import LayoutSectionComponent from "@/components/layouts/layout-section-component";
+import Link from "next/link";
+import MainLayout from "@/components/layouts/MainLayout";
+import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
+import Pagination from "@/components/pagination-component/pagination-component";
 
 export default function OrdersPage() {
   const [pedidos, setPedidos] = useState<Pedido[]>([]);
@@ -236,12 +238,12 @@ export default function OrdersPage() {
                         ? `${formatCurrency.format(pedido.valorTotal)}`
                         : "N/A"}
                     </td>
-                    <td className="border p-2">
+                    <td className="border items-center flex justify-center py-2">
                       <Link
                         href={`/orders/ordersDetails/${pedido.pedidoId}`}
-                        className="text-blue-500 hover:underline"
+                        className="text-blue-500"
                       >
-                        Ver Detalle
+                       <IoMdSearch className="text-2xl hover:scale-125 transition-all"/>
                       </Link>
                     </td>
                   </tr>

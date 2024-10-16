@@ -18,6 +18,7 @@ import NavAdmin from "@/components/shared/navbar-admin-component/NavAdmin";
 import useAdmin from "@/hooks/useAdmin";
 import ExcelButtonComponent from "@/components/buttons-components/Excel-Button";
 import Pagination from "@/components/pagination-component/pagination-component";
+import { IoMdSearch } from "react-icons/io";
 
 export default function OrdersPage() {
   useAdmin();
@@ -262,7 +263,7 @@ export default function OrdersPage() {
                         <td className="border px-4 py-2">
                           {pedido.estadoNombre}
                         </td>
-                        <td className="border px-4 py-2">
+                        <td className="border  px-4 py-2">
                           {pedido.cantidadDetalles}
                         </td>
                         <td className="border px-4 py-2">
@@ -271,12 +272,12 @@ export default function OrdersPage() {
                             ? formatCurrency.format(pedido.valorTotal)
                             : "N/A"}
                         </td>
-                        <td className="border px-4 py-2">
+                        <td className="border items-center flex justify-center py-2">
                           <Link
                             href={`/admin/orders/${pedido.pedidoId}`}
                             className="text-blue-500 hover:underline"
                           >
-                            Ver
+                            <IoMdSearch className="text-2xl hover:scale-125 transition-all"/>
                           </Link>
                         </td>
                       </tr>

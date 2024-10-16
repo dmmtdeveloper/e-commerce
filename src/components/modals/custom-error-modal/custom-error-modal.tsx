@@ -1,5 +1,5 @@
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import sucessAnimation from "@/public/assets/animation/Animation-success.json";
+import ErrorAnimation from "@/public/assets/animation/Error.json";
 import React, { useRef } from "react";
 
 
@@ -30,7 +30,7 @@ const CustomErrorModal: React.FC<CustomErrorModalProps> = ({
             lottieRef={successRef}
             loop={false}
             className="w-52"
-            animationData={sucessAnimation}
+            animationData={ErrorAnimation}
           />
         </div>
           <div className="flex flex-col pb-5">

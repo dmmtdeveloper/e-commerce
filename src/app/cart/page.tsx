@@ -70,7 +70,7 @@ export default function CartPage() {
         errorMessage = error.message;
       }
 
-      setErrorMessage("Error al crear el pedido: " + errorMessage)
+      setErrorMessage(errorMessage)
       setShowErrorModal(true); // Mostrar modal de error
 
       // alert("Error al crear el pedido: " + errorMessage);
@@ -155,7 +155,7 @@ export default function CartPage() {
     if (showSuccessModal) {
       const timer = setTimeout(() => {
         setShowSuccessModal(false);
-      }, 3000); // 3000 ms = 3 segundos
+      }, 4000); // 3000 ms = 3 segundos
 
       return () => clearTimeout(timer); // Limpiar el timer en caso de que el componente se desmonte
     }
@@ -164,7 +164,7 @@ export default function CartPage() {
     if (showErrorModal) {
       const timer = setTimeout(() => {
         setShowErrorModal(false);
-      }, 3000); // 3000 ms = 3 segundos
+      }, 4000); // 3000 ms = 3 segundos
 
       return () => clearTimeout(timer); // Limpiar el timer en caso de que el componente se desmonte
     }
