@@ -246,7 +246,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 name="nombre"
                 onChange={handleChange}
                 register={register("nombre")} // Usando el registro de react-hook-form
-                error={errors.nombre?.message} // Mostrando el mensaje de error si existe
+                error={errors.nombre} // Mostrando el mensaje de error si existe
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -256,7 +256,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                 name="descripcion"
                 register={register("descripcion")}
                 onChange={handleChange}
-                error={errors.descripcion?.message} // Mostrando el mensaje de error si existe
+                error={errors.descripcion} // Mostrando el mensaje de error si existe
               />
             </div>
 
@@ -268,7 +268,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                   name="stock"
                   register={register("stock")}
                   onChange={handleChange}
-                  error={errors.stock?.message}
+                  error={errors.stock}
                 />
               </div>
               <div className="flex flex-col gap-2">
@@ -278,7 +278,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
                   name="precio"
                   onChange={handleChange}
                   register={register("precio")}
-                  error={errors.precio?.message}
+                  error={errors.precio}
                 />
               </div>
             </div>

@@ -94,7 +94,7 @@ export default function RegisterPage() {
                   type="text"
                   placeholder="Ingresa tu nombre"
                   register={register("nombre")}
-                  error={errors.nombre?.message}
+                  error={errors.nombre}
                 />
 
                 {/* correo */}
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                   type="email"
                   placeholder="Ingresa tu correo"
                   register={register("correo")}
-                  error={errors.correo?.message}
+                  error={errors.correo}
                 />
 
                 {/* Input de contraseña */}
@@ -125,7 +125,7 @@ export default function RegisterPage() {
                 />
 
                 <SubmitButton
-                  text="Regitrate"
+                  text="Registrate"
                   type="submit"
                   isSubmitting={isSubmitting}
                 />
