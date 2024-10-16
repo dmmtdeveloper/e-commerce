@@ -85,7 +85,7 @@ export default function LoginPage() {
                   type="email"
                   placeholder="Ingresa tu correo"
                   register={register("email")}
-                  error={errors.email}
+                  error={errors.email?.message}
                 />
 
                 {/* Input de contraseña */}

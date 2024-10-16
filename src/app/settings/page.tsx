@@ -183,6 +183,15 @@ export default function SettingsPage() {
         await UpdateClaveUsuario(id, data.clave);
         await UpdateCorreoUsuario(id, data.correo);
         openSuccessModal("Datos actualizados con exito.");
+
+        useAuthStore
+        .getState()
+        .updateUser(
+          data.correo,
+          data.nombre,
+          avatar || ""
+        );
+       
         setTimeout(() => {
           // Cerrar el modal después de 3 segundos
           setTimeout(() => {

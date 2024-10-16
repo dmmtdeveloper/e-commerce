@@ -11,6 +11,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isAdmin?: boolean;
   login: (email: string, token: string, name: string, avatar: string) => Promise<void>;
+  updateUser: (email: string, name: string, avatar: string) => Promise<void>;
   logout: () => void;
   checkAdmin: () => Promise<void>;
   usuario?: Usuario;
@@ -43,6 +44,15 @@ export const useAuthStore = create<AuthState>()(
         sessionStorage.removeItem("token");
         set({ email: "", token: "", name: "", avatar: "", isAuthenticated: false, isAdmin: undefined });
         clearToken();
+      },
+
+      // Función de updateUser
+      updateUser:  async (email: string, name: string, avatar: string) => {
+        sessionStorage.setItem("name", name);
+        sessionStorage.setItem("avatar", avatar);
+        sessionStorage.setItem("email", email);
+        // Establecer el estado inicial
+        set({ email, name,  avatar});
       },
 
       // Función para verificar si es admin
