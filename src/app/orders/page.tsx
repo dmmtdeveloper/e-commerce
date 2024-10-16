@@ -121,7 +121,7 @@ export default function OrdersPage() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Pedidos");
 
     // Generar y descargar el archivo Excel
-    XLSX.writeFile(workbook, "pedidos.xlsx");
+    XLSX.writeFile(workbook, "mis_compras.xlsx");
   };
 
   if (loading) {

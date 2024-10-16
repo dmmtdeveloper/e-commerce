@@ -94,7 +94,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
       setFileType(file.type); // Almacenar el tipo del archivo
       convertToBase64(file); // Convertir el archivo a base64
     } else {
-      alert("Solo se permiten archivos .png y .jpg");
+      openErrorModal("Solo se permiten archivos .png y .jpg");
     }
   };
 
@@ -132,7 +132,7 @@ const EditarProducto = ({ params }: EditPageProps) => {
           errorMessage = error.message;
         }
 
-        alert(errorMessage);
+        openErrorModal(errorMessage);
       }
     }
   };
@@ -359,6 +359,8 @@ const EditarProducto = ({ params }: EditPageProps) => {
           </div>
         </div>
       )}
+
+      
     </MainLayout>
   );
 };
