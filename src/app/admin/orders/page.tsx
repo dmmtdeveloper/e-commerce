@@ -238,7 +238,7 @@ export default function OrdersPage() {
                       <th className="border p-2">Fecha</th>
                       <th className="border p-2">Usuario</th>
                       <th className="border p-2">Estado</th>
-                      <th className="border p-2">Cantidad Productos</th>
+                      <th className="border p-2">Cantidad</th>
                       <th className="border p-2">Valor Total</th>
                       <th className="border px-4 py-2">Acciones</th>
                     </tr>

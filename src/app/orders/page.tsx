@@ -214,12 +214,12 @@ export default function OrdersPage() {
             <table className="table-auto w-full border">
               <thead>
                 <tr>
-                  <th className="border p-2"></th>
-                  <th className="border p-2">Fecha</th>
-                  <th className="border p-2">Estado</th>
-                  <th className="border p-2">Cantidad Producto</th>
-                  <th className="border p-2">Valor Total</th>
-                  <th className="border p-2">Acciones</th>
+                  <th className="border text-sm p-2"></th>
+                  <th className="border text-sm p-2">Fecha</th>
+                  <th className="border text-sm p-2">Estado</th>
+                  <th className="border text-sm p-2">Cantidad</th>
+                  <th className="border text-sm p-2">Valor Total</th>
+                  <th className="border text-sm p-2">Acciones</th>
                 </tr>
               </thead>
               <tbody>

@@ -26,7 +26,7 @@ const NavbarHeader: FC<NavbarHeaderProps> = ({ menuOpen, toggleMenu }) => {
   return (
     <div className="flex w-full items-center justify-between px-4 2xl:px-8 py-4 gap-4">
       <Link href="/" className="text-2xl font-bold">
-        <Image height={100} width={100} src={logo} alt="logo" priority />
+        <Image height={100} width={100} src={logo} alt="logo" priority className="w-24 h-auto" />
       </Link>
 
       <section className="flex gap-4 items-center">

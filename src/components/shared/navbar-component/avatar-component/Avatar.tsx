@@ -10,16 +10,15 @@ const Avatar: React.FC<AvatarProps> = ({ avatar }) => {
 
   return (
     <div>
-      <Image
-        src={isValidAvatar ? avatar : userImage}
-        alt="Avatar"
-        objectFit="cover"
-        priority
-        width={100}
-        height={100}
-        className='rounded-full border-2 border-blue-500 w-12 h-auto'
-      />
-    </div>
+    <Image
+      src={isValidAvatar ? avatar : userImage}
+      width={100}
+      height={100}
+      alt="Avatar"
+      className='rounded-full object-cover w-16 h-16 border-2 border-blue-500'
+      priority
+    />
+  </div>
   );
 };
 

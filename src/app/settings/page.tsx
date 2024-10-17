@@ -277,7 +277,7 @@ export default function SettingsPage() {
               </div>
 
               <section>
-                <div className="flex flex-col gap-4 w-[30rem]">
+                <div className="flex flex-col gap-4 2xl:w-[30rem]">
                   <InputComponentAuth
                     name="nombre"
                     type="text"

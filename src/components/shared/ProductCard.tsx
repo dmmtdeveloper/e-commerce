@@ -75,7 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             )}
           >
             <Image
-              className="object-cover" // Asegúrate de que la imagen mantenga la proporción correcta
+              className="object-cover w-100 h-auto" // Asegúrate de que la imagen mantenga la proporción correcta
               width={190}
               height={190}
               src={
